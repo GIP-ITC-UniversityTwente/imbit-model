@@ -102,7 +102,7 @@ municipalities-own [name GGDregion vaccinationrate population totalpopulation fr
   S19111  E19111  I19111  R19111 suminfected05 suminfected512 suminfected1217 suminfected1725 suminfected2535 suminfected3550
   suminfected5065 suminfected6580 suminfected80plus hospitalized05 hospitalized512 hospitalized1217 hospitalized1725 hospitalized2535 hospitalized3550
   hospitalized5065 hospitalized6580 hospitalized80plus
-  
+
   ; To record number of animal infections and spillovers
   totalinfectedanimals totalspilloveranimalhumaninfections
   ]
@@ -234,7 +234,7 @@ to go
     ; Introducing animal-human spillover infection in every gemeente
     ; if conditions are met
     if (ticks mod spillover-interval = 0)[
-      create-spillover-animal-human-mechanism-a
+      create-spillover-animal-human
     ]
 
     recolor-single-municipality
@@ -664,7 +664,7 @@ CHOOSER
 Scenario
 Scenario
 "Original_Pertussis_Model" "COVID19_History_No_Lockdown" "COVID19_History_Lockdown" "Road_Map_Scenario" "Economic_Scenario" "Age_Scenario"
-3
+2
 
 MONITOR
 625
@@ -1073,7 +1073,7 @@ Frequency
 Frequency
 0
 30
-0.0
+1.0
 1
 1
 NIL
@@ -1105,6 +1105,16 @@ CHOOSER
 spillover-group
 spillover-group
 "all" "farmers"
+0
+
+CHOOSER
+168
+797
+394
+842
+spillover-anim-hum-mechanism
+spillover-anim-hum-mechanism
+"A" "B"
 0
 
 @#$#@#$#@

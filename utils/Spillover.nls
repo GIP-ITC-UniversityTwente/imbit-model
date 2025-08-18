@@ -88,6 +88,19 @@ to update-num-animal-infc-gm
   ]
 end
 
+; Procedure to induce spillover infection based on the mechanism chosen
+; by the user
+to create-spillover-animal-human
+  if (spillover-anim-hum-mechanism = "A") [
+    create-spillover-animal-human-mechanism-a
+  ]
+  
+  if (spillover-anim-hum-mechanism = "B") [
+   create-spillover-animal-human-mechanism-b
+  ]
+end
+  
+
 ; Municipality procedure to introduce spillover infection based on total
 ; num of infected animals
 to create-spillover-animal-human-mechanism-a
@@ -129,4 +142,9 @@ to spillover-infection-farmers-mechanism-a
   ]
 
   run (word "set " spillover-subgroup " " spillover-subgroup " + new-hum-spillover-infc")
+end
+
+; Procedure to introduce animal-human-mechanism based on farm size
+to create-spillover-animal-human-mechanism-b
+  
 end
