@@ -234,7 +234,7 @@ to go
     ; Introducing animal-human spillover infection in every gemeente
     ; if conditions are met
     if (ticks mod spillover-interval = 0)[
-      create-spillover-infc-animal-human-gm
+      create-spillover-animal-human-mechanism-a
     ]
 
     recolor-single-municipality

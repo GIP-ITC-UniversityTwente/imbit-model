@@ -90,7 +90,7 @@ end
 
 ; Municipality procedure to introduce spillover infection based on total
 ; num of infected animals
-to create-spillover-infc-animal-human-gm 
+to create-spillover-animal-human-mechanism-a
     ; Introducing one new human infection whenever iv > spillover-threshold
     (ifelse totalinfectedanimals > spillover-threshold [
       set new-hum-spillover-infc 1
@@ -100,10 +100,10 @@ to create-spillover-infc-animal-human-gm
 
       ; Introducing spillover infection based on the spillover-group
       if (spillover-group = "farmers") [
-        spillover-infection-farmers
+        spillover-infection-farmers-mechanism-a
       ]
       if (spillover-group = "all") [
-        spillover-infection-farmers
+        spillover-infection-farmers-mechanism-a
       ]
     ] 
     [
@@ -119,7 +119,7 @@ end
 ; All genders none I1xxxx, male I2xxxx and female I3xxxx
 ; both non-pregnant Ixxx1x and pregnant Ixxx2x people
 ; both household Ixxxx1 and non-household Ixxxx2
-to spillover-infection-farmers
+to spillover-infection-farmers-mechanism-a
 
   ; Randomly selecting a subgroup from age groups 25-60 years
   let spillover-subgroup one-of [
