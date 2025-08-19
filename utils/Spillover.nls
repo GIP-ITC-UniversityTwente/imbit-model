@@ -6,6 +6,7 @@ globals [basemap-farm centroid-envelope
   spillover-threshold spillover-interval
   spillover_gm_name
   new-hum-spillover-infc
+  new-hum-spillover-infc-per-group
 ]
 
 breed [ animalfarms animalfarm ]
@@ -119,6 +120,8 @@ to create-spillover-animal-human-mechanism-a
         spillover-infection-farmers-mechanism-a
       ]
     ] 
+
+    ; Spillover threshold was not exceeded so no spillover infections
     [
       set totalspilloveranimalhumaninfections 0
     ])
@@ -144,7 +147,28 @@ to spillover-infection-farmers-mechanism-a
   run (word "set " spillover-subgroup " " spillover-subgroup " + new-hum-spillover-infc")
 end
 
-; Procedure to introduce animal-human-mechanism based on farm size
+; Procedure to introduce animal-human-mechanism based on the number of
+; workers in the farm. 
+; We introduce total number of spillover infections = no_farmers_per_farm
 to create-spillover-animal-human-mechanism-b
-  
+
+  ifelse (totalinfectedanimals > spillover-threshold) [
+    set new-hum-spillover-infc-per-group no_farmers_per_farm / 9
+
+    let farming-groups [
+      "I26311" "I26312" "I36311" "I36312" "I36322"   ;; age 25–35
+      "I17311" "I17312" ;; age 35–50
+      "I18311" "I18312" ;; age 50–60
+    ]
+
+    ; Infecting members of each group
+    foreach farming-groups [ grp ->
+      run (word "set " grp " " grp " + new-hum-spillover-infc-per-group")
+    ]
+
+    set totalspilloveranimalhumaninfections no_farmers_per_farm
+  ] [
+    set totalspilloveranimalhumaninfections 0
+  ]
 end
+

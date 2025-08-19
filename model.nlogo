@@ -93,6 +93,9 @@ breed [municipalities municipality]
 municipalities-own [name GGDregion vaccinationrate population totalpopulation fractionsusceptible fractionexposed
   fractioninfected fractionrecovered totalsusceptible totalexposed totalinfected totalrecovered totalhospitalized achospitalized
   totalinfecteddaybefore totalnewinfected ; Used for calculating the number of totalnewinfected per day
+  
+  no_farmers_per_farm ; For calculating spillovers
+
   S11112  E11112  I11112  R11112 S12112  E12112  I12112  R12112 S13112  E13112  I13112  R13112 S14212  E14212  I14212  R14212
   S14112  E14112  I14112  R14112 S15111  E15111  I15111  R15111 S26311  E26311  I26311  R26311 S26312  E26312  I26312  R26312
   S26111  E26111  I26111  R26111 S26112  E26112  I26112  R26112 S36322  E36322  I36322  R36322 S36311  E36311  I36311  R36311
