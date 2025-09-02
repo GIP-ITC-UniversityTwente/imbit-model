@@ -527,7 +527,7 @@ CHOOSER
 735
 Infection-Rate-WithinMuni-Summer
 Infection-Rate-WithinMuni-Summer
-"Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
+"Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
 0
 
 CHOOSER
@@ -537,7 +537,7 @@ CHOOSER
 733
 Infection-Rate-WithinMuni-SpringAutumn
 Infection-Rate-WithinMuni-SpringAutumn
-"Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
+"Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
 12
 
 CHOOSER
@@ -547,7 +547,7 @@ CHOOSER
 621
 Infection-Rate-WithinMuni-Winter
 Infection-Rate-WithinMuni-Winter
-"Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
+"Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
 12
 
 CHOOSER
@@ -557,7 +557,7 @@ CHOOSER
 785
 Infection-Rate-AmongMuni-Summer
 Infection-Rate-AmongMuni-Summer
-"CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
+"CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
 3
 
 CHOOSER
@@ -567,7 +567,7 @@ CHOOSER
 782
 Infection-Rate-AmongMuni-SpringAutumn
 Infection-Rate-AmongMuni-SpringAutumn
-"CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
+"CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
 12
 
 CHOOSER
@@ -577,7 +577,7 @@ CHOOSER
 669
 Infection-Rate-AmongMuni-Winter
 Infection-Rate-AmongMuni-Winter
-"CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
+"CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
 12
 
 TEXTBOX
