@@ -9,6 +9,8 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
    newtotalinfected newtotalhospitalized differenceinfected differencehospitalized differencehospitalizedfixed reproductionnumber reproductionnumberold reproductionnumbernew
    positivetests positivetestscalc ij risk_level
 
+   num-hum-spillover-infc
+
    ; School commuting
    schoolcommuters totalschoolcommutersflow extraS14112school extraS14212school schoolcommuterstotal schoolcommuterstotalNL
 
