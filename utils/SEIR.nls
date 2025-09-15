@@ -35,6 +35,14 @@
     ;;contact S19111 * infected of all classes = 600-624 in list contactrates
    
     ;;Calculate ds, needed for the SEIR calculations
+
+
+   ; Farmer category
+   let dS00000 S00000
+   let dE00000 E00000
+   let dI00000 dI0000
+   let dR00000 R00000
+
    let dS11112 S11112
    let dE11112 E11112
    let dI11112 I11112
@@ -165,14 +173,20 @@
    ;; SEIR model
    
     ;;S*I infection rate
-   let infectionrate11112 (dS11112 * dI11112 * (item 0 contactrates) + dS11112 * dI12112 * (item 1 contactrates) +  dS11112 * dI13112 * (item 2 contactrates) + dS11112 * dI14212 * (item 3 contactrates) + dS11112 * dI14112 * (item 4 contactrates) + dS11112 * dI15111 * (item 5 contactrates) + dS11112 * dI26311 * (item 6 contactrates) + dS11112 * dI26312 * (item 7 contactrates) + dS11112 * dI26111 * (item 8 contactrates) + dS11112 * dI26112 * (item 9 contactrates) + dS11112 * dI36322 * (item 10 contactrates) + dS11112 * dI36311 * (item 11 contactrates) + dS11112 * dI36312 * (item 12 contactrates) + dS11112 * dI36122 * (item 13 contactrates) + dS11112 * dI36111 * (item 14 contactrates) + dS11112 * dI36112 * (item 15 contactrates) + dS11112 * dI17311 * (item 16 contactrates) + dS11112 * dI17312 * (item 17 contactrates) + dS11112 * dI17111 * (item 18 contactrates) + dS11112 * dI17112 * (item 19 contactrates) + dS11112 * dI18311 * (item 20 contactrates) + dS11112 * dI18312 * (item 21 contactrates) + dS11112 * dI18111 * (item 22 contactrates) + dS11112 * dI18112 * (item 23 contactrates) + dS11112 * dI19111 * (item 24 contactrates)) 
+   let infectionrate00000 (dS00000 * dI00000 * (item 0 contactrates) + dS00000 * dI12112 * (item 1 contactrates) +  dS00000 * dI13112 * (item 2 contactrates) + dS00000 * dI14212 * (item 3 contactrates) + dS00000 * dI14112 * (item 4 contactrates) + dS00000 * dI15111 * (item 5 contactrates) + dS00000 * dI26311 * (item 6 contactrates) + dS00000 * dI26312 * (item 7 contactrates) + dS00000 * dI26111 * (item 8 contactrates) + dS00000 * dI26112 * (item 9 contactrates) + dS00000 * dI36322 * (item 10 contactrates) + dS00000 * dI36311 * (item 11 contactrates) + dS00000 * dI36312 * (item 12 contactrates) + dS00000 * dI36122 * (item 13 contactrates) + dS00000 * dI36111 * (item 14 contactrates) + dS00000 * dI36112 * (item 15 contactrates) + dS00000 * dI17311 * (item 16 contactrates) + dS00000 * dI17312 * (item 17 contactrates) + dS00000 * dI17111 * (item 18 contactrates) + dS00000 * dI17112 * (item 19 contactrates) + dS00000 * dI18311 * (item 20 contactrates) + dS00000 * dI18312 * (item 21 contactrates) + dS00000 * dI18111 * (item 22 contactrates) + dS00000 * dI18112 * (item 23 contactrates) + dS00000 * dI19111 * (item 24 contactrates)) 
     ;; S = S + d recovered - S*I infection rate
-   set S11112 S11112 + 0 - infectionrate11112              
+   set S00000 S00000 + 0 - infectionrate00000              
     ;; E = E - people ending exposed period + S*I infection rate
-   set E11112 E11112 - (dE11112 / exposed-period) + infectionrate11112  
+   set E00000 E00000 - (dE00000 / exposed-period) + infectionrate00000  
     ;; I = I + people ending exposed period - people recovering  
-   set I11112 I11112 + (dE11112 / exposed-period) - (dI11112 / infected-period) 
+   set I00000 I00000 + (dE00000 / exposed-period) - (dI00000 / infected-period) 
     ;; R = R + people recovering -  people getting susceptible again (not in youngest age group) 
+   set R00000 R00000 + (dI00000 / infected-period) - 0 
+   
+   let infectionrate11112 (dS11112 * dI11112 * (item 0 contactrates) + dS11112 * dI12112 * (item 1 contactrates) +  dS11112 * dI13112 * (item 2 contactrates) + dS11112 * dI14212 * (item 3 contactrates) + dS11112 * dI14112 * (item 4 contactrates) + dS11112 * dI15111 * (item 5 contactrates) + dS11112 * dI26311 * (item 6 contactrates) + dS11112 * dI26312 * (item 7 contactrates) + dS11112 * dI26111 * (item 8 contactrates) + dS11112 * dI26112 * (item 9 contactrates) + dS11112 * dI36322 * (item 10 contactrates) + dS11112 * dI36311 * (item 11 contactrates) + dS11112 * dI36312 * (item 12 contactrates) + dS11112 * dI36122 * (item 13 contactrates) + dS11112 * dI36111 * (item 14 contactrates) + dS11112 * dI36112 * (item 15 contactrates) + dS11112 * dI17311 * (item 16 contactrates) + dS11112 * dI17312 * (item 17 contactrates) + dS11112 * dI17111 * (item 18 contactrates) + dS11112 * dI17112 * (item 19 contactrates) + dS11112 * dI18311 * (item 20 contactrates) + dS11112 * dI18312 * (item 21 contactrates) + dS11112 * dI18111 * (item 22 contactrates) + dS11112 * dI18112 * (item 23 contactrates) + dS11112 * dI19111 * (item 24 contactrates)) 
+   set S11112 S11112 + 0 - infectionrate11112              
+   set E11112 E11112 - (dE11112 / exposed-period) + infectionrate11112  
+   set I11112 I11112 + (dE11112 / exposed-period) - (dI11112 / infected-period) 
    set R11112 R11112 + (dI11112 / infected-period) - 0 
    
    let infectionrate12112 (dS12112 * dI11112 * (item 25 contactrates) + dS12112 * dI12112 * (item 26 contactrates) +  dS12112 * dI13112 * (item 27 contactrates) + dS12112 * dI14212 * (item 28 contactrates) + dS12112 * dI14112 * (item 29 contactrates) + dS12112 * dI15111 * (item 30 contactrates) + dS12112 * dI26311 * (item 31 contactrates) + dS12112 * dI26312 * (item 32 contactrates) + dS12112 * dI26111 * (item 33 contactrates) + dS12112 * dI26112 * (item 34 contactrates) + dS12112 * dI36322 * (item 35 contactrates) + dS12112 * dI36311 * (item 36 contactrates) + dS12112 * dI36312 * (item 37 contactrates) + dS12112 * dI36122 * (item 38 contactrates) + dS12112 * dI36111 * (item 39 contactrates) + dS12112 * dI36112 * (item 40 contactrates) + dS12112 * dI17311 * (item 41 contactrates) + dS12112 * dI17312 * (item 42 contactrates) + dS12112 * dI17111 * (item 43 contactrates) + dS12112 * dI17112 * (item 44 contactrates) + dS12112 * dI18311 * (item 45 contactrates) + dS12112 * dI18312 * (item 46 contactrates) + dS12112 * dI18111 * (item 47 contactrates) + dS12112 * dI18112 * (item 48 contactrates) + dS12112 * dI19111 * (item 49 contactrates))    
