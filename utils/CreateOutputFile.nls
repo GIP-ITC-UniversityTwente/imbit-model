@@ -36,6 +36,10 @@ end
 ; For instance adding the counts for I11112, S11112, R13112
 to setup-output-file-specific-group-counts
 
+  ;file-type "S00000 ;"
+  ;file-type "I00000 ;"
+  ;file-type "R00000 ;"
+
   ;file-type "S11112 ;"
   ;file-type "I11112 ;"
   ;file-type "R11112 ;"
