@@ -54,6 +54,12 @@ to create-centroids-turtles
     ;;Pregnant 1=no 2=yes
     ;;Household 1=no 2=yes
     
+    ; Farmers
+    set S00000 gis:property-value vector-feature "S00000"
+    set E00000 gis:property-value vector-feature "E00000"
+    set I00000 gis:property-value vector-feature "I00000"
+    set R00000 gis:property-value vector-feature "R00000"
+
     set S11112 gis:property-value vector-feature "S11112"
     set E11112 gis:property-value vector-feature "E11112"
     set I11112 gis:property-value vector-feature "I11112"
