@@ -1120,6 +1120,21 @@ spillover-anim-hum-mechanism
 "A" "B"
 0
 
+SLIDER
+9
+858
+308
+891
+prob-spillover-risk-after-contact
+prob-spillover-risk-after-contact
+0
+1
+0.5
+0.05
+1
+NIL
+HORIZONTAL
+
 @#$#@#$#@
 ## CONTACT?
 
