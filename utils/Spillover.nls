@@ -128,23 +128,15 @@ to create-spillover-animal-human-mechanism-a
 end
 
 ; Creating separate functions for spillover
-
-; Randomly choose one subgroup from the following subgroups
-; to spillover infection to:
-; working adults Ix?3xx age groups 6-8 with age 25-65yr
-; All genders none I1xxxx, male I2xxxx and female I3xxxx
-; both non-pregnant Ixxx1x and pregnant Ixxx2x people
-; both household Ixxxx1 and non-household Ixxxx2
+; Direct spillover with no calculation of number infected
 to spillover-infection-farmers-mechanism-a
 
-  ; Randomly selecting a subgroup from age groups 25-60 years
-  let spillover-subgroup one-of [
-    "I26311" "I26312" "I36311" "I36312" "I36322" ; Age group 6: 25-35yr
-    "I17311" "I17312" ; Age group 7: 35-50yr
-    "I18311" "I18312" ; Age group 8: 50-60yr
-  ]
+  ; Cap the number of infections as it cannot increase more than the number of susceptible
+  ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
+  set num-hum-spillover-infc min (list num-hum-spillover-infc S00001)
 
-  run (word "set " spillover-subgroup " " spillover-subgroup " + new-hum-spillover-infc")
+  set I00001 I00001 + num-hum-spillover-infec
+  set S00001 S00001 - num-hum-spillover-infec
 end
 
 ; Procedure to introduce animal-human-mechanism based on the number of
@@ -153,18 +145,16 @@ end
 to create-spillover-animal-human-mechanism-b
 
   ifelse (totalinfectedanimals > spillover-threshold) [
-    set new-hum-spillover-infc-per-group no_farmers_per_farm / 9
+    ; Creating spillovers to the group
+    set num-hum-spillover-infc (S00001 * num_infected_animals * prob-spillover-risk-after-contact)
 
-    let farming-groups [
-      "I26311" "I26312" "I36311" "I36312" "I36322"   ;; age 25–35
-      "I17311" "I17312" ;; age 35–50
-      "I18311" "I18312" ;; age 50–60
-    ]
+    ; Cap the number of infections as it cannot increase more than the number of susceptible
+    ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
+    set num-hum-spillover-infc min (list num-hum-spillover-infc S00001)
 
-    ; Infecting members of each group
-    foreach farming-groups [ grp ->
-      run (word "set " grp " " grp " + new-hum-spillover-infc-per-group")
-    ]
+    ; Updating the number of infected and susceptible individuals
+    set I00001 I00001 + num-hum-spillover-infec
+    set S00001 S00001 - num-hum-spillover-infec
 
     set totalspilloveranimalhumaninfections no_farmers_per_farm
   ] [
