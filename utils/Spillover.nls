@@ -143,22 +143,18 @@ end
 ; workers in the farm. 
 ; We introduce total number of spillover infections = no_farmers_per_farm
 to create-spillover-animal-human-mechanism-b
+  ; Calculating number of spillovers based on RIVM's numbers
+  set num-hum-spillover-infc (S00001 * num_infected_animals * prob-spillover-risk-after-contact)
 
-  ifelse (totalinfectedanimals > spillover-threshold) [
-    ; Creating spillovers to the group
-    set num-hum-spillover-infc (S00001 * num_infected_animals * prob-spillover-risk-after-contact)
+  ; Cap the number of infections as it cannot increase more than the number of susceptible
+  ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
+  set num-hum-spillover-infc min (list num-hum-spillover-infc S00001)
 
-    ; Cap the number of infections as it cannot increase more than the number of susceptible
-    ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
-    set num-hum-spillover-infc min (list num-hum-spillover-infc S00001)
+  ; Updating the number of infected and susceptible individuals
+  set I00001 I00001 + num-hum-spillover-infec
+  set S00001 S00001 - num-hum-spillover-infec
 
-    ; Updating the number of infected and susceptible individuals
-    set I00001 I00001 + num-hum-spillover-infec
-    set S00001 S00001 - num-hum-spillover-infec
-
-    set totalspilloveranimalhumaninfections no_farmers_per_farm
-  ] [
-    set totalspilloveranimalhumaninfections 0
-  ]
+  set totalspilloveranimalhumaninfections totalspilloveranimalhumaninfections + num-hum-spillover-infc
+  
 end
 
