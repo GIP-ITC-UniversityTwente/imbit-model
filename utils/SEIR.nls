@@ -40,7 +40,7 @@
    ; Farmer category
    let dS00000 S00000
    let dE00000 E00000
-   let dI00000 dI0000
+   let dI00000 I00000
    let dR00000 R00000
 
    let dS11112 S11112
@@ -171,7 +171,7 @@
    let dhospitalized achospitalized
    
    ;; SEIR model
-    ;;S*I infection rate    
+    ;;S*I infection rate  
    let infectionrate00000 (dS00000 * dI00000 * (item 0 contactrates) + dS00000 * dI11112 * (item 1 contactrates) + dS00000 * dI12112 * (item 2 contactrates) + dS00000 * dI13112 * (item 3 contactrates) + dS00000 * dI14212 * (item 4 contactrates) + dS00000 * dI14112 * (item 5 contactrates) + dS00000 * dI15111 * (item 6 contactrates) + dS00000 * dI26311 * (item 7 contactrates) + dS00000 * dI26312 * (item 8 contactrates) + dS00000 * dI26111 * (item 9 contactrates) + dS00000 * dI26112 * (item 10 contactrates) + dS00000 * dI36322 * (item 11 contactrates) + dS00000 * dI36311 * (item 12 contactrates) + dS00000 * dI36312 * (item 13 contactrates) + dS00000 * dI36122 * (item 14 contactrates) + dS00000 * dI36111 * (item 15 contactrates) + dS00000 * dI36112 * (item 16 contactrates) + dS00000 * dI17311 * (item 17 contactrates) + dS00000 * dI17312 * (item 18 contactrates) + dS00000 * dI17111 * (item 19 contactrates) + dS00000 * dI17112 * (item 20 contactrates) + dS00000 * dI18311 * (item 21 contactrates) + dS00000 * dI18312 * (item 22 contactrates) + dS00000 * dI18111 * (item 23 contactrates) + dS00000 * dI18112 * (item 24 contactrates) + dS00000 * dI19111 * (item 25 contactrates))
 
     ;; S = S + d recovered - S*I infection rate
