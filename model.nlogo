@@ -95,7 +95,7 @@ breed [municipalities municipality]
 municipalities-own [name GGDregion vaccinationrate population totalpopulation fractionsusceptible fractionexposed
   fractioninfected fractionrecovered totalsusceptible totalexposed totalinfected totalrecovered totalhospitalized achospitalized
   totalinfecteddaybefore totalnewinfected ; Used for calculating the number of totalnewinfected per day
-  
+
   no_farmers_per_farm ; For calculating spillovers
 
   ; Farmers
@@ -251,7 +251,7 @@ to go
 
     ;; write to output file
     ; The total susceptibl, exposed and infected are rounded
-    file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ")
+    file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ; "S00000" ; "I00000" ; "R00000" ")
     ; "I11112" ; "I12112" ; "I13112" ; "suminfected1217" ; "I15111" ; "suminfected2535" ; "suminfected3550" ; "suminfected5065" ; "I19111" ")
     ;] ;"sum05" ; "sum55"; "sum512"; "sum1217"; "sum1725"; "sum2535"; "sum3550"; "sum5065"; "sum65" ")] ; "S11112" ; "E11112" ;"I11112" ;"R11112" ;  "S12112" ;  "E12112" ; "I12112" ; "R12112" ; "S13112" ; "E13112" ; "I13112" ; "R13112" ; "S14212" ; "E14212" ; "I14212" ; "R14212" ; "S14112" ; "E14112" ; "I14112" ; "R14112" ; "S15111" ; "E15111" ; "I15111" ; "R15111" ; "S26311" ; "E26311" ; "I26311" ; "R26311" ; "S26312" ; "E26312" ; "I26312" ; "R26312" ; "S26111" ; "E26111" ; "I26111" ; "R26111" ; "S26112" ; "E26112" ; "I26112" ; "R26112" ; "S36322" ; "E36322" ; "I36322" ; "R36322" ; "S36311" ; "E36311" ;  "I36311" ; "R36311" ; "S36312" ; "E36312" ; "I36312" ; "R36312" ; "S36122" ; "E36122" ; "I36122" ; "R36122" ; "S36111" ; "E36111" ; "I36111" ; "R36111" ; "S36112" ; "E36112" ; "I36112" ; "R36112" ; "S17311" ; "E17311" ; "I17311" ; "R17311" ; "S17312" ; "E17312" ; "I17312" ; "R17312" ; "S17111" ; "E17111" ; "I17111" ; "R17111" ; "S17112" ; "E17112" ; "I17112" ; "R17112" ; "S18311" ; "E18311" ; "I18311" ; "R18311" ; "S18312" ; "E18312" ; "I18312" ; "R18312" ; "S18111" ; "E18111" ; "I18111" ; "R18111" ; "S18112" ; "E18112" ; "I18112" ; "R18112" ; "S19111" ; "E19111" ; "I19111" ; "R19111" ")
   ]
@@ -522,7 +522,7 @@ CHOOSER
 230
 Immunity-Startpopulation
 Immunity-Startpopulation
-"StartPopulationHighestR90TrMr.shp" "StartPopulationHighR70TrMr.shp" "StartPopulationFullySTrMr.shp" "StartPopulationChilderenR50.shp" "StartPopulationChildrenR90.shp"
+"test.shp" "StartPopulationHighestR90TrMr.shp" "StartPopulationHighR70TrMr.shp" "StartPopulationFullySTrMr.shp" "StartPopulationChilderenR50.shp" "StartPopulationChildrenR90.shp"
 0
 
 CHOOSER
@@ -543,7 +543,7 @@ CHOOSER
 Infection-Rate-WithinMuni-SpringAutumn
 Infection-Rate-WithinMuni-SpringAutumn
 "Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
-12
+0
 
 CHOOSER
 214
@@ -553,7 +553,7 @@ CHOOSER
 Infection-Rate-WithinMuni-Winter
 Infection-Rate-WithinMuni-Winter
 "Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
-12
+0
 
 CHOOSER
 252
@@ -563,7 +563,7 @@ CHOOSER
 Infection-Rate-AmongMuni-Summer
 Infection-Rate-AmongMuni-Summer
 "CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
-3
+0
 
 CHOOSER
 15
@@ -573,7 +573,7 @@ CHOOSER
 Infection-Rate-AmongMuni-SpringAutumn
 Infection-Rate-AmongMuni-SpringAutumn
 "CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
-12
+0
 
 CHOOSER
 214
@@ -583,7 +583,7 @@ CHOOSER
 Infection-Rate-AmongMuni-Winter
 Infection-Rate-AmongMuni-Winter
 "CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
-12
+0
 
 TEXTBOX
 18
@@ -1090,9 +1090,9 @@ HORIZONTAL
 PLOT
 1133
 748
-1532
+1522
 903
-plot 1
+Infected animals
 NIL
 NIL
 0.0
@@ -1103,7 +1103,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "\nif positivetestscalc < 50 or differencehospitalizedfixed < 40 [ set risk_level 1 ] \n  ;Concern level\nif positivetestscalc >= 50 and positivetests < 150 and differencehospitalizedfixed < 40 [ set risk_level 2]\n  ;Serious level\nif positivetestscalc >= 150 and positivetests < 250 or differencehospitalizedfixed >= 40 and differencehospitalizedfixed < 80 [ set risk_level 3 ] \n  ;Severe level\nif positivetestscalc >= 250 or differencehospitalizedfixed >= 80 and differencehospitalizedfixed < 100 [ set risk_level 4 ]\n  ;Lockdown level\nif positivetestscalc >= 350 or differencehospitalizedfixed >= 100 [ set risk_level 5 ]\n  \nplot risk_level"
+"sum_infected_animals" 1.0 0 -16777216 true "plot sum [totalhospitalized] of municipalities" "plot sum [totalhospitalized] of municipalities"
 
 CHOOSER
 16
@@ -1123,7 +1123,7 @@ CHOOSER
 spillover-anim-hum-mechanism
 spillover-anim-hum-mechanism
 "A" "B"
-0
+1
 
 SLIDER
 9
@@ -1139,6 +1139,24 @@ prob-spillover-risk-after-contact
 1
 NIL
 HORIZONTAL
+
+PLOT
+1531
+750
+1961
+900
+Spillover infections
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot sum [totalspilloveranimalhumaninfections] of municipalities"
 
 @#$#@#$#@
 ## CONTACT?
