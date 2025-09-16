@@ -85,7 +85,8 @@ end
 ; Procedure to update a specific gemeente's number of animal infection
 to update-num-animal-infc-gm
   ask municipalities with [name = spillover_gm_name][
-    set totalinfectedanimals totalinfectedanimals + iv
+    ; This is the number of totalinfected animals at any given day
+    set totalinfectedanimals iv
   ]
 end
 
@@ -144,7 +145,7 @@ end
 ; We introduce total number of spillover infections = no_farmers_per_farm
 to create-spillover-animal-human-mechanism-b
   ; Calculating number of spillovers based on RIVM's numbers
-  set num-hum-spillover-infc (S00000 * num_infected_animals * prob-spillover-risk-after-contact)
+  set num-hum-spillover-infc (S00000 * totalinfectedanimals * prob-spillover-risk-after-contact * prob-contact)
 
   ; Cap the number of infections as it cannot increase more than the number of susceptible
   ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
@@ -154,7 +155,7 @@ to create-spillover-animal-human-mechanism-b
   set I00000 I00000 + num-hum-spillover-infc
   set S00000 S00000 - num-hum-spillover-infc
 
-  set totalspilloveranimalhumaninfections totalspilloveranimalhumaninfections + num-hum-spillover-infc
+  set totalspilloveranimalhumaninfections  num-hum-spillover-infc
   
 end
 
