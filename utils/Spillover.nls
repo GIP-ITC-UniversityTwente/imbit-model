@@ -86,7 +86,7 @@ end
 to update-num-animal-infc-gm
   ask municipalities with [name = spillover_gm_name][
     ; This is the number of totalinfected animals at any given day
-    set totalinfectedanimals iv
+    set totalinfectedanimals totalinfectedanimals + iv
   ]
 end
 
