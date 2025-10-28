@@ -260,12 +260,12 @@ to go
 
   ; The totalspilloveranimalhumaninfections need to set to 0
   ask municipalities [set totalspilloveranimalhumaninfections 0]
-;  set newtotalinfected sum [totalinfected] of municipalities
-;  set newtotalhospitalized sum [totalhospitalized] of municipalities
+  set newtotalinfected sum [totalinfected] of municipalities
+  set newtotalhospitalized sum [totalhospitalized] of municipalities
 
   tick
 
-  ; calculate R0
+  ; calculate R0 three days after the outbreak
   if (ticks > Day-COVID-19-Outbreak + 3) [R0]
   set reproductionnumbernew reproductionnumber
 
@@ -442,7 +442,7 @@ Duration-of-Infectivity
 Duration-of-Infectivity
 5
 30
-6.0
+5.0
 1
 1
 Days
@@ -641,7 +641,7 @@ PLOT
 1129
 360
 1518
-549
+569
 Hospitalization
 Time (days)
 patients
@@ -779,7 +779,7 @@ PLOT
 1130
 173
 1517
-351
+364
 Age infected whole population
 Time (days)
 Infected
@@ -800,6 +800,7 @@ PENS
 "50-64 years" 1.0 0 -13345367 true "" "plot sum [suminfected5065] of municipalities"
 "65-80 years" 1.0 0 -11221820 true "" "plot sum [suminfected6580] of municipalities"
 "80+ years" 1.0 0 -14835848 true "" "plot sum [suminfected80plus] of municipalities"
+"farmers" 1.0 0 -7500403 true "" "plot sum [I00000] of municipalities"
 
 MONITOR
 856
@@ -906,10 +907,10 @@ PENS
 "GAET" 1.0 0 -13345367 true "" "plot decimalGAETcalc * 100"
 
 PLOT
-1132
-556
-1521
-734
+1131
+578
+1520
+756
 (Not Working) Number of infected commuting and travelling
 NIL
 NIL
@@ -1088,10 +1089,10 @@ NIL
 HORIZONTAL
 
 PLOT
-1133
-748
-1522
-903
+1132
+770
+1521
+925
 Infected animals
 NIL
 NIL
@@ -1134,7 +1135,7 @@ prob-spillover-risk-after-contact
 prob-spillover-risk-after-contact
 0
 1
-0.5
+0.05
 0.05
 1
 NIL
@@ -1157,6 +1158,21 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot sum [totalspilloveranimalhumaninfections] of municipalities"
+
+SLIDER
+345
+860
+517
+893
+prob-contact
+prob-contact
+0
+1
+0.02
+0.01
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## CONTACT?
