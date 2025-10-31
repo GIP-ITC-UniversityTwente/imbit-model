@@ -598,23 +598,23 @@ Infection rates should be set to the same number for within municipalities and a
 PLOT
 1529
 15
-1964
+1915
 165
-Fractions SIR whole population
+Fractions SIR farmers
 Time (days)
 Fraction
 0.0
-10.0
+50.0
 0.0
 1.0
 true
 true
 "" ""
 PENS
-"Fraction Susceptible" 1.0 0 -14070903 true "" "plot (sum [fractionsusceptible] of municipalities) / 396"
-"Fraction Infected" 1.0 0 -2674135 true "" "plot (sum [fractioninfected] of municipalities) / 396"
-"Fraction Recovered" 1.0 0 -13840069 true "" "plot (sum [fractionrecovered] of municipalities) / 396"
-"Fraction Exposed" 1.0 0 -1184463 true "" "plot (sum [fractionexposed] of municipalities) / 396"
+"Fraction Susceptible" 1.0 0 -14070903 true "" "plot (sum [fractionS0000] of municipalities) / 396"
+"Fraction Infected" 1.0 0 -2674135 true "" "plot (sum [fractionI0000] of municipalities) / 396"
+"Fraction Recovered" 1.0 0 -13840069 true "" "plot (sum [fractionR0000] of municipalities) / 396"
+"Fraction Exposed" 1.0 0 -1184463 true "" "plot (sum [fractionE0000] of municipalities) / 396"
 
 SWITCH
 248
@@ -639,9 +639,9 @@ Sets the percentage immunity before the start (go procedure) of the model. Simul
 
 PLOT
 1129
-360
+373
 1518
-569
+582
 Hospitalization
 Time (days)
 patients
@@ -681,17 +681,6 @@ MONITOR
 767
 Total Infected
 newtotalinfected
-0
-1
-11
-
-MONITOR
-740
-722
-850
-767
-Total Hospital
-newtotalhospitalized\n;sum [totalhospitalized] of municipalities
 0
 1
 11
@@ -814,10 +803,10 @@ newtotalinfected * 0.80 / Duration-of-Infectivity / 10.5 * 100\n; 20% is asympto
 11
 
 MONITOR
-626
-771
-733
-816
+625
+772
+732
+817
 Difference Infected
 differenceinfected
 0
@@ -845,27 +834,6 @@ Extra-Gathering-Events-Travelling-Holiday
 1
 1
 -1000
-
-PLOT
-1528
-172
-1964
-352
-Fractions SIR only Utrecht
-Time (days)
-Fraction
-0.0
-50.0
-0.0
-1.0
-true
-true
-"" ""
-PENS
-"Fraction Susceptible" 1.0 0 -13345367 true "" "plot [fractionsusceptible] of municipality 357"
-"Fraction Infected" 1.0 0 -2674135 true "" "plot [fractioninfected] of municipality 357"
-"Fraction Recovered" 1.0 0 -10899396 true "" "plot [fractionrecovered] of municipality 357"
-"Fraction Exposed" 1.0 0 -1184463 true "" "plot [fractionexposed] of municipality 357"
 
 TEXTBOX
 253
@@ -901,17 +869,6 @@ Day-COVID-19-Outbreak
 1
 NIL
 HORIZONTAL
-
-MONITOR
-740
-771
-850
-816
-Difference Hospitalized
-differencehospitalizedfixed
-0
-1
-11
 
 CHOOSER
 9
@@ -1011,22 +968,22 @@ NIL
 HORIZONTAL
 
 PLOT
-1128
-583
-1517
-738
+1530
+175
+1915
+365
 Infected animals
-NIL
-NIL
+Time (days)
+Animals
 0.0
-10.0
+50.0
 0.0
-5.0
+100.0
 true
 false
 "" ""
 PENS
-"sum_infected_animals" 1.0 0 -16777216 true "plot sum [totalhospitalized] of municipalities" "plot sum [totalhospitalized] of municipalities"
+"sum_infected_animals" 1.0 0 -16777216 true "plot sum [totalhospitalized] of municipalities" "plot sum [totalinfectedanimals] of municipalities"
 
 CHOOSER
 16
@@ -1063,24 +1020,6 @@ prob-spillover-risk-after-contact
 NIL
 HORIZONTAL
 
-PLOT
-1128
-751
-1518
-901
-Spillover infections
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" "plot sum [totalspilloveranimalhumaninfections] of municipalities"
-
 SLIDER
 345
 860
@@ -1095,6 +1034,24 @@ prob-contact
 1
 NIL
 HORIZONTAL
+
+PLOT
+1530
+374
+1916
+583
+Number of infected farms
+Time (days)
+Farms
+0.0
+50.0
+0.0
+100.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot sum [infected_farms] of municipalities"
 
 @#$#@#$#@
 ## CONTACT?
