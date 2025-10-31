@@ -867,66 +867,6 @@ PENS
 "Fraction Recovered" 1.0 0 -10899396 true "" "plot [fractionrecovered] of municipality 357"
 "Fraction Exposed" 1.0 0 -1184463 true "" "plot [fractionexposed] of municipality 357"
 
-PLOT
-1529
-357
-1961
-550
-Reproduction number
-NIL
-NIL
-4.0
-0.0
-4.0
-3.0
-true
-true
-"" ""
-PENS
-"R0" 1.0 0 -16777216 true "" "plot reproductionnumber"
-
-PLOT
-1528
-557
-1961
-734
-Commuting and Travelling (in %)
-NIL
-NIL
-0.0
-100.0
-0.0
-100.0
-true
-true
-"" ""
-PENS
-"Job commuting" 1.0 0 -10899396 true "" "plot decimaljobcom * 100"
-"School commuting" 1.0 0 -6759204 true "" "plot decimalschoolcom * 100"
-"VT" 1.0 0 -5825686 true "" "plot decimalVTcalc * 100"
-"GAET" 1.0 0 -13345367 true "" "plot decimalGAETcalc * 100"
-
-PLOT
-1131
-578
-1520
-756
-(Not Working) Number of infected commuting and travelling
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"Job commuting" 1.0 0 -10899396 true "" "plot jobcommuter-new-infected-over-7-days"
-"School commuting" 1.0 0 -6759204 true "" "plot schoolcommuter-new-infected-over-7-days"
-"VT" 1.0 0 -5825686 true "" "plot VT-new-infected-over-7-days"
-"GAET" 1.0 0 -13345367 true "" "plot GAET-new-infected-over-7-days"
-
 TEXTBOX
 253
 272
@@ -972,24 +912,6 @@ differencehospitalizedfixed
 0
 1
 11
-
-PLOT
-1967
-356
-2350
-551
-Reproduction number 7 day average
-NIL
-NIL
-0.0
-3.0
-0.0
-3.0
-true
-true
-"" ""
-PENS
-"R0" 1.0 0 -16777216 true "" "plot R0-over-7-days"
 
 CHOOSER
 9
@@ -1089,10 +1011,10 @@ NIL
 HORIZONTAL
 
 PLOT
-1132
-770
-1521
-925
+1128
+583
+1517
+738
 Infected animals
 NIL
 NIL
@@ -1142,10 +1064,10 @@ NIL
 HORIZONTAL
 
 PLOT
-1531
-750
-1961
-900
+1128
+751
+1518
+901
 Spillover infections
 NIL
 NIL
