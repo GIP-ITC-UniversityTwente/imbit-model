@@ -22,7 +22,7 @@ to create-and-setup-output-file
   file-type "totalexposed ; "
   file-type "totalinfected ; "
   file-type "totalrecovered ; "
-  file-type "totalnewinfected "
+  file-type "totalnewinfected ;"
 
   ; Uncomment this if you do not want to add specific groups'
   ; counts in the output file
@@ -35,6 +35,10 @@ end
 ; Function to add column for specific group counts to the output file
 ; For instance adding the counts for I11112, S11112, R13112
 to setup-output-file-specific-group-counts
+
+  file-type "S00000 ;"
+  file-type "I00000 ;"
+  file-type "R00000 ;"
 
   ;file-type "S11112 ;"
   ;file-type "I11112 ;"

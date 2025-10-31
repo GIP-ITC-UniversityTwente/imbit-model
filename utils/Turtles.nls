@@ -40,6 +40,10 @@ to create-centroids-turtles
     set GGDregion gis:property-value vector-feature "GGDREGION"
     set population gis:property-value vector-feature "TOTPOP"
     set vaccinationrate gis:property-value vector-feature "DKTPVACCIN"
+
+    ; Loading the number of farmers
+    set no_farmers_per_farm 20
+    ; set no_farmers_per_farm gis:property-value vector-feature "no_farmers_per_farm"
   
     ;;The variables should be read as follows:
     ;;SEIR.Gender.Age.Commuting.Pregnant.Household
@@ -50,6 +54,12 @@ to create-centroids-turtles
     ;;Pregnant 1=no 2=yes
     ;;Household 1=no 2=yes
     
+    ; Farmers
+    set S00000 gis:property-value vector-feature "S00000"
+    set E00000 gis:property-value vector-feature "E00000"
+    set I00000 gis:property-value vector-feature "I00000"
+    set R00000 gis:property-value vector-feature "R00000"
+
     set S11112 gis:property-value vector-feature "S11112"
     set E11112 gis:property-value vector-feature "E11112"
     set I11112 gis:property-value vector-feature "I11112"

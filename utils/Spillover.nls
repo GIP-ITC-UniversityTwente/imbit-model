@@ -6,6 +6,7 @@ globals [basemap-farm centroid-envelope
   spillover-threshold spillover-interval
   spillover_gm_name
   new-hum-spillover-infc
+  new-hum-spillover-infc-per-group
 ]
 
 breed [ animalfarms animalfarm ]
@@ -84,13 +85,27 @@ end
 ; Procedure to update a specific gemeente's number of animal infection
 to update-num-animal-infc-gm
   ask municipalities with [name = spillover_gm_name][
+    ; This is the number of totalinfected animals at any given day
     set totalinfectedanimals totalinfectedanimals + iv
   ]
 end
 
+; Procedure to induce spillover infection based on the mechanism chosen
+; by the user
+to create-spillover-animal-human
+  if (spillover-anim-hum-mechanism = "A") [
+    create-spillover-animal-human-mechanism-a
+  ]
+  
+  if (spillover-anim-hum-mechanism = "B") [
+   create-spillover-animal-human-mechanism-b
+  ]
+end
+  
+
 ; Municipality procedure to introduce spillover infection based on total
 ; num of infected animals
-to create-spillover-infc-animal-human-gm 
+to create-spillover-animal-human-mechanism-a
     ; Introducing one new human infection whenever iv > spillover-threshold
     (ifelse totalinfectedanimals > spillover-threshold [
       set new-hum-spillover-infc 1
@@ -100,33 +115,47 @@ to create-spillover-infc-animal-human-gm
 
       ; Introducing spillover infection based on the spillover-group
       if (spillover-group = "farmers") [
-        spillover-infection-farmers
+        spillover-infection-farmers-mechanism-a
       ]
       if (spillover-group = "all") [
-        spillover-infection-farmers
+        spillover-infection-farmers-mechanism-a
       ]
     ] 
+
+    ; Spillover threshold was not exceeded so no spillover infections
     [
       set totalspilloveranimalhumaninfections 0
     ])
 end
 
 ; Creating separate functions for spillover
+; Direct spillover with no calculation of number infected
+to spillover-infection-farmers-mechanism-a
 
-; Randomly choose one subgroup from the following subgroups
-; to spillover infection to:
-; working adults Ix?3xx age groups 6-8 with age 25-65yr
-; All genders none I1xxxx, male I2xxxx and female I3xxxx
-; both non-pregnant Ixxx1x and pregnant Ixxx2x people
-; both household Ixxxx1 and non-household Ixxxx2
-to spillover-infection-farmers
+  ; Cap the number of infections as it cannot increase more than the number of susceptible
+  ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
+  set num-hum-spillover-infc min (list num-hum-spillover-infc S00000)
 
-  ; Randomly selecting a subgroup from age groups 25-60 years
-  let spillover-subgroup one-of [
-    "I26311" "I26312" "I36311" "I36312" "I36322" ; Age group 6: 25-35yr
-    "I17311" "I17312" ; Age group 7: 35-50yr
-    "I18311" "I18312" ; Age group 8: 50-60yr
-  ]
-
-  run (word "set " spillover-subgroup " " spillover-subgroup " + new-hum-spillover-infc")
+  set I00000 I00000 + num-hum-spillover-infc
+  set S00000 S00000 - num-hum-spillover-infc
 end
+
+; Procedure to introduce animal-human-mechanism based on the number of
+; workers in the farm. 
+; We introduce total number of spillover infections = no_farmers_per_farm
+to create-spillover-animal-human-mechanism-b
+  ; Calculating number of spillovers based on RIVM's numbers
+  set num-hum-spillover-infc (S00000 * totalinfectedanimals * prob-spillover-risk-after-contact * prob-contact)
+
+  ; Cap the number of infections as it cannot increase more than the number of susceptible
+  ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
+  set num-hum-spillover-infc min (list num-hum-spillover-infc S00000)
+
+  ; Updating the number of infected and susceptible individuals
+  set I00000 I00000 + num-hum-spillover-infc
+  set S00000 S00000 - num-hum-spillover-infc
+
+  set totalspilloveranimalhumaninfections  num-hum-spillover-infc
+  
+end
+
