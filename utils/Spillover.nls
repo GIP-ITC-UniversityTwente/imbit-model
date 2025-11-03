@@ -54,7 +54,7 @@ to load-animal-farm-infections
       set-animal-farm-color
 
       set spillover_gm_name gm_name
-      update-num-animal-infc-gm
+      update-gm-animal-farm-inf
     ]
   ]  
   file-close
@@ -83,10 +83,14 @@ to set-animal-farm-color
 end
 
 ; Procedure to update a specific gemeente's number of animal infection
-to update-num-animal-infc-gm
-  ask municipalities with [name = spillover_gm_name][
+to update-gm-animal-farm-inf
     ; This is the number of totalinfected animals at any given day
+  ask municipalities with [name = spillover_gm_name][
     set totalinfectedanimals totalinfectedanimals + iv
+
+    if (iv > 0)[
+      set ninfectedfarms ninfectedfarms + 1
+    ]
   ]
 end
 

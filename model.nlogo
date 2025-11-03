@@ -113,6 +113,9 @@ municipalities-own [name GGDregion vaccinationrate population totalpopulation fr
 
   ; To record number of animal infections and spillovers
   totalinfectedanimals totalspilloveranimalhumaninfections
+
+  ; Number of animal farms
+  ninfectedfarms
   ]
 
 directed-link-breed [commuterflows commuterflow]
@@ -217,8 +220,11 @@ to go
 
   if ticks = 0 or (ticks - Day-COVID-19-Outbreak) mod Frequency = 0 [run Scenario]
 
-  ; For each day we reset the number of totalinfected animals for municipalities to 0
-  ask municipalities [set totalinfectedanimals 0]
+  ; For each day we reset the number of totalinfected animals and infected farms for municipalities to 0
+  ask municipalities [
+    set totalinfectedanimals 0
+    set ninfectedfarms 0
+    ]
   load-animal-farm-infections
 
   ; Write to output file every day
