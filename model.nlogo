@@ -9,7 +9,7 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
    newtotalinfected newtotalhospitalized differenceinfected differencehospitalized differencehospitalizedfixed reproductionnumber reproductionnumberold reproductionnumbernew
    positivetests positivetestscalc ij risk_level
 
-   num-hum-spillover-infc
+   num-hum-spillover-infc frac-infected-farms
 
    ; School commuting
    schoolcommuters totalschoolcommutersflow extraS14112school extraS14212school schoolcommuterstotal schoolcommuterstotalNL
@@ -115,7 +115,7 @@ municipalities-own [name GGDregion vaccinationrate population totalpopulation fr
   totalinfectedanimals totalspilloveranimalhumaninfections
 
   ; Number of animal farms
-  ninfectedfarms
+  nfarms ninfectedfarms
   ]
 
 directed-link-breed [commuterflows commuterflow]

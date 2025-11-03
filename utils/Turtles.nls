@@ -35,6 +35,10 @@ to create-centroids-turtles
     set totalinfectedanimals 0
     set totalspilloveranimalhumaninfections 0
 
+    ; Setting total farms and infected farms 
+    set nfarms 0
+    set ninfectedfarms 0
+
     ;;Define variables for the municipalities
     set name gis:property-value vector-feature "NAME"
     set GGDregion gis:property-value vector-feature "GGDREGION"
@@ -187,6 +191,9 @@ to create-animalfarm-turtles
     ;let gm_id gis:property-value vector-feature "gm_id" 
     set gm_name gis:property-value vector-feature "Name" 
       
+    ask (municipalities with [name = [gm_name] of myself]) [
+      set nfarms nfarms + 1
+    ]
     ; The index of the nodes' iv values in the csv value will correspond to the
     ; position of the node in the first row of the read line
     let index position node node-values
