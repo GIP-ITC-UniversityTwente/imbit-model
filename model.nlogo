@@ -517,9 +517,9 @@ Immunity-Startpopulation
 
 CHOOSER
 15
-785
+792
 221
-830
+837
 Infection-Rate-WithinMuni-Summer
 Infection-Rate-WithinMuni-Summer
 "Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
@@ -527,9 +527,9 @@ Infection-Rate-WithinMuni-Summer
 
 CHOOSER
 15
-734
+742
 221
-779
+787
 Infection-Rate-WithinMuni-SpringAutumn
 Infection-Rate-WithinMuni-SpringAutumn
 "Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
@@ -537,39 +537,39 @@ Infection-Rate-WithinMuni-SpringAutumn
 
 CHOOSER
 15
-836
+843
 220
-881
+888
 Infection-Rate-WithinMuni-Winter
 Infection-Rate-WithinMuni-Winter
 "Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
 0
 
 CHOOSER
-229
-785
-435
-830
-Infection-Rate-AmongMuni-Summer
-Infection-Rate-AmongMuni-Summer
-"CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
-0
-
-CHOOSER
-229
-733
-435
-778
-Infection-Rate-AmongMuni-SpringAutumn
-Infection-Rate-AmongMuni-SpringAutumn
-"CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
-0
-
-CHOOSER
-229
-836
+230
+792
 436
-881
+837
+Infection-Rate-AmongMuni-Summer
+Infection-Rate-AmongMuni-Summer
+"CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
+0
+
+CHOOSER
+230
+740
+436
+785
+Infection-Rate-AmongMuni-SpringAutumn
+Infection-Rate-AmongMuni-SpringAutumn
+"CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
+0
+
+CHOOSER
+230
+843
+437
+888
 Infection-Rate-AmongMuni-Winter
 Infection-Rate-AmongMuni-Winter
 "CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
@@ -578,8 +578,8 @@ Infection-Rate-AmongMuni-Winter
 TEXTBOX
 31
 682
-444
-725
+445
+744
 Infection rates should be set to the same number for within municipalities and among municipalities in the same seasons. Only used for Original pertussis model and COVID-19 history model without lockdown
 11
 0.0
@@ -601,10 +601,10 @@ true
 true
 "" ""
 PENS
-"Fraction Susceptible" 1.0 0 -14070903 true "" "plot (sum [fractionS0000] of municipalities) / 396"
-"Fraction Infected" 1.0 0 -2674135 true "" "plot (sum [fractionI0000] of municipalities) / 396"
-"Fraction Recovered" 1.0 0 -13840069 true "" "plot (sum [fractionR0000] of municipalities) / 396"
-"Fraction Exposed" 1.0 0 -1184463 true "" "plot (sum [fractionE0000] of municipalities) / 396"
+"Fraction Susceptible" 1.0 0 -14070903 true "" "plot (sum [S0000] of municipalities) / (sum map [s -> sum [s] of municipalities][S0000 I0000 R0000 E0000]"
+"Fraction Infected" 1.0 0 -2674135 true "" "plot (sum [I0000] of municipalities) / (sum map [s -> sum [s] of municipalities][S0000 I0000 R0000 E0000])"
+"Fraction Recovered" 1.0 0 -13840069 true "" "plot (sum [R0000] of municipalities) / (sum map [s -> sum [s] of municipalities][S0000 I0000 R0000 E0000])"
+"Fraction Exposed" 1.0 0 -1184463 true "" "plot (sum [E0000] of municipalities) / (sum map [s -> sum [s] of municipalities][S0000 I0000 R0000 E0000])"
 
 SWITCH
 250
@@ -713,10 +713,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-541
-92
-591
-137
+545
+95
+595
+140
 Week
 (ticks / 7)
 0
@@ -725,9 +725,9 @@ Week
 
 MONITOR
 937
-96
+95
 1033
-141
+140
 Positive tests (day)
 newtotalinfected * 0.80 / Duration-of-Infectivity\n; 20% is asymptomic and does not take a test. \n; Around 10.5% of tests taken are positive \n; based on 2020
 0
