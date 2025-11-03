@@ -1085,8 +1085,8 @@ PLOT
 1905
 805
 Fraction of infected farms
-NIL
-NIL
+Time (days)
+Fraction
 0.0
 50.0
 0.0
