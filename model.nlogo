@@ -607,10 +607,10 @@ true
 true
 "" ""
 PENS
-"Fraction Susceptible" 1.0 0 -14070903 true "" "plot (sum [S0000] of municipalities) / (sum map [s -> sum [s] of municipalities][S0000 I0000 R0000 E0000]"
-"Fraction Infected" 1.0 0 -2674135 true "" "plot (sum [I0000] of municipalities) / (sum map [s -> sum [s] of municipalities][S0000 I0000 R0000 E0000])"
-"Fraction Recovered" 1.0 0 -13840069 true "" "plot (sum [R0000] of municipalities) / (sum map [s -> sum [s] of municipalities][S0000 I0000 R0000 E0000])"
-"Fraction Exposed" 1.0 0 -1184463 true "" "plot (sum [E0000] of municipalities) / (sum map [s -> sum [s] of municipalities][S0000 I0000 R0000 E0000])"
+"Fraction Susceptible" 1.0 0 -14070903 true "" "plot (sum [S00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)"
+"Fraction Infected" 1.0 0 -2674135 true "" "plot (sum [I00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)"
+"Fraction Recovered" 1.0 0 -13840069 true "" "plot (sum [R00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)"
+"Fraction Exposed" 1.0 0 -1184463 true "" "plot (sum [E00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)"
 
 SWITCH
 250
@@ -1017,7 +1017,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot sum [infected_farms] of municipalities"
+"default" 1.0 0 -16777216 true "" "plot sum [ninfectedfarms] of municipalities"
 
 TEXTBOX
 161
@@ -1078,6 +1078,24 @@ Plots
 15
 0.0
 0
+
+PLOT
+1520
+635
+1905
+805
+Fraction of infected farms
+NIL
+NIL
+0.0
+50.0
+0.0
+1.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot (sum [ninfectedfarms] of municipalities)/ count animalfarms"
 
 @#$#@#$#@
 ## CONTACT?
