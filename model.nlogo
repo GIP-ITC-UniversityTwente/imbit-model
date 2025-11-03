@@ -518,7 +518,7 @@ CHOOSER
 201
 Immunity-Startpopulation
 Immunity-Startpopulation
-"test.shp" "StartPopulationHighestR90TrMr.shp" "StartPopulationHighR70TrMr.shp" "StartPopulationFullySTrMr.shp" "StartPopulationChilderenR50.shp" "StartPopulationChildrenR90.shp"
+"test.shp"
 0
 
 CHOOSER
