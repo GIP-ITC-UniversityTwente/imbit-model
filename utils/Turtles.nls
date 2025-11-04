@@ -181,7 +181,7 @@ to create-animalfarm-turtles
     set color [0 0 255 0]
     set xcor item 0 location
     set ycor item 1 location
-    set size 0.15
+    set size 0.2
       
     ; Setting node id of the object
     ;let node_id gis:property-value vector-feature "node" 
