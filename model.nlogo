@@ -90,8 +90,12 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
    jobcommuter-new-infected jobcommuter-new-infected-over-7-days schoolcommuter-new-infected schoolcommuter-new-infected-over-7-days VT-new-infected VT-new-infected-over-7-days
    GAET-new-infected GAET-new-infected-over-7-days R0-new R0-over-7-days economiclist
 
+   ; Move to config
    Source_1_infections Source_2_infections Source_3_infections
    Source_1 Source_2 Source_3
+
+   Frequency Day-COVID-19-Outbreak
+   ; Move to config
    ]
 
 breed [municipalities municipality]
@@ -156,6 +160,8 @@ healthunits-own [region]
 
 
 to setup
+  clear-all
+  file-close
 
   ; Move to CONFIG file
   set Source_1 "Tilburg"
@@ -165,15 +171,14 @@ to setup
   set Source_1_infections 0
   set Source_2_infections 0
   set Source_3_infections 0
-  ; Move to CONFIG file
 
-  clear-all
-  file-close
+  set Frequency 1
+  set Day-COVID-19-Outbreak 41
+  ; Move to CONFIG file
 
   load-spatial-layers
   create-model-turtles
   create-list-contactrates
-
   initiate-helpstep
 
   ;; setup selected links
@@ -187,7 +192,6 @@ to setup
 
   if setup-links-travelling = 1 [setup-links-travelling-neigh]
   if setup-links-travelling = 1 [setup-links-travelling-non-neigh]
-
   set decimalVT 1
   set decimalGAET 1
   set decimalschoolcom 1
@@ -223,7 +227,6 @@ to setup
   ask municipalities[
 ;  healthunits-location-vaccination
   ]
-
   load-spillover-time-stamps
   print("Setup complete")
 end
@@ -232,7 +235,6 @@ to go
   set oldtotalinfected sum [totalinfected] of municipalities
   set oldtotalhospitalized sum [totalhospitalized] of municipalities
   if (Scenario ="Age_Scenario") [old-age-tests-hospitalized-infected]
-
   if ticks = 0 or (ticks - Day-COVID-19-Outbreak) mod Frequency = 0 [run Scenario]
 
   ; For each day we reset the number of totalinfected animals and infected farms for municipalities to 0
@@ -414,10 +416,10 @@ PENS
 "Nr. infected" 1.0 0 -2674135 true "" "plot newtotalinfected"
 
 SWITCH
-250
-532
-450
-565
+248
+537
+448
+570
 School-Commuting-Holiday?
 School-Commuting-Holiday?
 1
@@ -425,10 +427,10 @@ School-Commuting-Holiday?
 -1000
 
 SLIDER
-260
-108
-453
-141
+266
+140
+459
+173
 Commuter-Threshold
 Commuter-Threshold
 1
@@ -440,10 +442,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-261
-21
-454
-54
+268
+23
+461
+56
 Duration-of-Immunity
 Duration-of-Immunity
 0.1
@@ -455,10 +457,10 @@ Year
 HORIZONTAL
 
 SLIDER
-261
-61
-453
-94
+268
+79
+460
+112
 Duration-of-Infectivity
 Duration-of-Infectivity
 5
@@ -470,10 +472,10 @@ Days
 HORIZONTAL
 
 SLIDER
-259
-146
-453
-179
+263
+203
+457
+236
 Schoolcommuter-Threshold
 Schoolcommuter-Threshold
 1
@@ -485,10 +487,10 @@ NIL
 HORIZONTAL
 
 SWITCH
-11
-494
-229
-527
+9
+499
+227
+532
 Overall-Job-Commuting?
 Overall-Job-Commuting?
 1
@@ -496,10 +498,10 @@ Overall-Job-Commuting?
 -1000
 
 SWITCH
-11
-531
-229
-564
+9
+536
+227
+569
 Overall-School-Commuting?
 Overall-School-Commuting?
 1
@@ -507,10 +509,10 @@ Overall-School-Commuting?
 -1000
 
 TEXTBOX
-22
-447
-404
-489
+20
+452
+402
+494
 Switch on to start commuting & travelling.\nIn summer holiday no school commuting and less job commuting? Switch 'commuting-holiday' on
 11
 0.0
@@ -527,70 +529,70 @@ Immunity-Startpopulation
 0
 
 CHOOSER
-15
-792
-221
-837
+13
+797
+219
+842
 Infection-Rate-WithinMuni-Summer
 Infection-Rate-WithinMuni-Summer
 "Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
 0
 
 CHOOSER
-15
-742
-221
-787
-Infection-Rate-WithinMuni-SpringAutumn
-Infection-Rate-WithinMuni-SpringAutumn
-"Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
-0
-
-CHOOSER
-15
-843
-220
-888
-Infection-Rate-WithinMuni-Winter
-Infection-Rate-WithinMuni-Winter
-"Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
-0
-
-CHOOSER
-230
+13
+747
+219
 792
-436
-837
+Infection-Rate-WithinMuni-SpringAutumn
+Infection-Rate-WithinMuni-SpringAutumn
+"Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
+0
+
+CHOOSER
+13
+848
+218
+893
+Infection-Rate-WithinMuni-Winter
+Infection-Rate-WithinMuni-Winter
+"Transmission0.000.txt" "Transmission0.020.txt" "Transmission0.029.txt" "Transmission0.040.txt" "Transmission0.050.txt" "Transmission0.067.txt" "Transmission0.100.txt" "Transmission0.200.txt" "Transmission0.400.txt" "Transmission0.600.txt" "Transmission0.800.txt" "Transmission1.000.txt" "Transmission1.400.txt" "Transmission2.000.txt"
+0
+
+CHOOSER
+228
+797
+434
+842
 Infection-Rate-AmongMuni-Summer
 Infection-Rate-AmongMuni-Summer
 "CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
 0
 
 CHOOSER
-230
-740
-436
-785
+228
+745
+434
+790
 Infection-Rate-AmongMuni-SpringAutumn
 Infection-Rate-AmongMuni-SpringAutumn
 "CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
 0
 
 CHOOSER
-230
-843
-437
-888
+228
+848
+435
+893
 Infection-Rate-AmongMuni-Winter
 Infection-Rate-AmongMuni-Winter
 "CommuterTransmission0.000.txt" "CommuterTransmission0.020.txt" "CommuterTransmission0.029.txt" "CommuterTransmission0.040.txt" "CommuterTransmission0.050.txt" "CommuterTransmission0.067.txt" "CommuterTransmission0.100.txt" "CommuterTransmission0.200.txt" "CommuterTransmission0.400.txt" "CommuterTransmission0.600.txt" "CommuterTransmission0.800.txt" "CommuterTransmission1.000.txt" "CommuterTransmission1.400.txt" "CommuterTransmission2.000.txt"
 0
 
 TEXTBOX
-31
-682
-445
-744
+29
+687
+443
+749
 Infection rates should be set to the same number for within municipalities and among municipalities in the same seasons. Only used for Original pertussis model and COVID-19 history model without lockdown
 11
 0.0
@@ -618,10 +620,10 @@ PENS
 "Fraction Exposed" 1.0 0 -1184463 true "" "plot (sum [E00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)"
 
 SWITCH
-250
-494
-450
-527
+248
+499
+448
+532
 Job-Commuting-Holiday?
 Job-Commuting-Holiday?
 1
@@ -646,7 +648,7 @@ CHOOSER
 Scenario
 Scenario
 "Original_Pertussis_Model" "COVID19_History_No_Lockdown" "COVID19_History_Lockdown" "Road_Map_Scenario" "Economic_Scenario" "Age_Scenario"
-2
+1
 
 MONITOR
 603
@@ -660,10 +662,10 @@ newtotalinfected
 11
 
 SWITCH
-11
-606
-229
-639
+9
+611
+227
+644
 Overall-Visit-Travelling?
 Overall-Visit-Travelling?
 1
@@ -671,10 +673,10 @@ Overall-Visit-Travelling?
 -1000
 
 SWITCH
-249
-607
-451
-640
+247
+612
+449
+645
 Extra-Visit-Travelling-Holiday?
 Extra-Visit-Travelling-Holiday?
 1
@@ -682,10 +684,10 @@ Extra-Visit-Travelling-Holiday?
 -1000
 
 SLIDER
-257
-184
-452
-217
+262
+256
+457
+289
 Travelling-Threshold
 Travelling-Threshold
 1
@@ -768,10 +770,10 @@ differenceinfected
 11
 
 SWITCH
-11
-569
-229
-602
+9
+574
+227
+607
 Overall-Gatherings-Events-Travelling?
 Overall-Gatherings-Events-Travelling?
 1
@@ -779,40 +781,15 @@ Overall-Gatherings-Events-Travelling?
 -1000
 
 SWITCH
-249
-569
-451
-602
+247
+574
+449
+607
 Extra-Gathering-Events-Travelling-Holiday
 Extra-Gathering-Events-Travelling-Holiday
 1
 1
 -1000
-
-TEXTBOX
-264
-235
-465
-257
-Day COVID-19 outbreak
-15
-0.0
-1
-
-SLIDER
-257
-307
-455
-340
-Day-COVID-19-Outbreak
-Day-COVID-19-Outbreak
-1
-100
-41.0
-1
-1
-NIL
-HORIZONTAL
 
 BUTTON
 747
@@ -830,21 +807,6 @@ NIL
 NIL
 NIL
 1
-
-SLIDER
-257
-261
-455
-294
-Frequency
-Frequency
-0
-30
-1.0
-1
-1
-NIL
-HORIZONTAL
 
 PLOT
 1520
@@ -865,30 +827,30 @@ PENS
 "sum_infected_animals" 1.0 0 -16777216 true "plot sum [totalhospitalized] of municipalities" "plot sum [totalinfectedanimals] of municipalities"
 
 CHOOSER
-14
-923
-152
-968
+29
+332
+167
+377
 spillover-group
 spillover-group
 "all" "farmers"
 0
 
 CHOOSER
-166
-924
-392
-969
+181
+333
+407
+378
 spillover-anim-hum-mechanism
 spillover-anim-hum-mechanism
-"A" "B"
-1
+"B"
+0
 
 SLIDER
-14
-974
-253
-1007
+29
+383
+268
+416
 prob-spillover-risk-after-contact
 prob-spillover-risk-after-contact
 0
@@ -900,15 +862,15 @@ NIL
 HORIZONTAL
 
 SLIDER
-260
-976
-432
-1009
+275
+385
+447
+418
 prob-contact
 prob-contact
 0
 1
-0.02
+0.0
 0.01
 1
 NIL
@@ -933,30 +895,30 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot sum [ninfectedfarms] of municipalities"
 
 TEXTBOX
-161
-657
-311
-676
+159
+662
+309
+681
 Transmission Rates
 15
 0.0
 0
 
 TEXTBOX
-174
-896
-324
-915
-Spillover 
+138
+303
+357
+328
+Animal to human spillover 
 15
 0.0
 0
 
 TEXTBOX
-147
-422
-325
-444
+145
+427
+323
+449
 Commuting & Travelling
 15
 0.0
