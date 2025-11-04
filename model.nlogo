@@ -833,7 +833,7 @@ CHOOSER
 377
 spillover-group
 spillover-group
-"all" "farmers"
+"farmers"
 0
 
 CHOOSER
