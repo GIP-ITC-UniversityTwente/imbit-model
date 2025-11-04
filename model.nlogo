@@ -88,7 +88,11 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
 
    ; Lists to calculate 7 day average
    jobcommuter-new-infected jobcommuter-new-infected-over-7-days schoolcommuter-new-infected schoolcommuter-new-infected-over-7-days VT-new-infected VT-new-infected-over-7-days
-   GAET-new-infected GAET-new-infected-over-7-days R0-new R0-over-7-days economiclist]
+   GAET-new-infected GAET-new-infected-over-7-days R0-new R0-over-7-days economiclist
+
+   Source_1_infections Source_2_infections Source_3_infections
+   Source_1 Source_2 Source_3
+   ]
 
 breed [municipalities municipality]
 
@@ -152,6 +156,17 @@ healthunits-own [region]
 
 
 to setup
+
+  ; Move to CONFIG file
+  set Source_1 "Tilburg"
+  set Source_2 "Amsterdam"
+  set Source_3 "Diemen"
+
+  set Source_1_infections 0
+  set Source_2_infections 0
+  set Source_3_infections 0
+  ; Move to CONFIG file
+
   clear-all
   file-close
 
@@ -442,7 +457,7 @@ HORIZONTAL
 SLIDER
 261
 61
-454
+453
 94
 Duration-of-Infectivity
 Duration-of-Infectivity
@@ -468,16 +483,6 @@ Schoolcommuter-Threshold
 1
 NIL
 HORIZONTAL
-
-CHOOSER
-11
-276
-103
-321
-Source_1
-Source_1
-"None" "Cuijk" "Tilburg" "Utrecht0gemeente" "Amsterdam" "Rotterdam" "s0Gravenhage0gemeente" "Groningen0gemeente"
-2
 
 SWITCH
 11
@@ -592,10 +597,10 @@ Infection rates should be set to the same number for within municipalities and a
 1
 
 PLOT
-1517
-58
-1903
-208
+1119
+416
+1505
+578
 Fractions SIR farmers
 Time (days)
 Fraction
@@ -632,33 +637,6 @@ Sets the percentage immunity before the start (go procedure) of the model. Simul
 11
 0.0
 1
-
-PLOT
-1117
-415
-1506
-624
-Hospitalization
-Time (days)
-patients
-0.0
-50.0
-0.0
-1.0
-true
-true
-"" ""
-PENS
-"Nr. hospitalized" 1.0 0 -16777216 true "" "plot sum [totalhospitalized] of municipalities"
-"0-4 years" 1.0 0 -5825686 true "" "plot sum [hospitalized05] of municipalities"
-"5-11 years" 1.0 0 -2064490 true "" "plot sum [hospitalized512] of municipalities"
-"12-16 years" 1.0 0 -2674135 true "" "plot sum [hospitalized1217] of municipalities"
-"17-24 years" 1.0 0 -955883 true "" "plot sum [hospitalized1725] of municipalities"
-"25-34 years" 1.0 0 -6459832 true "" "plot sum [hospitalized2535] of municipalities"
-"35-49 years" 1.0 0 -1184463 true "" "plot sum [hospitalized3550] of municipalities"
-"50-64 years" 1.0 0 -13345367 true "" "plot sum [hospitalized5065] of municipalities"
-"65-79 years" 1.0 0 -11221820 true "" "plot sum [hospitalized6580] of municipalities"
-"80+ years" 1.0 0 -14835848 true "" "plot sum [hospitalized80plus] of municipalities"
 
 CHOOSER
 16
@@ -812,90 +790,25 @@ Extra-Gathering-Events-Travelling-Holiday
 -1000
 
 TEXTBOX
-269
+264
 235
-470
-277
+465
+257
 Day COVID-19 outbreak
 15
 0.0
 1
 
 SLIDER
-263
-330
-461
-363
+257
+307
+455
+340
 Day-COVID-19-Outbreak
 Day-COVID-19-Outbreak
 1
 100
 41.0
-1
-1
-NIL
-HORIZONTAL
-
-CHOOSER
-11
-322
-103
-367
-Source_2
-Source_2
-"None" "Cuijk" "Tilburg" "Utrecht0gemeente" "Amsterdam" "Rotterdam" "s0Gravenhage0gemeente" "Groningen0gemeente"
-4
-
-CHOOSER
-11
-368
-103
-413
-Source_3
-Source_3
-"None" "Cuijk" "Tilburg" "Utrecht0gemeente" "Amsterdam" "Rotterdam" "s0Gravenhage0gemeente" "Groningen0gemeente" "Diemen"
-8
-
-SLIDER
-102
-283
-254
-316
-Source_1_infections
-Source_1_infections
-0
-50
-0.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-102
-329
-255
-362
-Source_2_infections
-Source_2_infections
-0
-20
-0.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-102
-376
-256
-409
-Source_3_infections
-Source_3_infections
-0
-20
-0.0
 1
 1
 NIL
@@ -919,10 +832,10 @@ NIL
 1
 
 SLIDER
-263
-284
-461
-317
+257
+261
+455
+294
 Frequency
 Frequency
 0
@@ -934,10 +847,10 @@ NIL
 HORIZONTAL
 
 PLOT
-1518
-218
-1903
-408
+1520
+59
+1905
+207
 Infected animals
 Time (days)
 Animals
@@ -1002,10 +915,10 @@ NIL
 HORIZONTAL
 
 PLOT
-1518
-417
-1904
-626
+1519
+215
+1905
+405
 Number of infected farms
 Time (days)
 Farms
@@ -1050,16 +963,6 @@ Commuting & Travelling
 0
 
 TEXTBOX
-15
-231
-254
-269
-Source infection locations \nand numbers
-15
-0.0
-1
-
-TEXTBOX
 588
 10
 1025
@@ -1080,10 +983,10 @@ Plots
 0
 
 PLOT
-1520
-635
-1905
-805
+1519
+416
+1904
+578
 Fraction of infected farms
 Time (days)
 Fraction
