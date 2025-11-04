@@ -517,10 +517,10 @@ Switch on to start commuting & travelling.\nIn summer holiday no school commutin
 1
 
 CHOOSER
-14
-156
-236
-201
+11
+246
+233
+291
 Immunity-Startpopulation
 Immunity-Startpopulation
 "test.shp"
@@ -629,20 +629,20 @@ Job-Commuting-Holiday?
 -1000
 
 TEXTBOX
-17
-83
-241
-156
+14
+173
+238
+246
 Sets the percentage immunity before the start (go procedure) of the model. Simulates a one time vaccination intervention. Municipal vaccinationrates are taken into account.
 11
 0.0
 1
 
 CHOOSER
-16
-28
-239
-73
+12
+115
+235
+160
 Scenario
 Scenario
 "Original_Pertussis_Model" "COVID19_History_No_Lockdown" "COVID19_History_Lockdown" "Road_Map_Scenario" "Economic_Scenario" "Age_Scenario"
@@ -999,6 +999,16 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot (sum [ninfectedfarms] of municipalities)/ count animalfarms"
+
+TEXTBOX
+19
+21
+243
+121
+To run a scenario with human to human transimission choose scenario \"COVID19_History_Lockdown\".\n\nFor no human to human transmission choose  \"COVID19_No_Lockdown\".
+11
+0.0
+1
 
 @#$#@#$#@
 ## CONTACT?
