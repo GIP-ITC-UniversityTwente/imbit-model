@@ -54,7 +54,7 @@ to load-animal-farm-infections
       set-animal-farm-color
 
       set spillover_gm_name gm_name
-      update-num-animal-infc-gm
+      update-gm-animal-farm-inf
     ]
   ]  
   file-close
@@ -83,10 +83,14 @@ to set-animal-farm-color
 end
 
 ; Procedure to update a specific gemeente's number of animal infection
-to update-num-animal-infc-gm
-  ask municipalities with [name = spillover_gm_name][
+to update-gm-animal-farm-inf
     ; This is the number of totalinfected animals at any given day
+  ask municipalities with [name = spillover_gm_name][
     set totalinfectedanimals totalinfectedanimals + iv
+
+    if (iv > 0)[
+      set ninfectedfarms ninfectedfarms + 1
+    ]
   ]
 end
 
@@ -144,18 +148,20 @@ end
 ; workers in the farm. 
 ; We introduce total number of spillover infections = no_farmers_per_farm
 to create-spillover-animal-human-mechanism-b
-  ; Calculating number of spillovers based on RIVM's numbers
-  set num-hum-spillover-infc (S00000 * totalinfectedanimals * prob-spillover-risk-after-contact * prob-contact)
+  if not (nfarms = 0) [
+    set frac-infected-farms (ninfectedfarms / nfarms)
+    ; Calculating number of spillovers based on RIVM's numbers
+    set num-hum-spillover-infc (S00000 * frac-infected-farms * totalinfectedanimals * prob-spillover-risk-after-contact * prob-contact)
 
-  ; Cap the number of infections as it cannot increase more than the number of susceptible
-  ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
-  set num-hum-spillover-infc min (list num-hum-spillover-infc S00000)
+    ; Cap the number of infections as it cannot increase more than the number of susceptible
+    ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
+    set num-hum-spillover-infc min (list num-hum-spillover-infc S00000)
+    
+    ; Updating the number of infected and susceptible individuals
+    set I00000 I00000 + num-hum-spillover-infc
+    set S00000 S00000 - num-hum-spillover-infc
 
-  ; Updating the number of infected and susceptible individuals
-  set I00000 I00000 + num-hum-spillover-infc
-  set S00000 S00000 - num-hum-spillover-infc
-
-  set totalspilloveranimalhumaninfections  num-hum-spillover-infc
-  
+    set totalspilloveranimalhumaninfections  num-hum-spillover-infc
+  ] 
 end
 
