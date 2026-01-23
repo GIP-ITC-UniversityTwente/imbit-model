@@ -1,55 +1,23 @@
 globals [
   input-dir
-  spatial-layers-subdir
-
-  imm-startpop-subdir
-  imm-startpop-dir
-  
   gm-shp-file
-  gm-shp-dir
-  
   biblebelt-shp-file
-  biblebelt-shp-dir
-
   ggdpoints-shp-file
-  ggdpoints-shp-dir
-
   ggdregio-shp-file
-  ggdregio-shp-dir
-
-  farm-subdir
+  imm-startpop-fil
   farm-shp-file
-  farm-shp-dir
-
-  anim-outbreak-subdir
 ]
 
 
 to init-paths
   set input-dir "data/input/"
-  set spatial-layers-subdir "spatial_layers/"
-  set imm-startpop-subdir "imm_startpop/"
-  set farm-subdir "farm_data/"
   
-  set gm-shp-file "Gemeentes2013TrMr.shp"
-  set biblebelt-shp-file "BiblebeltTrMr.shp"
-  set ggdpoints-shp-file "GGDpointsTrMr.shp"
-  set ggdregio-shp-file "GGDregioTrMr.shp"
-  set farm-shp-file "preprocessed_farm.shp"
+  set gm-shp-file (word input-dir "spatial_layers/Gemeentes2013TrMr.shp")
+  set biblebelt-shp-file (word input-dir "spatial_layers/BiblebeltTrMr.shp")
+  set ggdpoints-shp-file (word input-dir "spatial_layers/GGDpointsTrMr.shp")
+  set ggdregio-shp-file (word input-dir "spatial_layers/GGDregioTrMr.shp")
 
-  set anim-outbreak-subdir (word "outbreak_" animal-inf-oubtreak-nr "/")
-end
-
-
-to build-input-filepaths
-  init-paths
-
-  set gm-shp-dir (word input-dir spatial-layers-subdir gm-shp-file)
-  set biblebelt-shp-dir (word input-dir spatial-layers-subdir biblebelt-shp-file)
-  set ggdpoints-shp-dir (word input-dir spatial-layers-subdir ggdpoints-shp-file)
-  set ggdregio-shp-dir (word input-dir spatial-layers-subdir ggdregio-shp-file)
-
-  set imm-startpop-dir (word input-dir imm-startpop-subdir Immunity-Startpopulation)
-  set farm-shp-dir (word input-dir farm-subdir anim-outbreak-subdir farm-shp-file)
-
+  ; Creating paths based on user chosen options
+  set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
+  set farm-shp-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/preprocessed_farm.shp")
 end

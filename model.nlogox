@@ -165,7 +165,7 @@ to setup
   clear-all
   file-close
 
-  build-input-filepaths
+  init-paths
 
   ; Move to CONFIG file
   set Source_1 "Tilburg"
