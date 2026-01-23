@@ -249,7 +249,7 @@ to go
   load-animal-farm-infections
 
   ; Write to output file every day
-  file-open (word "data/output/OutputBasemodel.csv")
+  file-open (word output-file)
 
   ask municipalities [
     ;population-model-plus

@@ -1,4 +1,6 @@
 globals [
+  output-dir
+  output-file
   input-dir
   gm-shp-file
   biblebelt-shp-file
@@ -23,6 +25,16 @@ globals [
 
 
 to init-paths
+  init-input-paths
+  init-output-paths
+end
+
+to init-output-paths
+  set output-dir "data/output/"
+  set output-file (word output-dir "OutputBasemodel.csv")
+end
+
+to init-input-paths
   set input-dir "data/input/"
   
   ; Spatial layer
