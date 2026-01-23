@@ -4,7 +4,7 @@
 __includes [ "utils/Spillover.nls" "utils/input.nls" "utils/Ageingplus.nls" "utils/SEIR.nls" "utils/Ageingmin.nls" "utils/JobCommuting.nls" "utils/Schoolcommuting.nls" "utils/Travelling.nls" "utils/HealthunitsMaternal.nls"
   "utils/HealthunitsLocation.nls" "utils/R0.nls" "utils/COVID19history.nls" "utils/Roadmapscenario.nls" "utils/Economicscenario.nls" "utils/Agescenario.nls"
   "utils/Municipality.nls" "utils/SpatialLayers.nls" "utils/Turtles.nls" "utils/ContactRates.nls"
-  "utils/OriginalPertussisModel.nls" "utils/CreateOutputFile.nls"]
+  "utils/OriginalPertussisModel.nls" "utils/CreateOutputFile.nls" "utils/SetupPaths.nls"]
 
 
 globals [basemap biblebelt centroids items serviceregion GGD setup-links-travelling exposed-period infected-period recovered-period oldtotalinfected oldtotalhospitalized totalinfectedNL
@@ -164,6 +164,8 @@ healthunits-own [region]
 to setup
   clear-all
   file-close
+
+  build-input-filepaths
 
   ; Move to CONFIG file
   set Source_1 "Tilburg"
