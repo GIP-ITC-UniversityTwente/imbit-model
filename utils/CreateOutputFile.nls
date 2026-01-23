@@ -2,9 +2,9 @@
 ; Procedure to create an output file
 to create-and-setup-output-file
   ;; Delete already existing output file
-  carefully [ file-delete "data/output/OutputBasemodel.csv" ] [ ]
+  carefully [ file-delete output-file ] [ ]
 
-  file-open "data/output/OutputBasemodel.csv"
+  file-open output-file
   file-print (word "==========================================================")
   file-print (word "============ COVID-19 cases in the Netherlands ===============")
   file-type "ticks ; "

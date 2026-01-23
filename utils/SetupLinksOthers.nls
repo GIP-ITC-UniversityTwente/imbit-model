@@ -11,7 +11,7 @@ to setup-links-job
 ;;file contains 3 columns, first column name of originating municipality
 ;;second column name of end municipality, third column number of commuters
   
-  file-open "data/input/links/LinksCommuter.txt"
+  file-open commuter-links-file
   while [not file-at-end?] [
     set items read-from-string (word "[" file-read-line "]")
     ask get-node (item 0 items)
@@ -37,7 +37,7 @@ to setup-links-school
 ;;file contains 3 columns, first column name of originating municipality
 ;;second column name of end municipality, third column number of commuters
   
-  file-open "data/input/links/LinksSchool.txt"
+  file-open school-links-file
   while [not file-at-end?] [
     set items read-from-string (word "[" file-read-line "]")
     ask get-node (item 0 items)
@@ -62,7 +62,7 @@ to setup-links-travelling-neigh
 ;;file contains 3 columns, first column name of originating municipality
 ;;second column name of end municipality, third column number of travellers
   
-  file-open "data/input/links/LinksTravelNeigh.txt"
+  file-open travelneigh-links-file
   while [not file-at-end?] [
     set items read-from-string (word "[" file-read-line "]")
     ask get-node (item 0 items)
@@ -86,7 +86,7 @@ to setup-links-travelling-non-neigh
 ;;file contains 3 columns, first column name of originating municipality
 ;;second column name of end municipality, third column number of travellers
   
-  file-open "data/input/links/LinksTravelNonNeigh.txt"
+  file-open travelnonneigh-links-file
   while [not file-at-end?] [
     set items read-from-string (word "[" file-read-line "]")
     ask get-node (item 0 items)
@@ -107,7 +107,7 @@ end
 
 to setup-economic
   set economicscore []   
-  file-open "data/input/others/EconomicScore.txt"   
+  file-open economic-file 
   while [not file-at-end?]    
   [set economicscore sentence economicscore (list file-read)]   
   
@@ -117,7 +117,7 @@ end
 to setup-age
   ; because of time constraints this is not used and the age score is hard coded
   set agescore []   
-  file-open "data/input/others/AgeScore.txt"   
+  file-open age-file   
   while [not file-at-end?]    
   [set economicscore sentence economicscore (list file-read)]   
   

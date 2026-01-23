@@ -13,7 +13,7 @@ end
 
 to read-summer-contactrate-within-muni
    set contactrate1 []
-   file-open (word "data/input/trans/" Infection-Rate-WithinMuni-Summer)
+   file-open infc-within-summer-file
    while [not file-at-end?] 
    [set contactrate1 sentence contactrate1 (list file-read)]
   
@@ -22,7 +22,7 @@ end
 
 to read-autumnspring-contactrate-within-muni
   set contactrate2 []
-  file-open (word "data/input/trans/" Infection-Rate-WithinMuni-SpringAutumn)
+  file-open infc-within-springaut-file
   while [not file-at-end?] 
   [set contactrate2 sentence contactrate2 (list file-read)] 
 
@@ -31,7 +31,7 @@ end
 
 to read-winter-contactrate-within-muni
   set contactrate3 []
-  file-open (word "data/input/trans/" Infection-Rate-WithinMuni-Winter)
+  file-open infc-within-wint-file
   while [not file-at-end?] 
   [set contactrate3 sentence contactrate3 (list file-read)]   
 
@@ -40,7 +40,7 @@ end
 
 to read-summer-contactrate-among-muni
   set commutercontact1 []
-  file-open (word "data/input/comm_trans/" Infection-Rate-AmongMuni-Summer) 
+  file-open infc-among-summer-file
   while [not file-at-end?] 
   [set commutercontact1 sentence commutercontact1 (list file-read)]   
 
@@ -49,7 +49,7 @@ end
 
 to read-autumnspring-contactrate-among-muni
   set commutercontact2 []
-  file-open (word "data/input/comm_trans/" Infection-Rate-AmongMuni-SpringAutumn) 
+  file-open infc-among-springaut-file
   while [not file-at-end?] 
   [set commutercontact2 sentence commutercontact2 (list file-read)]  
 
@@ -58,7 +58,7 @@ end
 
 to read-winter-contactrate-among-muni
   set commutercontact3 []
-  file-open (word "data/input/comm_trans/" Infection-Rate-AmongMuni-Winter) 
+  file-open infc-among-wint-file 
   while [not file-at-end?] 
   [set commutercontact3 sentence commutercontact3 (list file-read)]   
 
