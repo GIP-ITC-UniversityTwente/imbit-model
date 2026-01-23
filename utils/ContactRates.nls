@@ -13,7 +13,7 @@ end
 
 to read-summer-contactrate-within-muni
    set contactrate1 []
-   file-open infc-withinmuni-sum-file
+   file-open infc-within-summer-file
    while [not file-at-end?] 
    [set contactrate1 sentence contactrate1 (list file-read)]
   
