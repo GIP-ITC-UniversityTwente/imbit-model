@@ -169,7 +169,7 @@ end
 
 to create-animalfarm-turtles
   ; Open the csv file
-  file-open "data/input/farm_data/iv_table.csv"
+  file-open farm-iv-file
   
   let csv-node-row file-read-line
   let node-values csv:from-row csv-node-row

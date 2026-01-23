@@ -6,12 +6,19 @@ globals [
   ggdregio-shp-file
   imm-startpop-file
   farm-shp-file
+  farm-iv-file
   commuter-links-file
   school-links-file
   travelneigh-links-file
   travelnonneigh-links-file
   age-file
   economic-file
+  infc-within-summer-file
+  infc-within-springaut-file
+  infc-within-wint-file
+  infc-among-summer-file
+  infc-among-springaut-file
+  infc-among-wint-file
 ]
 
 
@@ -24,10 +31,12 @@ to init-paths
   set ggdpoints-shp-file (word input-dir "spatial_layers/GGDpointsTrMr.shp")
   set ggdregio-shp-file (word input-dir "spatial_layers/GGDregioTrMr.shp")
 
-  ; Immunity, farm outbreak
-  ; Creating paths based on user chosen options
+  ; Immunity
   set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
+  
+  ; Farm
   set farm-shp-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/preprocessed_farm.shp")
+  set farm-iv-file (word input-dir "farm/data/outbreak_" animal-inf-oubtreak-nr "iv_table.csv")
 
   ; Links
   set commuter-links-file (word input-dir "links/LinksCommuter.txt")
@@ -38,5 +47,15 @@ to init-paths
   ; Others- age and economic
   set age-file (word input-dir "others/AgeScore.txt")
   set economic-file (word input-dir "others/EconomicScore.txt")
+
+  ; Transmission rates
+  set infc-within-summer-file (word input-dir "trans/" Infection-Rate-WithinMuni-Summer)
+  set infc-within-springaut-file (word input-dir "trans/" Infection-Rate-WithinMuni-SpringAutumn)
+  set infc-within-wint-file (word input-dir "trans/" Infection-Rate-WithinMuni-Winter)
+  
+  set infc-among-summer-file (word input-dir "comm_trans/" Infection-Rate-AmongMuni-Summer)
+  set infc-among-springaut-file (word input-dir "comm_trans/" Infection-Rate-AmongMuni-SpringAutumn)
+  set infc-among-wint-file (word input-dir "comm_trans/" Infection-Rate-AmongMuni-Winter)
+
 
 end

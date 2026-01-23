@@ -31,7 +31,7 @@ to load-animal-farm-infections
     stop
   ]
 
-  file-open "data/input/farm_data/iv_table.csv"
+  file-open farm-iv-file
   let header-line file-read-line ; Skipping the header line
   
   let target-row ticks + 1 ;Row indexing starts from 1 excluding the header
