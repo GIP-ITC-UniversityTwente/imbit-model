@@ -1,0 +1,2765 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model version="NetLogo 7.0.3" snapToGrid="false">
+  <code><![CDATA[ extensions [gis ] ;profiler]
+__includes [ "utils/Spillover.nls" "utils/input.nls" "utils/Ageingplus.nls" "utils/SEIR.nls" "utils/Ageingmin.nls" "utils/JobCommuting.nls" "utils/Schoolcommuting.nls" "utils/Travelling.nls" "utils/HealthunitsMaternal.nls"
+  "utils/HealthunitsLocation.nls" "utils/R0.nls" "utils/COVID19history.nls" "utils/Roadmapscenario.nls" "utils/Economicscenario.nls" "utils/Agescenario.nls"
+  "utils/Municipality.nls" "utils/SpatialLayers.nls" "utils/Turtles.nls" "utils/ContactRates.nls"
+  "utils/OriginalPertussisModel.nls" "utils/CreateOutputFile.nls"]
+
+
+globals [basemap biblebelt centroids items serviceregion GGD setup-links-travelling exposed-period infected-period recovered-period oldtotalinfected oldtotalhospitalized totalinfectedNL
+   newtotalinfected newtotalhospitalized differenceinfected differencehospitalized differencehospitalizedfixed reproductionnumber reproductionnumberold reproductionnumbernew
+   positivetests positivetestscalc ij risk_level
+
+   num-hum-spillover-infc frac-infected-farms
+
+   ; School commuting
+   schoolcommuters totalschoolcommutersflow extraS14112school extraS14212school schoolcommuterstotal schoolcommuterstotalNL
+
+   ; Job commuting
+   jobcommuterstotal jobcommuterstotalNL
+   extraS26311job extraS26312job extraS36322job extraS36311job extraS36312job extraS17311job extraS17312job extraS18311job extraS18312job
+   extraS26111job extraS26112job extraS36122job extraS36111job extraS36112job extraS17111job extraS17112job extraS18111job extraS18112job
+
+   ; VT & GAET
+   VTtotal GAETtotal traveltotal
+   travelextraS11112 travelextraS12112 travelextraS13112 travelextraS14212 travelextraS14112 travelextraS15111 travelextraS26311 travelextraS26312
+   travelextraS26111 travelextraS26112 travelextraS36322 travelextraS36311 travelextraS36312 travelextraS36122 travelextraS36111 travelextraS36112
+   travelextraS17311 travelextraS17312 travelextraS17111 travelextraS17112 travelextraS18311 travelextraS18312 travelextraS18111 travelextraS18112
+   travelextraS19111
+
+   ; Contact rates
+   contactrates contactrate1 contactrate2 contactrate3
+   contactrate0_000t contactrate0_020t contactrate0_029t contactrate0_040t contactrate0_050t contactrate0_067t contactrate0_100t contactrate0_200t
+   contactrate0_300t contactrate0_400t contactrate0_600t contactrate0_800t contactrate1_000t contactrate1_400t contactrate2_000t
+
+   ; Commuter contact
+   commutercontact commutercontact1 commutercontact2 commutercontact3
+   commutercontact0_000t commutercontact0_020t commutercontact0_029t commutercontact0_040t commutercontact0_050t  commutercontact0_067t commutercontact0_100t
+   commutercontact0_200t commutercontact0_300t commutercontact0_400t commutercontact0_600t commutercontact0_800t commutercontact1_000t commutercontact1_400t commutercontact2_000t
+
+   ; Travelling
+   travelling0-5yrs travelling5-12yrs travelling12-17yrs travelling17-25yrs travelling25-35yrs travelling35-50yrs travelling50-65yrs travelling65plusyrs neighbouring
+   travelling0-5yrs_neigh travelling5-12yrs_neigh travelling12-17yrs_neigh travelling17-25yrs_neigh travelling25-35yrs_neigh travelling35-50yrs_neigh travelling50-65yrs_neigh travelling65plusyrs_neigh decimalVT_neigh
+   travelling0-5yrs_non_neigh travelling5-12yrs_non_neigh travelling12-17yrs_non_neigh travelling17-25yrs_non_neigh travelling25-35yrs_non_neigh travelling35-50yrs_non_neigh travelling50-65yrs_non_neigh travelling65plusyrs_non_neigh decimalVT_non_neigh
+
+   ; Economic scores
+   score economicscore contactjobschoolGAETVTscore
+   contactscore1 contactscore2 contactscore3 contactscore4 contactscore5
+   jobcomscore1 jobcomscore2 jobcomscore3 jobcomscore4 jobcomscore5
+   schoolcomscore1 schoolcomscore2 schoolcomscore3 schoolcomscore4 schoolcomscore5
+   GAETscore1 GAETscore2 GAETscore3 GAETscore4 GAETscore5
+   VTscore1 VTscore2 VTscore3 VTscore4 VTscore5
+   contactcontact jobcomcontact schoolcomcontact GAETcontact VTcontact
+   contactrestrictions contactrestrictions1 contactrestrictions2 contactrestrictions3 contactrestrictions4 contactrestrictions5
+   jobcomrestrictions jobcomrestrictions1 jobcomrestrictions2 jobcomrestrictions3 jobcomrestrictions4 jobcomrestrictions5
+   schoolcomrestrictions schoolcomrestrictions1 schoolcomrestrictions2 schoolcomrestrictions3 schoolcomrestrictions4 schoolcomrestrictions5
+   GAETrestrictions GAETrestrictions1 GAETrestrictions2 GAETrestrictions3 GAETrestrictions4 GAETrestrictions5
+   VTrestrictions VTrestrictions1 VTrestrictions2 VTrestrictions3 VTrestrictions4 VTrestrictions5
+   numberoflists
+
+   ; Age scores
+   agescore
+   oldtotalinfected05 oldtotalhospitalized05 newtotalinfected05 newtotalhospitalized05 differencehospitalized05
+   oldtotalinfected512 oldtotalhospitalized512 newtotalinfected512 newtotalhospitalized512 differencehospitalized512
+   oldtotalinfected1217 oldtotalhospitalized1217 newtotalinfected1217 newtotalhospitalized1217 differencehospitalized1217
+   oldtotalinfected1725 oldtotalhospitalized1725 newtotalinfected1725 newtotalhospitalized1725 differencehospitalized1725
+   oldtotalinfected2535 oldtotalhospitalized2535 newtotalinfected2535 newtotalhospitalized2535 differencehospitalized2535
+   oldtotalinfected3550 oldtotalhospitalized3550 newtotalinfected3550 newtotalhospitalized3550 differencehospitalized3550
+   oldtotalinfected5065 oldtotalhospitalized5065 newtotalinfected5065 newtotalhospitalized5065 differencehospitalized5065
+   oldtotalinfected6580 oldtotalhospitalized6580 newtotalinfected6580 newtotalhospitalized6580 differencehospitalized6580
+   oldtotalinfected80plus oldtotalhospitalized80plus newtotalinfected80plus newtotalhospitalized80plus differencehospitalized80plus
+   total05 total512 total1217 total1725 total2535 total3550 total5065 total6580 total80plus
+   tests05per10000 tests512per10000 tests1217per10000 tests1725per10000 tests2535per10000 tests3550per10000 tests5065per10000 tests6580per10000 tests80plusper10000
+   contactagescore1 jobcomagescore1 schoolcomagescore1 GAETagescore1 VTagescore1 contactagescore2 jobcomagescore2 schoolcomagescore2 GAETagescore2 VTagescore2
+   contactagescore3 jobcomagescore3 schoolcomagescore3 GAETagescore3 VTagescore3 contactagescore4 jobcomagescore4 schoolcomagescore4 GAETagescore4 VTagescore4
+   contactagescore5 jobcomagescore5 schoolcomagescore5 GAETagescore5 VTagescore5
+
+   ; Measures
+   contactlevel1 contactlevel2 contactlevel3 contactlevel4 contactlevel5 contactlevel6
+   jobcomlevel1 jobcomlevel2 jobcomlevel3 jobcomlevel4 jobcomlevel5 jobcomlevel6
+   schoolcomlevel1 schoolcomlevel2 schoolcomlevel3 schoolcomlevel4 schoolcomlevel5 schoolcomlevel6
+   GAETlevel1 GAETlevel2 GAETlevel3 GAETlevel4 GAETlevel5 GAETlevel6
+   VTlevel1 VTlevel2 VTlevel3 VTlevel4 VTlevel5 VTlevel6
+
+   ; Holiday
+   holiday-ticks helpstep helpstepb
+
+   ; Decimals
+   decimalschool decimalschoolcom decimaljob decimaljobcom decimalGAET decimalGAETcalc decimalVT decimalVTcalc travelflows
+
+   ; Lists to calculate 7 day average
+   jobcommuter-new-infected jobcommuter-new-infected-over-7-days schoolcommuter-new-infected schoolcommuter-new-infected-over-7-days VT-new-infected VT-new-infected-over-7-days
+   GAET-new-infected GAET-new-infected-over-7-days R0-new R0-over-7-days economiclist
+
+   ; Move to config
+   Source_1_infections Source_2_infections Source_3_infections
+   Source_1 Source_2 Source_3
+
+   Frequency Day-COVID-19-Outbreak
+   ; Move to config
+   ]
+
+breed [municipalities municipality]
+
+municipalities-own [name GGDregion vaccinationrate population totalpopulation fractionsusceptible fractionexposed
+  fractioninfected fractionrecovered totalsusceptible totalexposed totalinfected totalrecovered totalhospitalized achospitalized
+  totalinfecteddaybefore totalnewinfected ; Used for calculating the number of totalnewinfected per day
+
+  no_farmers_per_farm ; For calculating spillovers
+
+  ; Farmers
+  S00000 E00000 I00000 R00000
+
+  S11112  E11112  I11112  R11112 S12112  E12112  I12112  R12112 S13112  E13112  I13112  R13112 S14212  E14212  I14212  R14212
+  S14112  E14112  I14112  R14112 S15111  E15111  I15111  R15111 S26311  E26311  I26311  R26311 S26312  E26312  I26312  R26312
+  S26111  E26111  I26111  R26111 S26112  E26112  I26112  R26112 S36322  E36322  I36322  R36322 S36311  E36311  I36311  R36311
+  S36312  E36312  I36312  R36312 S36122  E36122  I36122  R36122 S36111  E36111  I36111  R36111 S36112  E36112  I36112  R36112
+  S17311  E17311  I17311  R17311 S17312  E17312  I17312  R17312 S17111  E17111  I17111  R17111 S17112  E17112  I17112  R17112
+  S18311  E18311  I18311  R18311 S18312  E18312  I18312  R18312 S18111  E18111  I18111  R18111 S18112  E18112  I18112  R18112
+  S19111  E19111  I19111  R19111 suminfected05 suminfected512 suminfected1217 suminfected1725 suminfected2535 suminfected3550
+  suminfected5065 suminfected6580 suminfected80plus hospitalized05 hospitalized512 hospitalized1217 hospitalized1725 hospitalized2535 hospitalized3550
+  hospitalized5065 hospitalized6580 hospitalized80plus
+
+  ; To record number of animal infections and spillovers
+  totalinfectedanimals totalspilloveranimalhumaninfections
+
+  ; Number of animal farms
+  nfarms ninfectedfarms
+  ]
+
+directed-link-breed [commuterflows commuterflow]
+
+commuterflows-own [nr-people frommuni tomuni]
+
+directed-link-breed [schoolflows schoolflow]
+
+schoolflows-own [nr-people frommuni tomuni]
+
+directed-link-breed [visitflows visitflow]
+
+visitflows-own [nr-people frommuni tomuni]
+
+directed-link-breed [gatheringsandeventsflows gatheringsandeventsflow]
+
+gatheringsandeventsflows-own [nr-people frommuni tomuni]
+
+directed-link-breed [travelneighflows travelneighflow]
+
+travelneighflows-own [nr-people frommuni tomuni]
+
+directed-link-breed [travelnonneighflows travelnonneighflow]
+
+travelnonneighflows-own [nr-people frommuni tomuni]
+
+directed-link-breed [holidayflows holidayflow]
+
+holidayflows-own [nr-people frommuni tomuni]
+
+breed [healthunits healthunit]
+
+healthunits-own [region]
+
+
+to setup
+  clear-all
+  file-close
+
+  ; Move to CONFIG file
+  set Source_1 "Tilburg"
+  set Source_2 "Amsterdam"
+  set Source_3 "Diemen"
+
+  set Source_1_infections 0
+  set Source_2_infections 0
+  set Source_3_infections 0
+
+  set Frequency 1
+  set Day-COVID-19-Outbreak 41000
+  ; Move to CONFIG file
+
+  load-spatial-layers
+  create-model-turtles
+  create-list-contactrates
+  initiate-helpstep
+
+  ;; setup selected links
+  ifelse overall-job-commuting? [setup-links-job] []
+  ifelse overall-school-commuting? [setup-links-school] []
+
+  ;; setup links VT and GAET, that borh share same links
+  set setup-links-travelling 0
+  ifelse overall-gatherings-events-travelling? [set setup-links-travelling 1] []
+  ifelse overall-visit-travelling? [set setup-links-travelling 1] []
+
+  if setup-links-travelling = 1 [setup-links-travelling-neigh]
+  if setup-links-travelling = 1 [setup-links-travelling-non-neigh]
+  set decimalVT 1
+  set decimalGAET 1
+  set decimalschoolcom 1
+  set decimaljobcom 1
+  set decimalVTcalc 1
+  set decimalGAETcalc 1
+
+  ; create list to calculate 7 day average commuting and travelling
+  set jobcommuter-new-infected []
+  set schoolcommuter-new-infected []
+  set VT-new-infected []
+  set GAET-new-infected []
+  set R0-new []
+  set economiclist []
+
+  ask links [ hide-link ]
+  ;ask links [set color red]
+  reset-ticks
+
+  ;; set up the economic and age measure order
+  if (Scenario ="Economic_Scenario") [setup-economic]
+  if (Scenario ="Age_Scenario") [setup-age]
+  if (Scenario ="Economic_Scenario") [order_economic]
+
+  ;profiler:start         ;; start profiling
+  ;repeat 50 [ go ]       ;; run something you want to measure
+  ;profiler:stop          ;; stop profiling
+  ;print profiler:report  ;; view the results
+  ;profiler:reset         ;; clear the data
+
+  create-and-setup-output-file
+
+  ask municipalities[
+;  healthunits-location-vaccination
+  ]
+  load-spillover-time-stamps
+  print("Setup complete")
+end
+
+to go
+  set oldtotalinfected sum [totalinfected] of municipalities
+  set oldtotalhospitalized sum [totalhospitalized] of municipalities
+  if (Scenario ="Age_Scenario") [old-age-tests-hospitalized-infected]
+  if ticks = 0 or (ticks - Day-COVID-19-Outbreak) mod Frequency = 0 [run Scenario]
+
+  ; For each day we reset the number of totalinfected animals and infected farms for municipalities to 0
+  ask municipalities [
+    set totalinfectedanimals 0
+    set ninfectedfarms 0
+    ]
+  load-animal-farm-infections
+
+  ; Write to output file every day
+  file-open (word "data/output/OutputBasemodel.csv")
+
+  ask municipalities [
+    ;population-model-plus
+    ;population-model-min
+    ;healthunits-maternal-vaccination
+
+    SEIR-model
+
+    if (Scenario ="COVID19_History_No_Lockdown") [decide_commuting_travelling_history]
+    if (Scenario ="COVID19_History_Lockdown") [decide_commuting_travelling_history]
+    if (Scenario ="Road_Map_Scenario") [decide_commuting_road_map]
+    if (Scenario ="Economic_Scenario") [decide_commuting_economic]
+    if (Scenario ="Age_Scenario") [decide_commuting_age]
+    if (Scenario ="Original_Pertussis_Model") [decide_commuting_original]
+
+    introduce-source-infection-single-municipality
+    ; Introducing animal-human spillover infection in every gemeente
+    ; if conditions are met
+    if (ticks mod spillover-interval = 0)[
+      create-spillover-animal-human
+    ]
+
+    recolor-single-municipality
+
+    calculate-totals-single-municipality
+
+    ;; write to output file
+    ; The total susceptibl, exposed and infected are rounded
+    file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ; "S00000" ; "I00000" ; "R00000" ")
+    ; "I11112" ; "I12112" ; "I13112" ; "suminfected1217" ; "I15111" ; "suminfected2535" ; "suminfected3550" ; "suminfected5065" ; "I19111" ")
+    ;] ;"sum05" ; "sum55"; "sum512"; "sum1217"; "sum1725"; "sum2535"; "sum3550"; "sum5065"; "sum65" ")] ; "S11112" ; "E11112" ;"I11112" ;"R11112" ;  "S12112" ;  "E12112" ; "I12112" ; "R12112" ; "S13112" ; "E13112" ; "I13112" ; "R13112" ; "S14212" ; "E14212" ; "I14212" ; "R14212" ; "S14112" ; "E14112" ; "I14112" ; "R14112" ; "S15111" ; "E15111" ; "I15111" ; "R15111" ; "S26311" ; "E26311" ; "I26311" ; "R26311" ; "S26312" ; "E26312" ; "I26312" ; "R26312" ; "S26111" ; "E26111" ; "I26111" ; "R26111" ; "S26112" ; "E26112" ; "I26112" ; "R26112" ; "S36322" ; "E36322" ; "I36322" ; "R36322" ; "S36311" ; "E36311" ;  "I36311" ; "R36311" ; "S36312" ; "E36312" ; "I36312" ; "R36312" ; "S36122" ; "E36122" ; "I36122" ; "R36122" ; "S36111" ; "E36111" ; "I36111" ; "R36111" ; "S36112" ; "E36112" ; "I36112" ; "R36112" ; "S17311" ; "E17311" ; "I17311" ; "R17311" ; "S17312" ; "E17312" ; "I17312" ; "R17312" ; "S17111" ; "E17111" ; "I17111" ; "R17111" ; "S17112" ; "E17112" ; "I17112" ; "R17112" ; "S18311" ; "E18311" ; "I18311" ; "R18311" ; "S18312" ; "E18312" ; "I18312" ; "R18312" ; "S18111" ; "E18111" ; "I18111" ; "R18111" ; "S18112" ; "E18112" ; "I18112" ; "R18112" ; "S19111" ; "E19111" ; "I19111" ; "R19111" ")
+  ]
+
+  file-close
+
+  ; The totalspilloveranimalhumaninfections need to set to 0
+  ask municipalities [set totalspilloveranimalhumaninfections 0]
+  set newtotalinfected sum [totalinfected] of municipalities
+  set newtotalhospitalized sum [totalhospitalized] of municipalities
+
+  tick
+
+  ; calculate R0 three days after the outbreak
+  if (ticks > Day-COVID-19-Outbreak + 3) [R0]
+  set reproductionnumbernew reproductionnumber
+
+  ; calculate R0 7 day average
+  if ticks > (Day-COVID-19-Outbreak + 3) [R0-7-days]
+
+  ; calculate differences in infected and hospitalized each day
+  set newtotalinfected sum [totalinfected] of municipalities
+  set newtotalhospitalized sum [totalhospitalized] of municipalities
+  set differenceinfected newtotalinfected - oldtotalinfected
+  set differencehospitalized newtotalhospitalized - oldtotalhospitalized
+  if (Scenario ="Age_Scenario") [age-tests-hospitalized-infected]
+
+  ; calculate average commuters and travellers each 7 days
+  if ticks > Day-COVID-19-Outbreak + 2 [commuters-travellers-average-7-days]
+
+end
+
+to commuters-travellers-average-7-days
+  ; This model calculates the commuting and travelling once every 7 days, this creates the average of commuting and travelling in a week
+  set schoolcommuter-new-infected lput schoolcommuterstotalNL schoolcommuter-new-infected
+  if length schoolcommuter-new-infected > 7 [set schoolcommuter-new-infected but-first schoolcommuter-new-infected]
+  if length schoolcommuter-new-infected = 7 [set schoolcommuter-new-infected-over-7-days (sum schoolcommuter-new-infected) / 7]
+  set schoolcommuterstotalNL 0
+
+  set jobcommuter-new-infected lput jobcommuterstotalNL jobcommuter-new-infected
+  if length jobcommuter-new-infected > 7 [set jobcommuter-new-infected but-first jobcommuter-new-infected]
+  if length schoolcommuter-new-infected = 7 [set jobcommuter-new-infected-over-7-days (sum jobcommuter-new-infected) / 7]
+  set jobcommuterstotalNL 0
+
+  set GAET-new-infected lput GAETtotal GAET-new-infected
+  if length GAET-new-infected > 7 [set GAET-new-infected but-first GAET-new-infected]
+  if length schoolcommuter-new-infected = 7 [set GAET-new-infected-over-7-days (sum GAET-new-infected) / 7]
+  set GAETtotal 0
+
+  set VT-new-infected lput VTtotal VT-new-infected
+  if length VT-new-infected > 7 [set VT-new-infected but-first VT-new-infected]
+  if length schoolcommuter-new-infected = 7 [set VT-new-infected-over-7-days (sum VT-new-infected) / 7]
+  set VTtotal 0
+end
+
+to positivetestcalculation
+   ; positive test per 100 000 inhabitants per week
+   ; positive test per 100.000 inhabitants calculated by: (number of infected * (1 - ratio asymptomic people) / total population * week) * 100.000 * (1 - ratio asymptomic people)
+  set positivetestscalc ((differenceinfected * 7 * 0.8) / sum [totalpopulation] of municipalities) * 100000
+end]]></code>
+  <widgets>
+    <view x="504" wrappingAllowedX="false" y="168" frameRate="30.0" minPycor="-16" height="661" showTickCounter="true" patchSize="19.76" fontSize="10" wrappingAllowedY="false" width="581" tickCounterLabel="ticks" maxPycor="16" updateMode="0" maxPxcor="14" minPxcor="-14"></view>
+    <plot x="1119" autoPlotX="true" yMax="100.0" autoPlotY="true" yAxis="Infected" y="58" xMin="0.0" height="150" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Total infected in whole population" width="386" sizeVersion="0">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="Nr. infected" color="-2674135" legend="true">
+        <setup></setup>
+        <update>plot newtotalinfected</update>
+      </pen>
+    </plot>
+    <slider x="266" step="1" y="140" max="100" display="Commuter-Threshold" height="33" min="1" direction="Horizontal" default="4.0" variable="Commuter-Threshold" width="193" sizeVersion="0"></slider>
+    <slider x="268" step="0.1" y="23" max="4" display="Duration-of-Immunity" height="33" min="0.1" direction="Horizontal" default="0.1" variable="Duration-of-Immunity" units="Year" width="193" sizeVersion="0"></slider>
+    <slider x="268" step="1" y="79" max="30" display="Duration-of-Infectivity" height="33" min="5" direction="Horizontal" default="5.0" variable="Duration-of-Infectivity" units="Days" width="192" sizeVersion="0"></slider>
+    <slider x="263" step="1" y="203" max="100" display="Schoolcommuter-Threshold" height="33" min="1" direction="Horizontal" default="6.0" variable="Schoolcommuter-Threshold" width="194" sizeVersion="0"></slider>
+    <plot x="1119" autoPlotX="true" yMax="1.0" autoPlotY="true" yAxis="Fraction" y="416" xMin="0.0" height="162" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Fractions SIR farmers" width="386" sizeVersion="0">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="Fraction Susceptible" color="-14070903" legend="true">
+        <setup></setup>
+        <update>plot (sum [S00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="Fraction Infected" color="-2674135" legend="true">
+        <setup></setup>
+        <update>plot (sum [I00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="Fraction Recovered" color="-13840069" legend="true">
+        <setup></setup>
+        <update>plot (sum [R00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="Fraction Exposed" color="-1184463" legend="true">
+        <setup></setup>
+        <update>plot (sum [E00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
+      </pen>
+    </plot>
+    <chooser x="12" y="115" height="45" variable="Scenario" current="1" display="Scenario" width="223" sizeVersion="0">
+      <choice type="string" value="Original_Pertussis_Model"></choice>
+      <choice type="string" value="COVID19_History_No_Lockdown"></choice>
+      <choice type="string" value="COVID19_History_Lockdown"></choice>
+      <choice type="string" value="Road_Map_Scenario"></choice>
+      <choice type="string" value="Economic_Scenario"></choice>
+      <choice type="string" value="Age_Scenario"></choice>
+    </chooser>
+    <slider x="262" step="1" y="256" max="100" display="Travelling-Threshold" height="33" min="1" direction="Horizontal" default="8.0" variable="Travelling-Threshold" width="195" sizeVersion="0"></slider>
+    <plot x="1118" autoPlotX="true" yMax="100.0" autoPlotY="true" yAxis="Infected" y="215" xMin="0.0" height="191" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Age infected whole population" width="387" sizeVersion="0">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="0-4 years" color="-5825686" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected05] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="5-11 years" color="-2064490" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected512] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="12-16 years" color="-2674135" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected1217] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="17-24 years" color="-955883" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected1725] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="25-34 years" color="-6459832" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected2535] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="35-49 years" color="-16514302" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected3550] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="50-64 years" color="-13345367" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected5065] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="65-80 years" color="-11221820" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected6580] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="80+ years" color="-14835848" legend="true">
+        <setup></setup>
+        <update>plot sum [suminfected80plus] of municipalities</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="farmers" color="-7500403" legend="true">
+        <setup></setup>
+        <update>plot sum [I00000] of municipalities</update>
+      </pen>
+    </plot>
+    <plot x="1520" autoPlotX="true" yMax="100.0" autoPlotY="true" yAxis="Animals" y="59" xMin="0.0" height="148" legend="false" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Infected animals" width="385" sizeVersion="0">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="sum_infected_animals" color="-16777216" legend="true">
+        <setup>plot sum [totalhospitalized] of municipalities</setup>
+        <update>plot sum [totalinfectedanimals] of municipalities</update>
+      </pen>
+    </plot>
+    <plot x="1519" autoPlotX="true" yMax="100.0" autoPlotY="true" yAxis="Farms" y="215" xMin="0.0" height="190" legend="false" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Number of infected farms" width="386" sizeVersion="0">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="default" color="-16777216" legend="true">
+        <setup></setup>
+        <update>plot sum [ninfectedfarms] of municipalities</update>
+      </pen>
+    </plot>
+    <note x="588" y="10" backgroundDark="0" fontSize="30" width="437" markdown="false" height="45" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Infectious disease modelling</note>
+    <note x="1493" y="22" backgroundDark="0" fontSize="15" width="40" markdown="false" height="20" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Plots</note>
+    <plot x="1519" autoPlotX="true" yMax="1.0" autoPlotY="true" yAxis="Fraction" y="416" xMin="0.0" height="162" legend="false" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Fraction of infected farms" width="385" sizeVersion="0">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="default" color="-16777216" legend="true">
+        <setup></setup>
+        <update>plot (sum [ninfectedfarms] of municipalities)/ count animalfarms</update>
+      </pen>
+    </plot>
+    <note x="16" y="10" backgroundDark="0" fontSize="11" width="224" markdown="false" height="100" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">To run a scenario with human to human transimission choose scenario "COVID19_History_Lockdown".
+
+For no human to human transmission choose  "COVID19_No_Lockdown".</note>
+    <note x="14" y="169" backgroundDark="0" fontSize="11" width="224" markdown="false" height="100" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Sets the percentage immunity before the start (go procedure) of the model. Simulates a one time vaccination intervention. Municipal vaccinationrates are taken into account.</note>
+    <switch x="267" y="634" height="33" on="false" variable="Job-Commuting-Holiday?" display="Job-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
+    <chooser x="37" y="939" height="45" variable="Infection-Rate-WithinMuni-Summer" current="0" display="Infection-Rate-WithinMuni-Summer" width="206" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="37" y="889" height="45" variable="Infection-Rate-WithinMuni-SpringAutumn" current="0" display="Infection-Rate-WithinMuni-SpringAutumn" width="206" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="37" y="990" height="45" variable="Infection-Rate-WithinMuni-Winter" current="0" display="Infection-Rate-WithinMuni-Winter" width="205" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="252" y="939" height="45" variable="Infection-Rate-AmongMuni-Summer" current="0" display="Infection-Rate-AmongMuni-Summer" width="206" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="252" y="887" height="45" variable="Infection-Rate-AmongMuni-SpringAutumn" current="0" display="Infection-Rate-AmongMuni-SpringAutumn" width="206" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="252" y="990" height="45" variable="Infection-Rate-AmongMuni-Winter" current="0" display="Infection-Rate-AmongMuni-Winter" width="207" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <note x="183" y="804" backgroundDark="0" fontSize="15" width="150" markdown="false" height="19" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Transmission Rates</note>
+    <note x="53" y="829" backgroundDark="0" fontSize="11" width="414" markdown="false" height="62" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Infection rates should be set to the same number for within municipalities and among municipalities in the same seasons. Only used for Original pertussis model and COVID-19 history model without lockdown</note>
+    <note x="41" y="564" backgroundDark="0" fontSize="11" width="382" markdown="false" height="54" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Switch on to start commuting & travelling.
+In summer holiday no school commuting and less job commuting? Switch 'commuting-holiday' on]]></note>
+    <switch x="266" y="709" height="33" on="false" variable="Extra-Gathering-Events-Travelling-Holiday" display="Extra-Gathering-Events-Travelling-Holiday" width="202" sizeVersion="0"></switch>
+    <switch x="28" y="709" height="33" on="false" variable="Overall-Gatherings-Events-Travelling?" display="Overall-Gatherings-Events-Travelling?" width="218" sizeVersion="0"></switch>
+    <switch x="266" y="747" height="33" on="false" variable="Extra-Visit-Travelling-Holiday?" display="Extra-Visit-Travelling-Holiday?" width="202" sizeVersion="0"></switch>
+    <switch x="28" y="746" height="33" on="false" variable="Overall-Visit-Travelling?" display="Overall-Visit-Travelling?" width="218" sizeVersion="0"></switch>
+    <switch x="28" y="671" height="33" on="false" variable="Overall-School-Commuting?" display="Overall-School-Commuting?" width="218" sizeVersion="0"></switch>
+    <switch x="28" y="634" height="33" on="false" variable="Overall-Job-Commuting?" display="Overall-Job-Commuting?" width="218" sizeVersion="0"></switch>
+    <switch x="267" y="672" height="33" on="false" variable="School-Commuting-Holiday?" display="School-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
+    <note x="164" y="531" backgroundDark="0" fontSize="15" width="192" markdown="false" height="22" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Commuting & Travelling]]></note>
+    <note x="139" y="328" backgroundDark="0" fontSize="15" width="219" markdown="false" height="25" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Animal to human spillover </note>
+    <chooser x="17" y="272" height="45" variable="Immunity-Startpopulation" current="0" display="Immunity-Startpopulation" width="222" sizeVersion="0">
+      <choice type="string" value="test.shp"></choice>
+    </chooser>
+    <slider x="275" step="0.01" y="486" max="1" display="prob-contact" height="33" min="0" direction="Horizontal" default="0.0" variable="prob-contact" width="172" sizeVersion="0"></slider>
+    <chooser x="30" y="367" height="60" variable="animal-inf-oubtreak-nr" current="0" width="231" display="animal-inf-oubtreak-nr">
+      <choice type="double" value="1.0"></choice>
+      <choice type="double" value="103319.0"></choice>
+      <choice type="double" value="451119.0"></choice>
+      <choice type="double" value="467803.0"></choice>
+      <choice type="double" value="485214.0"></choice>
+      <choice type="double" value="631256.0"></choice>
+      <choice type="double" value="739713.0"></choice>
+      <choice type="double" value="823622.0"></choice>
+      <choice type="double" value="890939.0"></choice>
+      <choice type="double" value="995529.0"></choice>
+    </chooser>
+    <chooser x="29" y="433" height="45" variable="spillover-group" current="0" display="spillover-group" width="138" sizeVersion="0">
+      <choice type="string" value="farmers"></choice>
+    </chooser>
+    <chooser x="181" y="434" height="45" variable="spillover-anim-hum-mechanism" current="0" display="spillover-anim-hum-mechanism" width="196" sizeVersion="0">
+      <choice type="string" value="B"></choice>
+    </chooser>
+    <slider x="29" step="0.05" y="484" max="1" display="prob-spillover-risk-after-contact" height="33" min="0" direction="Horizontal" default="0.05" variable="prob-spillover-risk-after-contact" width="239" sizeVersion="0"></slider>
+    <monitor x="945" precision="0" y="104" height="45" fontSize="11" display="Positive tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity
+; 20% is asymptomic and does not take a test. 
+; Around 10.5% of tests taken are positive 
+; based on 2020</monitor>
+    <monitor x="553" precision="0" y="104" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
+    <button x="754" y="63" height="33" disableUntilTicks="false" forever="true" kind="Observer" display="Output" width="86" sizeVersion="0"><![CDATA[if ticks >= 511 [
+
+set ij (word substring date-and-time 0 2 substring date-and-time 3 5)
+if substring ij 0 2 = "10" [stop]
+export-plot "Total infected in whole population" ( word "Total infected in whole population _ " ij ".csv" )
+export-plot "Age infected whole population" ( word "Age infected whole population _ " ij ".csv" )
+export-plot "Hospitalization" ( word "Hospitalization _ " ij ".csv" )
+export-plot "Reproduction number 7 day average" ( word "Reproduction number 7 day average _ " ij ".csv" )
+export-plot "Commuting and Travelling (in %)" ( word "Commuting and Travelling (in %) _ " ij ".csv" )
+export-plot "(Not Working) Number of infected commuting and travelling" ( word "(Not Working) Number of infected commuting and travelling _ " ij ".csv" )
+
+reset-ticks
+clear-all-plots
+setup
+
+;export-plot "Age infected whole population" ( word "Age infected whole population _ 5.csv" )
+;export-plot "Hospitalization" ( word "Hospitalization _ 5.csv" )
+;export-plot "Reproduction number 7 day average" ( word "Reproduction number 7 day average _ 5.csv" )
+;export-plot "Commuting and Travelling (in %)" ( word "Commuting and Travelling (in %) _ 5.csv" )
+;export-plot "(Not Working) Number of infected commuting and travelling" ( word "(Not Working) Number of infected commuting and travelling _ 5.csv" )
+;stop
+
+]
+
+go
+
+;if ij >= 50 [ stop ]
+if ticks >= 510 [ stop ]]]></button>
+    <button x="684" y="63" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="63" sizeVersion="0">setup</button>
+    <button x="847" y="63" height="33" disableUntilTicks="false" forever="true" kind="Observer" display="go" width="63" sizeVersion="0"><![CDATA[go
+if ticks >= 550 [ stop ]]]></button>
+    <monitor x="727" precision="0" y="103" height="45" fontSize="11" display="Difference Infected" width="107" sizeVersion="0">differenceinfected</monitor>
+    <monitor x="841" precision="0" y="104" height="45" fontSize="11" display="Nr. of tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity / 10.5 * 100
+; 20% is asymptomic and does not take a test. 
+; Around 10.5% of tests taken are positive 
+; based on week 48 to 52 in 2020</monitor>
+    <monitor x="611" precision="0" y="103" height="45" fontSize="11" display="Total Infected" width="108" sizeVersion="0">newtotalinfected</monitor>
+  </widgets>
+  <info><![CDATA[## CONTACT?
+
+If you have any questions about the corona model Spring 2021 version, please contact me on my personal email: *mail.astridherwig@gmail.com*
+
+## WHAT IS IT?
+
+The main goal of this model is to evaluate the impact of the governmental risk perception and coping appraisal on the predicted number of disease cases for COVID-19 in the Netherlands with a COVID-19 Netlogo model. An agent-based COVID-19 model will be used to test newly available data. This thesis aims to give insight into COVID-19 through the year 2020 by looking at the effect of government decisions in different scenarios on the number of infected individuals, the reproduction number, the hospitalizations and the virus diffusion. 
+
+## HOW IT WORKS
+There are five scenario options (of which three are actual scenarios:
+- Original pertussis model by Tjalma (2016): this is the original model meant to 
+calculate the pertussis cases
+- COVID-19 History: This is the part of the model used to simulate the COVID-19 outbreak 
+in 2020 and base the callibration of the scenarios on.
+- Road map scenario: This scenario follows the Road map (routekaart) of december 2020 published by the RIVM (Rijksinstituut voor Volksgezondheid en Milieu)
+- Economic scenario: This scenario is based on the authors knowledge of the  effect of the COVID-19 measures on the economy and the number of infected. The measures are chosen based on the lowest impact they have on the economy. A textfile in the folder (EconomicScore.txt) imports the scores of each scenario. 
+- Age scenario: For the age scenario the impact of the measures on the different age groups in this model was observed. When an age group has a high number of cases the measures are chosen which affect the age group the most. This is hardcoded.
+
+## SETTINGS INTERFACE
+Other settings
+["Introduce-Infection-In" "Tilburg"]
+["Immunity-Startpopulation" "StartPopulationFullySTrMr.shp"] (whole population is used)
+["Day-COVID-19-Outbreak" 32]
+["Infection_Ratio" 1]
+["Number-Infectives-Introduced" 25]
+
+Lockdown
+["Covid-19-History-Lockdown?" true]
+
+Thresholds
+["Travelling-Threshold" 1]
+["Commuter-Threshold" 1]
+["Schoolcommuter-Threshold" 1]
+
+Duration
+["Duration-of-Immunity" 1] (1 year)
+["Duration-of-Infectivity" 6] (6 days)
+
+Commuting & Travelling
+["Overall-School-Commuting?" true]
+["Overall-Job-Commuting?" true]
+["Overall-Visit-Travelling?" true]
+["Overall-Gatherings-Events-Travelling?" true]
+
+Holiday (turned of for thesis)
+["School-Commuting-Holiday?" false]
+["Job-Commuting-Holiday?" false]
+["Extra-Gathering-Events-Travelling-Holiday" false]
+["Extra-Visit-Travelling-Holiday?" false]
+
+Transmission
+["Infection-Rate-WithinMuni-SpringAutumn" "Transmission1.400.txt"]
+["Infection-Rate-WithinMuni-Winter" "Transmission2.000.txt"]
+["Infection-Rate-WithinMuni-Summer" "Transmission1.000.txt"]
+
+Commuter transmission
+["Infection-Rate-AmongMuni-SpringAutumn" "CommuterTransmission1.400.txt"]
+["Infection-Rate-AmongMuni-Summer" "CommuterTransmission1.000.txt"]
+["Infection-Rate-AmongMuni-Winter" "CommuterTransmission2.000.txt"]
+
+
+## THINGS TO NOTICE
+
+- Spread of the virus
+- The number of infected (Is too high)
+
+## THINGS TO TRY
+
+- If new knowledge about COVID-19 (e.g. duration of immunity or infectivity) is available, try to implement it in the model
+
+## EXTENDING THE MODEL
+
+- The Age scenario is hardcoded and by implementing a textfile (like the economic scenario) it would be easier to make changes. 
+- Vaccination can be added, this was already in the pertussis model so there is a part already coded
+- Callibration with new/updated COVID-19 data
+
+
+## CREDITS AND REFERENCES
+Original Pertussis model: 
+Tjalma, S. (2016). An agent-based model to compare vaccination strategies for pertussis in the Netherlands (p. 97) [Thesis GIMA]. Twente University. https://dspace.library.uu.nl/handle/1874/340415]]></info>
+  <turtleShapes>
+    <shape name="default" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="5"></point>
+        <point x="40" y="250"></point>
+        <point x="150" y="205"></point>
+        <point x="260" y="250"></point>
+      </polygon>
+    </shape>
+    <shape name="airplane" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="0"></point>
+        <point x="135" y="15"></point>
+        <point x="120" y="60"></point>
+        <point x="120" y="105"></point>
+        <point x="15" y="165"></point>
+        <point x="15" y="195"></point>
+        <point x="120" y="180"></point>
+        <point x="135" y="240"></point>
+        <point x="105" y="270"></point>
+        <point x="120" y="285"></point>
+        <point x="150" y="270"></point>
+        <point x="180" y="285"></point>
+        <point x="210" y="270"></point>
+        <point x="165" y="240"></point>
+        <point x="180" y="180"></point>
+        <point x="285" y="195"></point>
+        <point x="285" y="165"></point>
+        <point x="180" y="105"></point>
+        <point x="180" y="60"></point>
+        <point x="165" y="15"></point>
+      </polygon>
+    </shape>
+    <shape name="arrow" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="0"></point>
+        <point x="0" y="150"></point>
+        <point x="105" y="150"></point>
+        <point x="105" y="293"></point>
+        <point x="195" y="293"></point>
+        <point x="195" y="150"></point>
+        <point x="300" y="150"></point>
+      </polygon>
+    </shape>
+    <shape name="box" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="285"></point>
+        <point x="285" y="225"></point>
+        <point x="285" y="75"></point>
+        <point x="150" y="135"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="135"></point>
+        <point x="15" y="75"></point>
+        <point x="150" y="15"></point>
+        <point x="285" y="75"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="15" y="75"></point>
+        <point x="15" y="225"></point>
+        <point x="150" y="285"></point>
+        <point x="150" y="135"></point>
+      </polygon>
+      <line endX="150" startY="285" marked="false" color="255" endY="135" startX="150"></line>
+      <line endX="15" startY="135" marked="false" color="255" endY="75" startX="150"></line>
+      <line endX="285" startY="135" marked="false" color="255" endY="75" startX="150"></line>
+    </shape>
+    <shape name="bug" rotatable="true" editableColorIndex="0">
+      <circle x="96" y="182" marked="true" color="-1920102913" diameter="108" filled="true"></circle>
+      <circle x="110" y="127" marked="true" color="-1920102913" diameter="80" filled="true"></circle>
+      <circle x="110" y="75" marked="true" color="-1920102913" diameter="80" filled="true"></circle>
+      <line endX="80" startY="100" marked="true" color="-1920102913" endY="30" startX="150"></line>
+      <line endX="220" startY="100" marked="true" color="-1920102913" endY="30" startX="150"></line>
+    </shape>
+    <shape name="butterfly" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="165"></point>
+        <point x="209" y="199"></point>
+        <point x="225" y="225"></point>
+        <point x="225" y="255"></point>
+        <point x="195" y="270"></point>
+        <point x="165" y="255"></point>
+        <point x="150" y="240"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="165"></point>
+        <point x="89" y="198"></point>
+        <point x="75" y="225"></point>
+        <point x="75" y="255"></point>
+        <point x="105" y="270"></point>
+        <point x="135" y="255"></point>
+        <point x="150" y="240"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="139" y="148"></point>
+        <point x="100" y="105"></point>
+        <point x="55" y="90"></point>
+        <point x="25" y="90"></point>
+        <point x="10" y="105"></point>
+        <point x="10" y="135"></point>
+        <point x="25" y="180"></point>
+        <point x="40" y="195"></point>
+        <point x="85" y="194"></point>
+        <point x="139" y="163"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="162" y="150"></point>
+        <point x="200" y="105"></point>
+        <point x="245" y="90"></point>
+        <point x="275" y="90"></point>
+        <point x="290" y="105"></point>
+        <point x="290" y="135"></point>
+        <point x="275" y="180"></point>
+        <point x="260" y="195"></point>
+        <point x="215" y="195"></point>
+        <point x="162" y="165"></point>
+      </polygon>
+      <polygon color="255" filled="true" marked="false">
+        <point x="150" y="255"></point>
+        <point x="135" y="225"></point>
+        <point x="120" y="150"></point>
+        <point x="135" y="120"></point>
+        <point x="150" y="105"></point>
+        <point x="165" y="120"></point>
+        <point x="180" y="150"></point>
+        <point x="165" y="225"></point>
+      </polygon>
+      <circle x="135" y="90" marked="false" color="255" diameter="30" filled="true"></circle>
+      <line endX="195" startY="105" marked="false" color="255" endY="60" startX="150"></line>
+      <line endX="105" startY="105" marked="false" color="255" endY="60" startX="150"></line>
+    </shape>
+    <shape name="car" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="300" y="180"></point>
+        <point x="279" y="164"></point>
+        <point x="261" y="144"></point>
+        <point x="240" y="135"></point>
+        <point x="226" y="132"></point>
+        <point x="213" y="106"></point>
+        <point x="203" y="84"></point>
+        <point x="185" y="63"></point>
+        <point x="159" y="50"></point>
+        <point x="135" y="50"></point>
+        <point x="75" y="60"></point>
+        <point x="0" y="150"></point>
+        <point x="0" y="165"></point>
+        <point x="0" y="225"></point>
+        <point x="300" y="225"></point>
+        <point x="300" y="180"></point>
+      </polygon>
+      <circle x="180" y="180" marked="false" color="255" diameter="90" filled="true"></circle>
+      <circle x="30" y="180" marked="false" color="255" diameter="90" filled="true"></circle>
+      <polygon color="255" filled="true" marked="false">
+        <point x="162" y="80"></point>
+        <point x="132" y="78"></point>
+        <point x="134" y="135"></point>
+        <point x="209" y="135"></point>
+        <point x="194" y="105"></point>
+        <point x="189" y="96"></point>
+        <point x="180" y="89"></point>
+      </polygon>
+      <circle x="47" y="195" marked="true" color="-1920102913" diameter="58" filled="true"></circle>
+      <circle x="195" y="195" marked="true" color="-1920102913" diameter="58" filled="true"></circle>
+    </shape>
+    <shape name="circle" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+    </shape>
+    <shape name="circle 2" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+      <circle x="30" y="30" marked="false" color="255" diameter="240" filled="true"></circle>
+    </shape>
+    <shape name="cow" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="200" y="193"></point>
+        <point x="197" y="249"></point>
+        <point x="179" y="249"></point>
+        <point x="177" y="196"></point>
+        <point x="166" y="187"></point>
+        <point x="140" y="189"></point>
+        <point x="93" y="191"></point>
+        <point x="78" y="179"></point>
+        <point x="72" y="211"></point>
+        <point x="49" y="209"></point>
+        <point x="48" y="181"></point>
+        <point x="37" y="149"></point>
+        <point x="25" y="120"></point>
+        <point x="25" y="89"></point>
+        <point x="45" y="72"></point>
+        <point x="103" y="84"></point>
+        <point x="179" y="75"></point>
+        <point x="198" y="76"></point>
+        <point x="252" y="64"></point>
+        <point x="272" y="81"></point>
+        <point x="293" y="103"></point>
+        <point x="285" y="121"></point>
+        <point x="255" y="121"></point>
+        <point x="242" y="118"></point>
+        <point x="224" y="167"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="73" y="210"></point>
+        <point x="86" y="251"></point>
+        <point x="62" y="249"></point>
+        <point x="48" y="208"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="25" y="114"></point>
+        <point x="16" y="195"></point>
+        <point x="9" y="204"></point>
+        <point x="23" y="213"></point>
+        <point x="25" y="200"></point>
+        <point x="39" y="123"></point>
+      </polygon>
+    </shape>
+    <shape name="cross" rotatable="false" editableColorIndex="0">
+      <rectangle endX="180" startY="60" marked="true" color="-1920102913" endY="240" startX="120" filled="true"></rectangle>
+      <rectangle endX="240" startY="120" marked="true" color="-1920102913" endY="180" startX="60" filled="true"></rectangle>
+    </shape>
+    <shape name="cylinder" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+    </shape>
+    <shape name="dot" rotatable="false" editableColorIndex="0">
+      <circle x="90" y="90" marked="true" color="-1920102913" diameter="120" filled="true"></circle>
+    </shape>
+    <shape name="face happy" rotatable="false" editableColorIndex="0">
+      <circle x="8" y="8" marked="true" color="-1920102913" diameter="285" filled="true"></circle>
+      <circle x="60" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <circle x="180" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <polygon color="255" filled="true" marked="false">
+        <point x="150" y="255"></point>
+        <point x="90" y="239"></point>
+        <point x="62" y="213"></point>
+        <point x="47" y="191"></point>
+        <point x="67" y="179"></point>
+        <point x="90" y="203"></point>
+        <point x="109" y="218"></point>
+        <point x="150" y="225"></point>
+        <point x="192" y="218"></point>
+        <point x="210" y="203"></point>
+        <point x="227" y="181"></point>
+        <point x="251" y="194"></point>
+        <point x="236" y="217"></point>
+        <point x="212" y="240"></point>
+      </polygon>
+    </shape>
+    <shape name="face neutral" rotatable="false" editableColorIndex="0">
+      <circle x="8" y="7" marked="true" color="-1920102913" diameter="285" filled="true"></circle>
+      <circle x="60" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <circle x="180" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <rectangle endX="240" startY="195" marked="false" color="255" endY="225" startX="60" filled="true"></rectangle>
+    </shape>
+    <shape name="face sad" rotatable="false" editableColorIndex="0">
+      <circle x="8" y="8" marked="true" color="-1920102913" diameter="285" filled="true"></circle>
+      <circle x="60" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <circle x="180" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <polygon color="255" filled="true" marked="false">
+        <point x="150" y="168"></point>
+        <point x="90" y="184"></point>
+        <point x="62" y="210"></point>
+        <point x="47" y="232"></point>
+        <point x="67" y="244"></point>
+        <point x="90" y="220"></point>
+        <point x="109" y="205"></point>
+        <point x="150" y="198"></point>
+        <point x="192" y="205"></point>
+        <point x="210" y="220"></point>
+        <point x="227" y="242"></point>
+        <point x="251" y="229"></point>
+        <point x="236" y="206"></point>
+        <point x="212" y="183"></point>
+      </polygon>
+    </shape>
+    <shape name="fish" rotatable="false" editableColorIndex="0">
+      <polygon color="-1" filled="true" marked="false">
+        <point x="44" y="131"></point>
+        <point x="21" y="87"></point>
+        <point x="15" y="86"></point>
+        <point x="0" y="120"></point>
+        <point x="15" y="150"></point>
+        <point x="0" y="180"></point>
+        <point x="13" y="214"></point>
+        <point x="20" y="212"></point>
+        <point x="45" y="166"></point>
+      </polygon>
+      <polygon color="-1" filled="true" marked="false">
+        <point x="135" y="195"></point>
+        <point x="119" y="235"></point>
+        <point x="95" y="218"></point>
+        <point x="76" y="210"></point>
+        <point x="46" y="204"></point>
+        <point x="60" y="165"></point>
+      </polygon>
+      <polygon color="-1" filled="true" marked="false">
+        <point x="75" y="45"></point>
+        <point x="83" y="77"></point>
+        <point x="71" y="103"></point>
+        <point x="86" y="114"></point>
+        <point x="166" y="78"></point>
+        <point x="135" y="60"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="30" y="136"></point>
+        <point x="151" y="77"></point>
+        <point x="226" y="81"></point>
+        <point x="280" y="119"></point>
+        <point x="292" y="146"></point>
+        <point x="292" y="160"></point>
+        <point x="287" y="170"></point>
+        <point x="270" y="195"></point>
+        <point x="195" y="210"></point>
+        <point x="151" y="212"></point>
+        <point x="30" y="166"></point>
+      </polygon>
+      <circle x="215" y="106" marked="false" color="255" diameter="30" filled="true"></circle>
+    </shape>
+    <shape name="flag" rotatable="false" editableColorIndex="0">
+      <rectangle endX="75" startY="15" marked="true" color="-1920102913" endY="300" startX="60" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="90" y="150"></point>
+        <point x="270" y="90"></point>
+        <point x="90" y="30"></point>
+      </polygon>
+      <line endX="90" startY="135" marked="true" color="-1920102913" endY="135" startX="75"></line>
+      <line endX="90" startY="45" marked="true" color="-1920102913" endY="45" startX="75"></line>
+    </shape>
+    <shape name="flower" rotatable="false" editableColorIndex="0">
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="135" y="120"></point>
+        <point x="165" y="165"></point>
+        <point x="180" y="210"></point>
+        <point x="180" y="240"></point>
+        <point x="150" y="300"></point>
+        <point x="165" y="300"></point>
+        <point x="195" y="240"></point>
+        <point x="195" y="195"></point>
+        <point x="165" y="135"></point>
+      </polygon>
+      <circle x="85" y="132" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="130" y="147" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="192" y="85" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="85" y="40" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="177" y="40" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="177" y="132" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="70" y="85" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="130" y="25" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="96" y="51" marked="true" color="-1920102913" diameter="108" filled="true"></circle>
+      <circle x="113" y="68" marked="false" color="255" diameter="74" filled="true"></circle>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="189" y="233"></point>
+        <point x="219" y="188"></point>
+        <point x="249" y="173"></point>
+        <point x="279" y="188"></point>
+        <point x="234" y="218"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="180" y="255"></point>
+        <point x="150" y="210"></point>
+        <point x="105" y="210"></point>
+        <point x="75" y="240"></point>
+        <point x="135" y="240"></point>
+      </polygon>
+    </shape>
+    <shape name="house" rotatable="false" editableColorIndex="0">
+      <rectangle endX="255" startY="120" marked="true" color="-1920102913" endY="285" startX="45" filled="true"></rectangle>
+      <rectangle endX="180" startY="210" marked="false" color="255" endY="285" startX="120" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="15" y="120"></point>
+        <point x="150" y="15"></point>
+        <point x="285" y="120"></point>
+      </polygon>
+      <line endX="270" startY="120" marked="false" color="255" endY="120" startX="30"></line>
+    </shape>
+    <shape name="leaf" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="210"></point>
+        <point x="135" y="195"></point>
+        <point x="120" y="210"></point>
+        <point x="60" y="210"></point>
+        <point x="30" y="195"></point>
+        <point x="60" y="180"></point>
+        <point x="60" y="165"></point>
+        <point x="15" y="135"></point>
+        <point x="30" y="120"></point>
+        <point x="15" y="105"></point>
+        <point x="40" y="104"></point>
+        <point x="45" y="90"></point>
+        <point x="60" y="90"></point>
+        <point x="90" y="105"></point>
+        <point x="105" y="120"></point>
+        <point x="120" y="120"></point>
+        <point x="105" y="60"></point>
+        <point x="120" y="60"></point>
+        <point x="135" y="30"></point>
+        <point x="150" y="15"></point>
+        <point x="165" y="30"></point>
+        <point x="180" y="60"></point>
+        <point x="195" y="60"></point>
+        <point x="180" y="120"></point>
+        <point x="195" y="120"></point>
+        <point x="210" y="105"></point>
+        <point x="240" y="90"></point>
+        <point x="255" y="90"></point>
+        <point x="263" y="104"></point>
+        <point x="285" y="105"></point>
+        <point x="270" y="120"></point>
+        <point x="285" y="135"></point>
+        <point x="240" y="165"></point>
+        <point x="240" y="180"></point>
+        <point x="270" y="195"></point>
+        <point x="240" y="210"></point>
+        <point x="180" y="210"></point>
+        <point x="165" y="195"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="195"></point>
+        <point x="135" y="240"></point>
+        <point x="120" y="255"></point>
+        <point x="105" y="255"></point>
+        <point x="105" y="285"></point>
+        <point x="135" y="285"></point>
+        <point x="165" y="240"></point>
+        <point x="165" y="195"></point>
+      </polygon>
+    </shape>
+    <shape name="line" rotatable="true" editableColorIndex="0">
+      <line endX="150" startY="0" marked="true" color="-1920102913" endY="300" startX="150"></line>
+    </shape>
+    <shape name="line half" rotatable="true" editableColorIndex="0">
+      <line endX="150" startY="0" marked="true" color="-1920102913" endY="150" startX="150"></line>
+    </shape>
+    <shape name="pentagon" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="15"></point>
+        <point x="15" y="120"></point>
+        <point x="60" y="285"></point>
+        <point x="240" y="285"></point>
+        <point x="285" y="120"></point>
+      </polygon>
+    </shape>
+    <shape name="person" rotatable="false" editableColorIndex="0">
+      <circle x="110" y="5" marked="true" color="-1920102913" diameter="80" filled="true"></circle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="105" y="90"></point>
+        <point x="120" y="195"></point>
+        <point x="90" y="285"></point>
+        <point x="105" y="300"></point>
+        <point x="135" y="300"></point>
+        <point x="150" y="225"></point>
+        <point x="165" y="300"></point>
+        <point x="195" y="300"></point>
+        <point x="210" y="285"></point>
+        <point x="180" y="195"></point>
+        <point x="195" y="90"></point>
+      </polygon>
+      <rectangle endX="172" startY="79" marked="true" color="-1920102913" endY="94" startX="127" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="195" y="90"></point>
+        <point x="240" y="150"></point>
+        <point x="225" y="180"></point>
+        <point x="165" y="105"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="105" y="90"></point>
+        <point x="60" y="150"></point>
+        <point x="75" y="180"></point>
+        <point x="135" y="105"></point>
+      </polygon>
+    </shape>
+    <shape name="plant" rotatable="false" editableColorIndex="0">
+      <rectangle endX="165" startY="90" marked="true" color="-1920102913" endY="300" startX="135" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="255"></point>
+        <point x="90" y="210"></point>
+        <point x="45" y="195"></point>
+        <point x="75" y="255"></point>
+        <point x="135" y="285"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="165" y="255"></point>
+        <point x="210" y="210"></point>
+        <point x="255" y="195"></point>
+        <point x="225" y="255"></point>
+        <point x="165" y="285"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="180"></point>
+        <point x="90" y="135"></point>
+        <point x="45" y="120"></point>
+        <point x="75" y="180"></point>
+        <point x="135" y="210"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="165" y="180"></point>
+        <point x="165" y="210"></point>
+        <point x="225" y="180"></point>
+        <point x="255" y="120"></point>
+        <point x="210" y="135"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="105"></point>
+        <point x="90" y="60"></point>
+        <point x="45" y="45"></point>
+        <point x="75" y="105"></point>
+        <point x="135" y="135"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="165" y="105"></point>
+        <point x="165" y="135"></point>
+        <point x="225" y="105"></point>
+        <point x="255" y="45"></point>
+        <point x="210" y="60"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="90"></point>
+        <point x="120" y="45"></point>
+        <point x="150" y="15"></point>
+        <point x="180" y="45"></point>
+        <point x="165" y="90"></point>
+      </polygon>
+    </shape>
+    <shape name="sheep" rotatable="false" editableColorIndex="15">
+      <circle x="203" y="65" marked="true" color="-1" diameter="88" filled="true"></circle>
+      <circle x="70" y="65" marked="true" color="-1" diameter="162" filled="true"></circle>
+      <circle x="150" y="105" marked="true" color="-1" diameter="120" filled="true"></circle>
+      <polygon color="-1920102913" filled="true" marked="false">
+        <point x="218" y="120"></point>
+        <point x="240" y="165"></point>
+        <point x="255" y="165"></point>
+        <point x="278" y="120"></point>
+      </polygon>
+      <circle x="214" y="72" marked="false" color="-1920102913" diameter="67" filled="true"></circle>
+      <rectangle endX="179" startY="223" marked="true" color="-1" endY="298" startX="164" filled="true"></rectangle>
+      <polygon color="-1" filled="true" marked="true">
+        <point x="45" y="285"></point>
+        <point x="30" y="285"></point>
+        <point x="30" y="240"></point>
+        <point x="15" y="195"></point>
+        <point x="45" y="210"></point>
+      </polygon>
+      <circle x="3" y="83" marked="true" color="-1" diameter="150" filled="true"></circle>
+      <rectangle endX="80" startY="221" marked="true" color="-1" endY="296" startX="65" filled="true"></rectangle>
+      <polygon color="-1" filled="true" marked="true">
+        <point x="195" y="285"></point>
+        <point x="210" y="285"></point>
+        <point x="210" y="240"></point>
+        <point x="240" y="210"></point>
+        <point x="195" y="210"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="false">
+        <point x="276" y="85"></point>
+        <point x="285" y="105"></point>
+        <point x="302" y="99"></point>
+        <point x="294" y="83"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="false">
+        <point x="219" y="85"></point>
+        <point x="210" y="105"></point>
+        <point x="193" y="99"></point>
+        <point x="201" y="83"></point>
+      </polygon>
+    </shape>
+    <shape name="square" rotatable="false" editableColorIndex="0">
+      <rectangle endX="270" startY="30" marked="true" color="-1920102913" endY="270" startX="30" filled="true"></rectangle>
+    </shape>
+    <shape name="square 2" rotatable="false" editableColorIndex="0">
+      <rectangle endX="270" startY="30" marked="true" color="-1920102913" endY="270" startX="30" filled="true"></rectangle>
+      <rectangle endX="240" startY="60" marked="false" color="255" endY="240" startX="60" filled="true"></rectangle>
+    </shape>
+    <shape name="star" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="151" y="1"></point>
+        <point x="185" y="108"></point>
+        <point x="298" y="108"></point>
+        <point x="207" y="175"></point>
+        <point x="242" y="282"></point>
+        <point x="151" y="216"></point>
+        <point x="59" y="282"></point>
+        <point x="94" y="175"></point>
+        <point x="3" y="108"></point>
+        <point x="116" y="108"></point>
+      </polygon>
+    </shape>
+    <shape name="target" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+      <circle x="30" y="30" marked="false" color="255" diameter="240" filled="true"></circle>
+      <circle x="60" y="60" marked="true" color="-1920102913" diameter="180" filled="true"></circle>
+      <circle x="90" y="90" marked="false" color="255" diameter="120" filled="true"></circle>
+      <circle x="120" y="120" marked="true" color="-1920102913" diameter="60" filled="true"></circle>
+    </shape>
+    <shape name="tree" rotatable="false" editableColorIndex="0">
+      <circle x="118" y="3" marked="true" color="-1920102913" diameter="94" filled="true"></circle>
+      <rectangle endX="180" startY="195" marked="false" color="-1653716737" endY="300" startX="120" filled="true"></rectangle>
+      <circle x="65" y="21" marked="true" color="-1920102913" diameter="108" filled="true"></circle>
+      <circle x="116" y="41" marked="true" color="-1920102913" diameter="127" filled="true"></circle>
+      <circle x="45" y="90" marked="true" color="-1920102913" diameter="120" filled="true"></circle>
+      <circle x="104" y="74" marked="true" color="-1920102913" diameter="152" filled="true"></circle>
+    </shape>
+    <shape name="triangle" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="30"></point>
+        <point x="15" y="255"></point>
+        <point x="285" y="255"></point>
+      </polygon>
+    </shape>
+    <shape name="triangle 2" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="30"></point>
+        <point x="15" y="255"></point>
+        <point x="285" y="255"></point>
+      </polygon>
+      <polygon color="255" filled="true" marked="false">
+        <point x="151" y="99"></point>
+        <point x="225" y="223"></point>
+        <point x="75" y="224"></point>
+      </polygon>
+    </shape>
+    <shape name="truck" rotatable="false" editableColorIndex="0">
+      <rectangle endX="195" startY="45" marked="true" color="-1920102913" endY="187" startX="4" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="296" y="193"></point>
+        <point x="296" y="150"></point>
+        <point x="259" y="134"></point>
+        <point x="244" y="104"></point>
+        <point x="208" y="104"></point>
+        <point x="207" y="194"></point>
+      </polygon>
+      <rectangle endX="195" startY="60" marked="false" color="-1" endY="105" startX="195" filled="true"></rectangle>
+      <polygon color="255" filled="true" marked="false">
+        <point x="238" y="112"></point>
+        <point x="252" y="141"></point>
+        <point x="219" y="141"></point>
+        <point x="218" y="112"></point>
+      </polygon>
+      <circle x="234" y="174" marked="false" color="255" diameter="42" filled="true"></circle>
+      <rectangle endX="214" startY="185" marked="true" color="-1920102913" endY="194" startX="181" filled="true"></rectangle>
+      <circle x="144" y="174" marked="false" color="255" diameter="42" filled="true"></circle>
+      <circle x="24" y="174" marked="false" color="255" diameter="42" filled="true"></circle>
+      <circle x="24" y="174" marked="true" color="-1920102913" diameter="42" filled="false"></circle>
+      <circle x="144" y="174" marked="true" color="-1920102913" diameter="42" filled="false"></circle>
+      <circle x="234" y="174" marked="true" color="-1920102913" diameter="42" filled="false"></circle>
+    </shape>
+    <shape name="turtle" rotatable="true" editableColorIndex="0">
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="215" y="204"></point>
+        <point x="240" y="233"></point>
+        <point x="246" y="254"></point>
+        <point x="228" y="266"></point>
+        <point x="215" y="252"></point>
+        <point x="193" y="210"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="195" y="90"></point>
+        <point x="225" y="75"></point>
+        <point x="245" y="75"></point>
+        <point x="260" y="89"></point>
+        <point x="269" y="108"></point>
+        <point x="261" y="124"></point>
+        <point x="240" y="105"></point>
+        <point x="225" y="105"></point>
+        <point x="210" y="105"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="105" y="90"></point>
+        <point x="75" y="75"></point>
+        <point x="55" y="75"></point>
+        <point x="40" y="89"></point>
+        <point x="31" y="108"></point>
+        <point x="39" y="124"></point>
+        <point x="60" y="105"></point>
+        <point x="75" y="105"></point>
+        <point x="90" y="105"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="132" y="85"></point>
+        <point x="134" y="64"></point>
+        <point x="107" y="51"></point>
+        <point x="108" y="17"></point>
+        <point x="150" y="2"></point>
+        <point x="192" y="18"></point>
+        <point x="192" y="52"></point>
+        <point x="169" y="65"></point>
+        <point x="172" y="87"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="85" y="204"></point>
+        <point x="60" y="233"></point>
+        <point x="54" y="254"></point>
+        <point x="72" y="266"></point>
+        <point x="85" y="252"></point>
+        <point x="107" y="210"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="119" y="75"></point>
+        <point x="179" y="75"></point>
+        <point x="209" y="101"></point>
+        <point x="224" y="135"></point>
+        <point x="220" y="225"></point>
+        <point x="175" y="261"></point>
+        <point x="128" y="261"></point>
+        <point x="81" y="224"></point>
+        <point x="74" y="135"></point>
+        <point x="88" y="99"></point>
+      </polygon>
+    </shape>
+    <shape name="wheel" rotatable="false" editableColorIndex="0">
+      <circle x="3" y="3" marked="true" color="-1920102913" diameter="294" filled="true"></circle>
+      <circle x="30" y="30" marked="false" color="255" diameter="240" filled="true"></circle>
+      <line endX="150" startY="285" marked="true" color="-1920102913" endY="15" startX="150"></line>
+      <line endX="285" startY="150" marked="true" color="-1920102913" endY="150" startX="15"></line>
+      <circle x="120" y="120" marked="true" color="-1920102913" diameter="60" filled="true"></circle>
+      <line endX="79" startY="40" marked="true" color="-1920102913" endY="269" startX="216"></line>
+      <line endX="269" startY="84" marked="true" color="-1920102913" endY="221" startX="40"></line>
+      <line endX="269" startY="216" marked="true" color="-1920102913" endY="79" startX="40"></line>
+      <line endX="221" startY="40" marked="true" color="-1920102913" endY="269" startX="84"></line>
+    </shape>
+    <shape name="wolf" rotatable="false" editableColorIndex="0">
+      <polygon color="255" filled="true" marked="false">
+        <point x="253" y="133"></point>
+        <point x="245" y="131"></point>
+        <point x="245" y="133"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="2" y="194"></point>
+        <point x="13" y="197"></point>
+        <point x="30" y="191"></point>
+        <point x="38" y="193"></point>
+        <point x="38" y="205"></point>
+        <point x="20" y="226"></point>
+        <point x="20" y="257"></point>
+        <point x="27" y="265"></point>
+        <point x="38" y="266"></point>
+        <point x="40" y="260"></point>
+        <point x="31" y="253"></point>
+        <point x="31" y="230"></point>
+        <point x="60" y="206"></point>
+        <point x="68" y="198"></point>
+        <point x="75" y="209"></point>
+        <point x="66" y="228"></point>
+        <point x="65" y="243"></point>
+        <point x="82" y="261"></point>
+        <point x="84" y="268"></point>
+        <point x="100" y="267"></point>
+        <point x="103" y="261"></point>
+        <point x="77" y="239"></point>
+        <point x="79" y="231"></point>
+        <point x="100" y="207"></point>
+        <point x="98" y="196"></point>
+        <point x="119" y="201"></point>
+        <point x="143" y="202"></point>
+        <point x="160" y="195"></point>
+        <point x="166" y="210"></point>
+        <point x="172" y="213"></point>
+        <point x="173" y="238"></point>
+        <point x="167" y="251"></point>
+        <point x="160" y="248"></point>
+        <point x="154" y="265"></point>
+        <point x="169" y="264"></point>
+        <point x="178" y="247"></point>
+        <point x="186" y="240"></point>
+        <point x="198" y="260"></point>
+        <point x="200" y="271"></point>
+        <point x="217" y="271"></point>
+        <point x="219" y="262"></point>
+        <point x="207" y="258"></point>
+        <point x="195" y="230"></point>
+        <point x="192" y="198"></point>
+        <point x="210" y="184"></point>
+        <point x="227" y="164"></point>
+        <point x="242" y="144"></point>
+        <point x="259" y="145"></point>
+        <point x="284" y="151"></point>
+        <point x="277" y="141"></point>
+        <point x="293" y="140"></point>
+        <point x="299" y="134"></point>
+        <point x="297" y="127"></point>
+        <point x="273" y="119"></point>
+        <point x="270" y="105"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="-1" y="195"></point>
+        <point x="14" y="180"></point>
+        <point x="36" y="166"></point>
+        <point x="40" y="153"></point>
+        <point x="53" y="140"></point>
+        <point x="82" y="131"></point>
+        <point x="134" y="133"></point>
+        <point x="159" y="126"></point>
+        <point x="188" y="115"></point>
+        <point x="227" y="108"></point>
+        <point x="236" y="102"></point>
+        <point x="238" y="98"></point>
+        <point x="268" y="86"></point>
+        <point x="269" y="92"></point>
+        <point x="281" y="87"></point>
+        <point x="269" y="103"></point>
+        <point x="269" y="113"></point>
+      </polygon>
+    </shape>
+    <shape name="x" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="270" y="75"></point>
+        <point x="225" y="30"></point>
+        <point x="30" y="225"></point>
+        <point x="75" y="270"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="30" y="75"></point>
+        <point x="75" y="30"></point>
+        <point x="270" y="225"></point>
+        <point x="225" y="270"></point>
+      </polygon>
+    </shape>
+  </turtleShapes>
+  <linkShapes>
+    <shape name="default" curviness="0.0">
+      <lines>
+        <line x="-0.2" visible="false">
+          <dash value="0.0"></dash>
+          <dash value="1.0"></dash>
+        </line>
+        <line x="0.0" visible="true">
+          <dash value="1.0"></dash>
+          <dash value="0.0"></dash>
+        </line>
+        <line x="0.2" visible="false">
+          <dash value="0.0"></dash>
+          <dash value="1.0"></dash>
+        </line>
+      </lines>
+      <indicator>
+        <shape name="link direction" rotatable="true" editableColorIndex="0">
+          <line endX="90" startY="150" marked="true" color="-1920102913" endY="180" startX="150"></line>
+          <line endX="210" startY="150" marked="true" color="-1920102913" endY="180" startX="150"></line>
+        </shape>
+      </indicator>
+    </shape>
+  </linkShapes>
+  <previewCommands>setup repeat 75 [ go ]</previewCommands>
+  <experiments>
+    <experiment name="experiment" repetitions="3" sequentialRunOrder="true" runMetricsEveryStep="false">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>if ticks 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment 2" repetitions="50" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment sensitivity 0.020" repetitions="25" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission0.020.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission0.020.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission0.020.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission0.020.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission0.020.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission0.020.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-0-25?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment sensitivity 0.200" repetitions="25" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission0.200.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission0.200.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission0.200.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission0.200.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission0.200.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission0.200.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-0-25?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment sensitivity 2.000" repetitions="25" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-0-25?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment sensitivity 1.000" repetitions="25" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-0-25?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment sensitivity 1.400" repetitions="25" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-0-25?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment sensitivity 0.600" repetitions="8" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-0-25?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment calibration 2.0 0.8 0.4" repetitions="25" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission0.800.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission0.800.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission0.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission0.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="false"></value>
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-0-25?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment sensitivity 2.000 test platform" repetitions="8" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="9"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-0-25?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="experiment (1)" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <metrics>
+        <metric>count turtles</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-5-12?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-12-17?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="thresholdjobcom">
+          <value value="0.5"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-35?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="7"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-0-5?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Day-COVID-19-Outbreak">
+          <value value="21"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission0.800.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-17-25?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-35-50?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-50-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Lockdown_Ratio">
+          <value value="0.5"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="Last run" repetitions="25" sequentialRunOrder="true" runMetricsEveryStep="true">
+      <setup>setup</setup>
+      <go>go</go>
+      <exitCondition>ticks = 370</exitCondition>
+      <metrics>
+        <metric>ticks</metric>
+        <metric>newtotalinfected</metric>
+        <metric>reproductionnumber</metric>
+        <metric>R0-over-7-days</metric>
+        <metric>newtotalhospitalized</metric>
+        <metric>(sum [fractionsusceptible] of municipalities) / 396</metric>
+        <metric>(sum [fractionexposed] of municipalities) / 396</metric>
+        <metric>(sum [fractioninfected] of municipalities) / 396</metric>
+        <metric>(sum [fractionrecovered] of municipalities) / 396</metric>
+        <metric>sum [suminfected05] of municipalities</metric>
+        <metric>sum [suminfected512] of municipalities</metric>
+        <metric>sum [suminfected1217] of municipalities</metric>
+        <metric>sum [suminfected1725] of municipalities</metric>
+        <metric>sum [suminfected2535] of municipalities</metric>
+        <metric>sum [suminfected3550] of municipalities</metric>
+        <metric>sum [suminfected5065] of municipalities</metric>
+        <metric>sum [suminfected6580] of municipalities</metric>
+        <metric>sum [suminfected80plus] of municipalities</metric>
+        <metric>sum [hospitalized05] of municipalities</metric>
+        <metric>sum [hospitalized512] of municipalities</metric>
+        <metric>sum [hospitalized1217] of municipalities</metric>
+        <metric>sum [hospitalized1725] of municipalities</metric>
+        <metric>sum [hospitalized2535] of municipalities</metric>
+        <metric>sum [hospitalized3550] of municipalities</metric>
+        <metric>sum [hospitalized5065] of municipalities</metric>
+        <metric>sum [hospitalized6580] of municipalities</metric>
+        <metric>sum [hospitalized80plus] of municipalities</metric>
+        <metric>jobcommuter-new-infected-over-7-days</metric>
+        <metric>schoolcommuter-new-infected-over-7-days</metric>
+        <metric>VT-new-infected-over-7-days</metric>
+        <metric>GAET-new-infected-over-7-days</metric>
+        <metric>decimaljobcom * 100</metric>
+        <metric>decimalschoolcom * 100</metric>
+        <metric>decimalVTcalc * 100</metric>
+        <metric>decimalGAETcalc * 100</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-5-12?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Schoolcommuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-12-17?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-School-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-History-Lockdown?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Travelling-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Commuter-Threshold">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-SpringAutumn">
+          <value value="&quot;CommuterTransmission1.000.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Winter">
+          <value value="&quot;CommuterTransmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Immunity">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-65plus?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="thresholdjobcom">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Immunity-Startpopulation">
+          <value value="&quot;StartPopulationFullySTrMr.shp&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-groups-restrictions-25-35?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Duration-of-Infectivity">
+          <value value="6"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Job-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-AmongMuni-Summer">
+          <value value="&quot;CommuterTransmission0.600.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection_Ratio">
+          <value value="1"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-0-5?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Gatherings-Events-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Day-COVID-19-Outbreak">
+          <value value="32"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Number-Infectives-Introduced">
+          <value value="25"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Winter">
+          <value value="&quot;Transmission1.400.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Visit-Travelling-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Extra-Gathering-Events-Travelling-Holiday">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-Summer">
+          <value value="&quot;Transmission0.800.txt&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-17-25?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Scenario">
+          <value value="&quot;COVID19_History&quot;"></value>
+          <value value="&quot;Route_Map_Scenario&quot;"></value>
+          <value value="&quot;Economic_Scenario&quot;"></value>
+          <value value="&quot;Age_Scenario&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-35-50?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Job-Commuting?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Overall-Visit-Travelling?">
+          <value value="true"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="School-Commuting-Holiday?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Introduce-Infection-In">
+          <value value="&quot;Tilburg&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Covid-19-Age-Groups-Restrictions-50-65?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="Infection-Rate-WithinMuni-SpringAutumn">
+          <value value="&quot;Transmission2.000.txt&quot;"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+  </experiments>
+</model>
