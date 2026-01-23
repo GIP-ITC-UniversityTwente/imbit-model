@@ -4,20 +4,39 @@ globals [
   biblebelt-shp-file
   ggdpoints-shp-file
   ggdregio-shp-file
-  imm-startpop-fil
+  imm-startpop-file
   farm-shp-file
+  commuter-links-file
+  school-links-file
+  travelneigh-links-file
+  travelnonneigh-links-file
+  age-file
+  economic-file
 ]
 
 
 to init-paths
   set input-dir "data/input/"
   
+  ; Spatial layer
   set gm-shp-file (word input-dir "spatial_layers/Gemeentes2013TrMr.shp")
   set biblebelt-shp-file (word input-dir "spatial_layers/BiblebeltTrMr.shp")
   set ggdpoints-shp-file (word input-dir "spatial_layers/GGDpointsTrMr.shp")
   set ggdregio-shp-file (word input-dir "spatial_layers/GGDregioTrMr.shp")
 
+  ; Immunity, farm outbreak
   ; Creating paths based on user chosen options
   set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
   set farm-shp-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/preprocessed_farm.shp")
+
+  ; Links
+  set commuter-links-file (word input-dir "links/LinksCommuter.txt")
+  set school-links-file (word input-dir "links/LinksSchool.txt")
+  set travelneigh-links-file (word input-dir "links/LinksTravelNeigh.txt")
+  set travelnonneigh-links-file (word input-dir "links/LinksTravelNonNeigh.txt")
+
+  ; Others- age and economic
+  set age-file (word input-dir "others/AgeScore.txt")
+  set economic-file (word input-dir "others/EconomicScore.txt")
+
 end
