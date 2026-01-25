@@ -48,7 +48,7 @@ to init-input-paths
   
   ; Farm
   set farm-shp-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/preprocessed_farm.shp")
-  set farm-iv-file (word input-dir "farm/data/outbreak_" animal-inf-oubtreak-nr "iv_table.csv")
+  set farm-iv-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/iv_table.csv")
 
   ; Links
   set commuter-links-file (word input-dir "links/LinksCommuter.txt")
