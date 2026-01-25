@@ -98,6 +98,8 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
 
    Frequency Day-COVID-19-Outbreak
    ; Move to config
+
+   farm-iv-data n-farm-iv-rows
    ]
 
 breed [municipalities municipality]
@@ -166,6 +168,10 @@ to setup
   file-close
 
   init-paths
+
+  ; Load farm infection level data
+  set farm-iv-data csv:from-file farm-iv-file
+  set n-farm-iv-rows length (farm-iv-data)- 1
 
   ; Move to CONFIG file
   set Source_1 "Tilburg"
