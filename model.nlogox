@@ -92,9 +92,6 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
    jobcommuter-new-infected jobcommuter-new-infected-over-7-days schoolcommuter-new-infected schoolcommuter-new-infected-over-7-days VT-new-infected VT-new-infected-over-7-days
    GAET-new-infected GAET-new-infected-over-7-days R0-new R0-over-7-days economiclist
 
-   Frequency Day-COVID-19-Outbreak
-   ; Move to config
-
    farm-iv-data n-farm-iv-rows
    ]
 
@@ -168,10 +165,6 @@ to setup
   ; Load farm infection level data
   set farm-iv-data csv:from-file farm-iv-file
   set n-farm-iv-rows length (farm-iv-data)- 1
-  
-  set Frequency 1
-  set Day-COVID-19-Outbreak 41000
-  ; Move to CONFIG file
 
   load-spatial-layers
   create-model-turtles
@@ -271,6 +264,8 @@ to go
 
     ;; write to output file
     ; The total susceptibl, exposed and infected are rounded
+    file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "round totalinfected)
+
     file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ; "S00000" ; "I00000" ; "R00000" ")
     ; "I11112" ; "I12112" ; "I13112" ; "suminfected1217" ; "I15111" ; "suminfected2535" ; "suminfected3550" ; "suminfected5065" ; "I19111" ")
     ;] ;"sum05" ; "sum55"; "sum512"; "sum1217"; "sum1725"; "sum2535"; "sum3550"; "sum5065"; "sum65" ")] ; "S11112" ; "E11112" ;"I11112" ;"R11112" ;  "S12112" ;  "E12112" ; "I12112" ; "R12112" ; "S13112" ; "E13112" ; "I13112" ; "R13112" ; "S14212" ; "E14212" ; "I14212" ; "R14212" ; "S14112" ; "E14112" ; "I14112" ; "R14112" ; "S15111" ; "E15111" ; "I15111" ; "R15111" ; "S26311" ; "E26311" ; "I26311" ; "R26311" ; "S26312" ; "E26312" ; "I26312" ; "R26312" ; "S26111" ; "E26111" ; "I26111" ; "R26111" ; "S26112" ; "E26112" ; "I26112" ; "R26112" ; "S36322" ; "E36322" ; "I36322" ; "R36322" ; "S36311" ; "E36311" ;  "I36311" ; "R36311" ; "S36312" ; "E36312" ; "I36312" ; "R36312" ; "S36122" ; "E36122" ; "I36122" ; "R36122" ; "S36111" ; "E36111" ; "I36111" ; "R36111" ; "S36112" ; "E36112" ; "I36112" ; "R36112" ; "S17311" ; "E17311" ; "I17311" ; "R17311" ; "S17312" ; "E17312" ; "I17312" ; "R17312" ; "S17111" ; "E17111" ; "I17111" ; "R17111" ; "S17112" ; "E17112" ; "I17112" ; "R17112" ; "S18311" ; "E18311" ; "I18311" ; "R18311" ; "S18312" ; "E18312" ; "I18312" ; "R18312" ; "S18111" ; "E18111" ; "I18111" ; "R18111" ; "S18112" ; "E18112" ; "I18112" ; "R18112" ; "S19111" ; "E19111" ; "I19111" ; "R19111" ")
@@ -483,7 +478,6 @@ if ticks >= 510 [ stop ]]]></button>
     <button x="684" y="63" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="63" sizeVersion="0">setup</button>
     <button x="847" y="63" height="33" disableUntilTicks="false" forever="true" kind="Observer" display="go" width="63" sizeVersion="0"><![CDATA[go
 if ticks >= 550 [ stop ]]]></button>
-    <note x="142" y="331" backgroundDark="0" fontSize="15" width="219" markdown="false" height="33" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Human source infection</note>
     <note x="144" y="592" backgroundDark="0" fontSize="15" width="219" markdown="false" height="25" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Animal to human spillover </note>
     <slider x="34" step="0.05" y="748" max="1" display="prob-spillover-risk-after-contact" height="33" min="0" direction="Horizontal" default="0.05" variable="prob-spillover-risk-after-contact" width="239" sizeVersion="0"></slider>
     <chooser x="34" y="697" height="45" variable="spillover-group" current="0" display="spillover-group" width="138" sizeVersion="0">
@@ -614,24 +608,6 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="Transmission2.000.txt"></choice>
     </chooser>
     <switch x="272" y="898" height="33" on="false" variable="Job-Commuting-Holiday?" display="Job-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
-    <slider x="217" step="1" y="390" max="10" display="Source_1_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_1_infections" width="195" sizeVersion="0"></slider>
-    <slider x="217" step="1" y="458" max="10" display="Source_2_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_2_infections" width="195" sizeVersion="0"></slider>
-    <slider x="217" step="1" y="526" max="10" display="Source_3_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_3_infections" width="195" sizeVersion="0"></slider>
-    <chooser x="74" y="373" height="60" variable="Source_1" current="0" width="121" display="Source_1">
-      <choice type="string" value="Tilburg"></choice>
-      <choice type="string" value="Amsterdam"></choice>
-      <choice type="string" value="Diemen"></choice>
-    </chooser>
-    <chooser x="74" y="441" height="60" variable="Source_2" current="0" width="121" display="Source_2">
-      <choice type="string" value="Tilburg"></choice>
-      <choice type="string" value="Amsterdam"></choice>
-      <choice type="string" value="Diemen"></choice>
-    </chooser>
-    <chooser x="74" y="509" height="60" variable="Source_3" current="0" width="119" display="Source_3">
-      <choice type="string" value="Tilburg"></choice>
-      <choice type="string" value="Amsterdam"></choice>
-      <choice type="string" value="Diemen"></choice>
-    </chooser>
     <monitor x="945" precision="0" y="116" height="45" fontSize="11" display="Positive tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity
 ; 20% is asymptomic and does not take a test. 
 ; Around 10.5% of tests taken are positive 
@@ -644,6 +620,27 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
     <monitor x="727" precision="0" y="115" height="45" fontSize="11" display="Difference Infected" width="107" sizeVersion="0">differenceinfected</monitor>
     <monitor x="553" precision="0" y="116" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
     <input x="473" multiline="false" y="50" height="60" variable="output-nr" type="string" width="127"></input>
+    <slider x="189" step="1" y="412" max="10" display="Source_1_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_1_infections" width="195" sizeVersion="0"></slider>
+    <chooser x="46" y="531" height="60" variable="Source_3" current="0" width="119" display="Source_3">
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+    </chooser>
+    <chooser x="46" y="463" height="60" variable="Source_2" current="0" width="121" display="Source_2">
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+    </chooser>
+    <chooser x="46" y="395" height="60" variable="Source_1" current="0" width="121" display="Source_1">
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+    </chooser>
+    <slider x="189" step="1" y="548" max="10" display="Source_3_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_3_infections" width="195" sizeVersion="0"></slider>
+    <slider x="189" step="1" y="480" max="10" display="Source_2_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_2_infections" width="195" sizeVersion="0"></slider>
+    <note x="145" y="321" backgroundDark="0" fontSize="15" width="219" markdown="false" height="33" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Human source infection</note>
+    <slider x="44" step="1" y="344" max="42" width="191" display="Day-COVID-19-Outbreak" height="50" min="0" direction="Horizontal" default="1.0" variable="Day-COVID-19-Outbreak"></slider>
+    <slider x="253" step="1" y="341" max="30" width="150" display="Frequency" height="50" min="0" direction="Horizontal" default="1.0" variable="Frequency"></slider>
   </widgets>
   <info><![CDATA[## CONTACT?
 
