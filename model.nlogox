@@ -92,10 +92,6 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
    jobcommuter-new-infected jobcommuter-new-infected-over-7-days schoolcommuter-new-infected schoolcommuter-new-infected-over-7-days VT-new-infected VT-new-infected-over-7-days
    GAET-new-infected GAET-new-infected-over-7-days R0-new R0-over-7-days economiclist
 
-   ; Move to config
-   Source_1_infections Source_2_infections Source_3_infections
-   Source_1 Source_2 Source_3
-
    Frequency Day-COVID-19-Outbreak
    ; Move to config
 
@@ -172,16 +168,7 @@ to setup
   ; Load farm infection level data
   set farm-iv-data csv:from-file farm-iv-file
   set n-farm-iv-rows length (farm-iv-data)- 1
-
-  ; Move to CONFIG file
-  set Source_1 "Tilburg"
-  set Source_2 "Amsterdam"
-  set Source_3 "Diemen"
-
-  set Source_1_infections 0
-  set Source_2_infections 0
-  set Source_3_infections 0
-
+  
   set Frequency 1
   set Day-COVID-19-Outbreak 41000
   ; Move to CONFIG file
@@ -462,139 +449,9 @@ end]]></code>
 
 For no human to human transmission choose  "COVID19_No_Lockdown".</note>
     <note x="14" y="169" backgroundDark="0" fontSize="11" width="224" markdown="false" height="100" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Sets the percentage immunity before the start (go procedure) of the model. Simulates a one time vaccination intervention. Municipal vaccinationrates are taken into account.</note>
-    <switch x="267" y="634" height="33" on="false" variable="Job-Commuting-Holiday?" display="Job-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
-    <chooser x="37" y="939" height="45" variable="Infection-Rate-WithinMuni-Summer" current="0" display="Infection-Rate-WithinMuni-Summer" width="206" sizeVersion="0">
-      <choice type="string" value="Transmission0.000.txt"></choice>
-      <choice type="string" value="Transmission0.020.txt"></choice>
-      <choice type="string" value="Transmission0.029.txt"></choice>
-      <choice type="string" value="Transmission0.040.txt"></choice>
-      <choice type="string" value="Transmission0.050.txt"></choice>
-      <choice type="string" value="Transmission0.067.txt"></choice>
-      <choice type="string" value="Transmission0.100.txt"></choice>
-      <choice type="string" value="Transmission0.200.txt"></choice>
-      <choice type="string" value="Transmission0.400.txt"></choice>
-      <choice type="string" value="Transmission0.600.txt"></choice>
-      <choice type="string" value="Transmission0.800.txt"></choice>
-      <choice type="string" value="Transmission1.000.txt"></choice>
-      <choice type="string" value="Transmission1.400.txt"></choice>
-      <choice type="string" value="Transmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="37" y="889" height="45" variable="Infection-Rate-WithinMuni-SpringAutumn" current="0" display="Infection-Rate-WithinMuni-SpringAutumn" width="206" sizeVersion="0">
-      <choice type="string" value="Transmission0.000.txt"></choice>
-      <choice type="string" value="Transmission0.020.txt"></choice>
-      <choice type="string" value="Transmission0.029.txt"></choice>
-      <choice type="string" value="Transmission0.040.txt"></choice>
-      <choice type="string" value="Transmission0.050.txt"></choice>
-      <choice type="string" value="Transmission0.067.txt"></choice>
-      <choice type="string" value="Transmission0.100.txt"></choice>
-      <choice type="string" value="Transmission0.200.txt"></choice>
-      <choice type="string" value="Transmission0.400.txt"></choice>
-      <choice type="string" value="Transmission0.600.txt"></choice>
-      <choice type="string" value="Transmission0.800.txt"></choice>
-      <choice type="string" value="Transmission1.000.txt"></choice>
-      <choice type="string" value="Transmission1.400.txt"></choice>
-      <choice type="string" value="Transmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="37" y="990" height="45" variable="Infection-Rate-WithinMuni-Winter" current="0" display="Infection-Rate-WithinMuni-Winter" width="205" sizeVersion="0">
-      <choice type="string" value="Transmission0.000.txt"></choice>
-      <choice type="string" value="Transmission0.020.txt"></choice>
-      <choice type="string" value="Transmission0.029.txt"></choice>
-      <choice type="string" value="Transmission0.040.txt"></choice>
-      <choice type="string" value="Transmission0.050.txt"></choice>
-      <choice type="string" value="Transmission0.067.txt"></choice>
-      <choice type="string" value="Transmission0.100.txt"></choice>
-      <choice type="string" value="Transmission0.200.txt"></choice>
-      <choice type="string" value="Transmission0.400.txt"></choice>
-      <choice type="string" value="Transmission0.600.txt"></choice>
-      <choice type="string" value="Transmission0.800.txt"></choice>
-      <choice type="string" value="Transmission1.000.txt"></choice>
-      <choice type="string" value="Transmission1.400.txt"></choice>
-      <choice type="string" value="Transmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="252" y="939" height="45" variable="Infection-Rate-AmongMuni-Summer" current="0" display="Infection-Rate-AmongMuni-Summer" width="206" sizeVersion="0">
-      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="252" y="887" height="45" variable="Infection-Rate-AmongMuni-SpringAutumn" current="0" display="Infection-Rate-AmongMuni-SpringAutumn" width="206" sizeVersion="0">
-      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="252" y="990" height="45" variable="Infection-Rate-AmongMuni-Winter" current="0" display="Infection-Rate-AmongMuni-Winter" width="207" sizeVersion="0">
-      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
-    </chooser>
-    <note x="183" y="804" backgroundDark="0" fontSize="15" width="150" markdown="false" height="19" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Transmission Rates</note>
-    <note x="53" y="829" backgroundDark="0" fontSize="11" width="414" markdown="false" height="62" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Infection rates should be set to the same number for within municipalities and among municipalities in the same seasons. Only used for Original pertussis model and COVID-19 history model without lockdown</note>
-    <note x="41" y="564" backgroundDark="0" fontSize="11" width="382" markdown="false" height="54" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Switch on to start commuting & travelling.
-In summer holiday no school commuting and less job commuting? Switch 'commuting-holiday' on]]></note>
-    <switch x="266" y="709" height="33" on="false" variable="Extra-Gathering-Events-Travelling-Holiday" display="Extra-Gathering-Events-Travelling-Holiday" width="202" sizeVersion="0"></switch>
-    <switch x="28" y="709" height="33" on="false" variable="Overall-Gatherings-Events-Travelling?" display="Overall-Gatherings-Events-Travelling?" width="218" sizeVersion="0"></switch>
-    <switch x="266" y="747" height="33" on="false" variable="Extra-Visit-Travelling-Holiday?" display="Extra-Visit-Travelling-Holiday?" width="202" sizeVersion="0"></switch>
-    <switch x="28" y="746" height="33" on="false" variable="Overall-Visit-Travelling?" display="Overall-Visit-Travelling?" width="218" sizeVersion="0"></switch>
-    <switch x="28" y="671" height="33" on="false" variable="Overall-School-Commuting?" display="Overall-School-Commuting?" width="218" sizeVersion="0"></switch>
-    <switch x="28" y="634" height="33" on="false" variable="Overall-Job-Commuting?" display="Overall-Job-Commuting?" width="218" sizeVersion="0"></switch>
-    <switch x="267" y="672" height="33" on="false" variable="School-Commuting-Holiday?" display="School-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
-    <note x="164" y="531" backgroundDark="0" fontSize="15" width="192" markdown="false" height="22" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Commuting & Travelling]]></note>
-    <note x="139" y="328" backgroundDark="0" fontSize="15" width="219" markdown="false" height="25" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Animal to human spillover </note>
     <chooser x="17" y="272" height="45" variable="Immunity-Startpopulation" current="0" display="Immunity-Startpopulation" width="222" sizeVersion="0">
       <choice type="string" value="test.shp"></choice>
     </chooser>
-    <slider x="275" step="0.01" y="486" max="1" display="prob-contact" height="33" min="0" direction="Horizontal" default="0.0" variable="prob-contact" width="172" sizeVersion="0"></slider>
-    <chooser x="30" y="367" height="60" variable="animal-inf-oubtreak-nr" current="0" width="231" display="animal-inf-oubtreak-nr">
-      <choice type="double" value="1.0"></choice>
-      <choice type="double" value="103319.0"></choice>
-      <choice type="double" value="451119.0"></choice>
-      <choice type="double" value="467803.0"></choice>
-      <choice type="double" value="485214.0"></choice>
-      <choice type="double" value="631256.0"></choice>
-      <choice type="double" value="739713.0"></choice>
-      <choice type="double" value="823622.0"></choice>
-      <choice type="double" value="890939.0"></choice>
-      <choice type="double" value="995529.0"></choice>
-    </chooser>
-    <chooser x="29" y="433" height="45" variable="spillover-group" current="0" display="spillover-group" width="138" sizeVersion="0">
-      <choice type="string" value="farmers"></choice>
-    </chooser>
-    <chooser x="181" y="434" height="45" variable="spillover-anim-hum-mechanism" current="0" display="spillover-anim-hum-mechanism" width="196" sizeVersion="0">
-      <choice type="string" value="B"></choice>
-    </chooser>
-    <slider x="29" step="0.05" y="484" max="1" display="prob-spillover-risk-after-contact" height="33" min="0" direction="Horizontal" default="0.05" variable="prob-spillover-risk-after-contact" width="239" sizeVersion="0"></slider>
     <monitor x="945" precision="0" y="104" height="45" fontSize="11" display="Positive tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity
 ; 20% is asymptomic and does not take a test. 
 ; Around 10.5% of tests taken are positive 
@@ -637,6 +494,155 @@ if ticks >= 550 [ stop ]]]></button>
 ; Around 10.5% of tests taken are positive 
 ; based on week 48 to 52 in 2020</monitor>
     <monitor x="611" precision="0" y="103" height="45" fontSize="11" display="Total Infected" width="108" sizeVersion="0">newtotalinfected</monitor>
+    <note x="142" y="331" backgroundDark="0" fontSize="15" width="219" markdown="false" height="33" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Human source infection</note>
+    <note x="144" y="592" backgroundDark="0" fontSize="15" width="219" markdown="false" height="25" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Animal to human spillover </note>
+    <slider x="34" step="0.05" y="748" max="1" display="prob-spillover-risk-after-contact" height="33" min="0" direction="Horizontal" default="0.05" variable="prob-spillover-risk-after-contact" width="239" sizeVersion="0"></slider>
+    <chooser x="34" y="697" height="45" variable="spillover-group" current="0" display="spillover-group" width="138" sizeVersion="0">
+      <choice type="string" value="farmers"></choice>
+    </chooser>
+    <switch x="272" y="936" height="33" on="false" variable="School-Commuting-Holiday?" display="School-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
+    <chooser x="186" y="698" height="45" variable="spillover-anim-hum-mechanism" current="0" display="spillover-anim-hum-mechanism" width="196" sizeVersion="0">
+      <choice type="string" value="B"></choice>
+    </chooser>
+    <chooser x="35" y="631" height="60" variable="animal-inf-oubtreak-nr" current="0" width="231" display="animal-inf-oubtreak-nr">
+      <choice type="double" value="1.0"></choice>
+      <choice type="double" value="103319.0"></choice>
+      <choice type="double" value="451119.0"></choice>
+      <choice type="double" value="467803.0"></choice>
+      <choice type="double" value="485214.0"></choice>
+      <choice type="double" value="631256.0"></choice>
+      <choice type="double" value="739713.0"></choice>
+      <choice type="double" value="823622.0"></choice>
+      <choice type="double" value="890939.0"></choice>
+      <choice type="double" value="995529.0"></choice>
+    </chooser>
+    <slider x="280" step="0.01" y="750" max="1" display="prob-contact" height="33" min="0" direction="Horizontal" default="0.0" variable="prob-contact" width="172" sizeVersion="0"></slider>
+    <note x="169" y="795" backgroundDark="0" fontSize="15" width="192" markdown="false" height="22" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Commuting & Travelling]]></note>
+    <switch x="33" y="898" height="33" on="false" variable="Overall-Job-Commuting?" display="Overall-Job-Commuting?" width="218" sizeVersion="0"></switch>
+    <switch x="33" y="935" height="33" on="false" variable="Overall-School-Commuting?" display="Overall-School-Commuting?" width="218" sizeVersion="0"></switch>
+    <switch x="33" y="1010" height="33" on="false" variable="Overall-Visit-Travelling?" display="Overall-Visit-Travelling?" width="218" sizeVersion="0"></switch>
+    <switch x="271" y="1011" height="33" on="false" variable="Extra-Visit-Travelling-Holiday?" display="Extra-Visit-Travelling-Holiday?" width="202" sizeVersion="0"></switch>
+    <switch x="33" y="973" height="33" on="false" variable="Overall-Gatherings-Events-Travelling?" display="Overall-Gatherings-Events-Travelling?" width="218" sizeVersion="0"></switch>
+    <switch x="271" y="973" height="33" on="false" variable="Extra-Gathering-Events-Travelling-Holiday" display="Extra-Gathering-Events-Travelling-Holiday" width="202" sizeVersion="0"></switch>
+    <note x="46" y="828" backgroundDark="0" fontSize="11" width="382" markdown="false" height="54" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Switch on to start commuting & travelling.
+In summer holiday no school commuting and less job commuting? Switch 'commuting-holiday' on]]></note>
+    <note x="58" y="1093" backgroundDark="0" fontSize="11" width="414" markdown="false" height="62" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Infection rates should be set to the same number for within municipalities and among municipalities in the same seasons. Only used for Original pertussis model and COVID-19 history model without lockdown</note>
+    <note x="188" y="1068" backgroundDark="0" fontSize="15" width="150" markdown="false" height="19" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Transmission Rates</note>
+    <chooser x="257" y="1254" height="45" variable="Infection-Rate-AmongMuni-Winter" current="0" display="Infection-Rate-AmongMuni-Winter" width="207" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="257" y="1151" height="45" variable="Infection-Rate-AmongMuni-SpringAutumn" current="0" display="Infection-Rate-AmongMuni-SpringAutumn" width="206" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="257" y="1203" height="45" variable="Infection-Rate-AmongMuni-Summer" current="0" display="Infection-Rate-AmongMuni-Summer" width="206" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="42" y="1254" height="45" variable="Infection-Rate-WithinMuni-Winter" current="0" display="Infection-Rate-WithinMuni-Winter" width="205" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="42" y="1153" height="45" variable="Infection-Rate-WithinMuni-SpringAutumn" current="0" display="Infection-Rate-WithinMuni-SpringAutumn" width="206" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="42" y="1203" height="45" variable="Infection-Rate-WithinMuni-Summer" current="0" display="Infection-Rate-WithinMuni-Summer" width="206" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <switch x="272" y="898" height="33" on="false" variable="Job-Commuting-Holiday?" display="Job-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
+    <slider x="217" step="1" y="390" max="10" display="Source_1_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_1_infections" width="195" sizeVersion="0"></slider>
+    <slider x="217" step="1" y="458" max="10" display="Source_2_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_2_infections" width="195" sizeVersion="0"></slider>
+    <slider x="217" step="1" y="526" max="10" display="Source_3_infections" height="33" min="0" direction="Horizontal" default="1.0" variable="Source_3_infections" width="195" sizeVersion="0"></slider>
+    <chooser x="74" y="373" height="60" variable="Source_1" current="0" width="121" display="Source_1">
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+    </chooser>
+    <chooser x="74" y="441" height="60" variable="Source_2" current="0" width="121" display="Source_2">
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+    </chooser>
+    <chooser x="74" y="509" height="60" variable="Source_3" current="0" width="119" display="Source_3">
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+    </chooser>
   </widgets>
   <info><![CDATA[## CONTACT?
 
