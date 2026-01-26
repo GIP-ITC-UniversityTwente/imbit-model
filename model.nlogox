@@ -452,11 +452,6 @@ For no human to human transmission choose  "COVID19_No_Lockdown".</note>
     <chooser x="17" y="272" height="45" variable="Immunity-Startpopulation" current="0" display="Immunity-Startpopulation" width="222" sizeVersion="0">
       <choice type="string" value="test.shp"></choice>
     </chooser>
-    <monitor x="945" precision="0" y="104" height="45" fontSize="11" display="Positive tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity
-; 20% is asymptomic and does not take a test. 
-; Around 10.5% of tests taken are positive 
-; based on 2020</monitor>
-    <monitor x="553" precision="0" y="104" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
     <button x="754" y="63" height="33" disableUntilTicks="false" forever="true" kind="Observer" display="Output" width="86" sizeVersion="0"><![CDATA[if ticks >= 511 [
 
 set ij (word substring date-and-time 0 2 substring date-and-time 3 5)
@@ -488,12 +483,6 @@ if ticks >= 510 [ stop ]]]></button>
     <button x="684" y="63" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="63" sizeVersion="0">setup</button>
     <button x="847" y="63" height="33" disableUntilTicks="false" forever="true" kind="Observer" display="go" width="63" sizeVersion="0"><![CDATA[go
 if ticks >= 550 [ stop ]]]></button>
-    <monitor x="727" precision="0" y="103" height="45" fontSize="11" display="Difference Infected" width="107" sizeVersion="0">differenceinfected</monitor>
-    <monitor x="841" precision="0" y="104" height="45" fontSize="11" display="Nr. of tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity / 10.5 * 100
-; 20% is asymptomic and does not take a test. 
-; Around 10.5% of tests taken are positive 
-; based on week 48 to 52 in 2020</monitor>
-    <monitor x="611" precision="0" y="103" height="45" fontSize="11" display="Total Infected" width="108" sizeVersion="0">newtotalinfected</monitor>
     <note x="142" y="331" backgroundDark="0" fontSize="15" width="219" markdown="false" height="33" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Human source infection</note>
     <note x="144" y="592" backgroundDark="0" fontSize="15" width="219" markdown="false" height="25" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Animal to human spillover </note>
     <slider x="34" step="0.05" y="748" max="1" display="prob-spillover-risk-after-contact" height="33" min="0" direction="Horizontal" default="0.05" variable="prob-spillover-risk-after-contact" width="239" sizeVersion="0"></slider>
@@ -643,6 +632,18 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="Amsterdam"></choice>
       <choice type="string" value="Diemen"></choice>
     </chooser>
+    <monitor x="945" precision="0" y="116" height="45" fontSize="11" display="Positive tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity
+; 20% is asymptomic and does not take a test. 
+; Around 10.5% of tests taken are positive 
+; based on 2020</monitor>
+    <monitor x="611" precision="0" y="115" height="45" fontSize="11" display="Total Infected" width="108" sizeVersion="0">newtotalinfected</monitor>
+    <monitor x="841" precision="0" y="116" height="45" fontSize="11" display="Nr. of tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity / 10.5 * 100
+; 20% is asymptomic and does not take a test. 
+; Around 10.5% of tests taken are positive 
+; based on week 48 to 52 in 2020</monitor>
+    <monitor x="727" precision="0" y="115" height="45" fontSize="11" display="Difference Infected" width="107" sizeVersion="0">differenceinfected</monitor>
+    <monitor x="553" precision="0" y="116" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
+    <input x="473" multiline="false" y="50" height="60" variable="output-nr" type="string" width="127"></input>
   </widgets>
   <info><![CDATA[## CONTACT?
 

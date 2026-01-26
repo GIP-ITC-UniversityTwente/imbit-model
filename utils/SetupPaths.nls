@@ -31,7 +31,7 @@ end
 
 to init-output-paths
   set output-dir "data/output/"
-  set output-file (word output-dir "OutputBasemodel.csv")
+  set output-file (word output-dir "OutputBasemodel_" output-nr ".csv")
 end
 
 to init-input-paths
