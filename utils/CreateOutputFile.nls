@@ -20,7 +20,7 @@ to create-and-setup-output-file
   ; file-type "totalpopulation ; "
   ; file-type "totalsusceptible ; "
   ; file-type "totalexposed ; "
-  file-type "totalinfected ; "
+  file-type "totalinfected"
   ; file-type "totalrecovered ; "
   ; file-type "totalnewinfected ;"
 
