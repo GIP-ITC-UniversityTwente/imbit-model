@@ -1,7 +1,10 @@
 to create-model-turtles
   create-healthunit-turtles
   create-centroids-turtles
-  create-animalfarm-turtles
+
+  if Model-Spillover? [ 
+    create-animalfarm-turtles
+  ]
 end
 
 to create-healthunit-turtles
@@ -38,6 +41,8 @@ to create-centroids-turtles
     ; Setting total farms and infected farms 
     set nfarms 0
     set ninfectedfarms 0
+    set no_farmers_per_farm 20
+    ; set no_farmers_per_farm gis:property-value vector-feature "no_farmers_per_farm"
 
     ;;Define variables for the municipalities
     set name gis:property-value vector-feature "NAME"
@@ -45,9 +50,6 @@ to create-centroids-turtles
     set population gis:property-value vector-feature "TOTPOP"
     set vaccinationrate gis:property-value vector-feature "DKTPVACCIN"
 
-    ; Loading the number of farmers
-    set no_farmers_per_farm 20
-    ; set no_farmers_per_farm gis:property-value vector-feature "no_farmers_per_farm"
   
     ;;The variables should be read as follows:
     ;;SEIR.Gender.Age.Commuting.Pregnant.Household
