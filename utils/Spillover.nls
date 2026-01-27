@@ -24,25 +24,24 @@ to load-animal-farm-infections
     print(word "Day " ticks ": Reached the end of farm iv file. Stopping the model.")
     stop
   ]
-
-  if ticks > n-farm-iv-rows [
-    print(word "Farm iv file has no more rows to load.")
-    stop
+  
+  if ticks < n-farm-iv-rows [
+    
+    ; n-row should always be ticks + 1 since the first row is the animal farm number
+    let row-index ticks + 1
+    let row item row-index farm-iv-data
+    
+    set iv-values-for-the-day row ; Parse the CSV row into a list
+    
+    ; Assign IV values to turtles
+    ask animalfarms [
+      set-animal-farm-color
+      
+      set spillover_gm_name gm_name
+      update-gm-animal-farm-inf
+    ]
   ]
 
-  ; n-row should always be ticks + 1 since the first row is the animal farm number
-  let row-index ticks + 1
-  let row item row-index farm-iv-data
-
-  set iv-values-for-the-day row ; Parse the CSV row into a list
-
-  ; Assign IV values to turtles
-  ask animalfarms [
-    set-animal-farm-color
-
-    set spillover_gm_name gm_name
-    update-gm-animal-farm-inf
-  ]
 end
 
 ; Procedure to set animal farm color based on number of infections
