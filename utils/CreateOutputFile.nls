@@ -7,10 +7,10 @@ to create-and-setup-output-file
   file-open output-file
   file-print (word "==========================================================")
   file-print (word "============ COVID-19 cases in the Netherlands ===============")
-  file-type "ticks ; "
-  file-type "name ; "
-  file-type "xcor ; "
-  file-type "ycor ; "
+  file-type "ticks;"
+  file-type "name;"
+  file-type "xcor;"
+  file-type "ycor;"
 
   ; Recording the number of animal infections and spillover numbers
   ; file-type "totalinfectedanimals ; "

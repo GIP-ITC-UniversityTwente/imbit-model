@@ -274,7 +274,7 @@ to go
 
     ;; write to output file
     ; The total susceptibl, exposed and infected are rounded
-    file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "round totalnewinfected)
+    file-print (word  ticks";"name";"xcor";"ycor";"round totalnewinfected)
 
     ;file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ; "S00000" ; "I00000" ; "R00000" ")
     ; "I11112" ; "I12112" ; "I13112" ; "suminfected1217" ; "I15111" ; "suminfected2535" ; "suminfected3550" ; "suminfected5065" ; "I19111" ")
@@ -505,7 +505,7 @@ if ticks >= 550 [ stop ]]]></button>
 In summer holiday no school commuting and less job commuting? Switch 'commuting-holiday' on]]></note>
     <note x="58" y="1093" backgroundDark="0" fontSize="11" width="414" markdown="false" height="62" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Infection rates should be set to the same number for within municipalities and among municipalities in the same seasons. Only used for Original pertussis model and COVID-19 history model without lockdown</note>
     <note x="188" y="1068" backgroundDark="0" fontSize="15" width="150" markdown="false" height="19" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Transmission Rates</note>
-    <chooser x="257" y="1254" height="45" variable="Infection-Rate-AmongMuni-Winter" current="0" display="Infection-Rate-AmongMuni-Winter" width="227" sizeVersion="0">
+    <chooser x="257" y="1254" height="45" variable="Infection-Rate-AmongMuni-Winter" current="9" display="Infection-Rate-AmongMuni-Winter" width="227" sizeVersion="0">
       <choice type="string" value="CommuterTransmission0.000.txt"></choice>
       <choice type="string" value="CommuterTransmission0.020.txt"></choice>
       <choice type="string" value="CommuterTransmission0.029.txt"></choice>
@@ -521,7 +521,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="CommuterTransmission1.400.txt"></choice>
       <choice type="string" value="CommuterTransmission2.000.txt"></choice>
     </chooser>
-    <chooser x="257" y="1151" height="45" variable="Infection-Rate-AmongMuni-SpringAutumn" current="0" display="Infection-Rate-AmongMuni-SpringAutumn" width="227" sizeVersion="0">
+    <chooser x="257" y="1151" height="45" variable="Infection-Rate-AmongMuni-SpringAutumn" current="4" display="Infection-Rate-AmongMuni-SpringAutumn" width="227" sizeVersion="0">
       <choice type="string" value="CommuterTransmission0.000.txt"></choice>
       <choice type="string" value="CommuterTransmission0.020.txt"></choice>
       <choice type="string" value="CommuterTransmission0.029.txt"></choice>
@@ -537,7 +537,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="CommuterTransmission1.400.txt"></choice>
       <choice type="string" value="CommuterTransmission2.000.txt"></choice>
     </chooser>
-    <chooser x="257" y="1203" height="45" variable="Infection-Rate-AmongMuni-Summer" current="0" display="Infection-Rate-AmongMuni-Summer" width="226" sizeVersion="0">
+    <chooser x="257" y="1203" height="45" variable="Infection-Rate-AmongMuni-Summer" current="8" display="Infection-Rate-AmongMuni-Summer" width="226" sizeVersion="0">
       <choice type="string" value="CommuterTransmission0.000.txt"></choice>
       <choice type="string" value="CommuterTransmission0.020.txt"></choice>
       <choice type="string" value="CommuterTransmission0.029.txt"></choice>
@@ -553,7 +553,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="CommuterTransmission1.400.txt"></choice>
       <choice type="string" value="CommuterTransmission2.000.txt"></choice>
     </chooser>
-    <chooser x="42" y="1254" height="45" variable="Infection-Rate-WithinMuni-Winter" current="0" display="Infection-Rate-WithinMuni-Winter" width="205" sizeVersion="0">
+    <chooser x="42" y="1254" height="45" variable="Infection-Rate-WithinMuni-Winter" current="10" display="Infection-Rate-WithinMuni-Winter" width="205" sizeVersion="0">
       <choice type="string" value="Transmission0.000.txt"></choice>
       <choice type="string" value="Transmission0.020.txt"></choice>
       <choice type="string" value="Transmission0.029.txt"></choice>
@@ -569,7 +569,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="Transmission1.400.txt"></choice>
       <choice type="string" value="Transmission2.000.txt"></choice>
     </chooser>
-    <chooser x="42" y="1153" height="45" variable="Infection-Rate-WithinMuni-SpringAutumn" current="0" display="Infection-Rate-WithinMuni-SpringAutumn" width="206" sizeVersion="0">
+    <chooser x="42" y="1153" height="45" variable="Infection-Rate-WithinMuni-SpringAutumn" current="8" display="Infection-Rate-WithinMuni-SpringAutumn" width="206" sizeVersion="0">
       <choice type="string" value="Transmission0.000.txt"></choice>
       <choice type="string" value="Transmission0.020.txt"></choice>
       <choice type="string" value="Transmission0.029.txt"></choice>
@@ -585,7 +585,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="Transmission1.400.txt"></choice>
       <choice type="string" value="Transmission2.000.txt"></choice>
     </chooser>
-    <chooser x="42" y="1203" height="45" variable="Infection-Rate-WithinMuni-Summer" current="0" display="Infection-Rate-WithinMuni-Summer" width="206" sizeVersion="0">
+    <chooser x="42" y="1203" height="45" variable="Infection-Rate-WithinMuni-Summer" current="6" display="Infection-Rate-WithinMuni-Summer" width="206" sizeVersion="0">
       <choice type="string" value="Transmission0.000.txt"></choice>
       <choice type="string" value="Transmission0.020.txt"></choice>
       <choice type="string" value="Transmission0.029.txt"></choice>
@@ -613,7 +613,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
 ; based on week 48 to 52 in 2020</monitor>
     <monitor x="727" precision="0" y="115" height="45" fontSize="11" display="New Infected" width="107" sizeVersion="0">round (sum [totalnewinfected] of municipalities)</monitor>
     <monitor x="553" precision="0" y="116" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
-    <input x="473" multiline="false" y="50" height="60" variable="output-nr" type="string" width="127">1_1_2</input>
+    <input x="473" multiline="false" y="50" height="60" variable="output-nr" type="string" width="127">1_1_3</input>
     <slider x="189" step="1" y="412" max="10" display="Source_1_infections" height="33" min="0" direction="Horizontal" default="7.0" variable="Source_1_infections" width="195" sizeVersion="0"></slider>
     <chooser x="46" y="531" height="60" variable="Source_3" current="3" width="119" display="Source_3">
       <choice type="string" value="Tilburg"></choice>
