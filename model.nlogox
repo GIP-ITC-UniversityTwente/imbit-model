@@ -99,8 +99,7 @@ breed [municipalities municipality]
 
 municipalities-own [name GGDregion vaccinationrate population totalpopulation fractionsusceptible fractionexposed
   fractioninfected fractionrecovered totalsusceptible totalexposed totalinfected totalrecovered totalhospitalized achospitalized
-  totalinfecteddaybefore totalnewinfected ; Used for calculating the number of totalnewinfected per day
-
+  totalnewinfected 
   no_farmers_per_farm ; For calculating spillovers
 
   ; Farmers
@@ -250,13 +249,14 @@ to go
     ;population-model-min
     ;healthunits-maternal-vaccination
 
+    set totalnewinfected 0
     SEIR-model
 
     if (Scenario ="COVID19_History_No_Lockdown") [decide_commuting_travelling_history]
-    if (Scenario ="COVID19_History_Lockdown") [decide_commuting_travelling_history]
-    if (Scenario ="Road_Map_Scenario") [decide_commuting_road_map]
-    if (Scenario ="Economic_Scenario") [decide_commuting_economic]
-    if (Scenario ="Age_Scenario") [decide_commuting_age]
+    ; if (Scenario ="COVID19_History_Lockdown") [decide_commuting_travelling_history]
+    ; if (Scenario ="Road_Map_Scenario") [decide_commuting_road_map]
+    ; if (Scenario ="Economic_Scenario") [decide_commuting_economic]
+    ; if (Scenario ="Age_Scenario") [decide_commuting_age]
     if (Scenario ="Original_Pertussis_Model") [decide_commuting_original]
 
     introduce-source-infection-single-municipality
