@@ -89,15 +89,4 @@ to calculate-totals-single-municipality
    set hospitalized80plus (suminfected80plus * 0.08) * 0.0944
    set totalhospitalized hospitalized05 + hospitalized512 + hospitalized1217 + hospitalized1725 + hospitalized2535 + hospitalized3550 + hospitalized5065 + hospitalized6580 + hospitalized80plus
 
-  ; Calculating the total number of new infections and subtracting 
-  ; the number of infected the day before.
-  set totalnewinfected round totalinfected - round totalinfecteddaybefore
-
-  if (totalnewinfected < 0) [
-    set totalnewinfected 0
-  ]
-    
-  ; Setting the totalinfecteddaybefore as the current day's number of infections
-  ; as we move on to the next day
-  set totalinfecteddaybefore totalinfected
 end

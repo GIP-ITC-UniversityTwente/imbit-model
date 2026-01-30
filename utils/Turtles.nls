@@ -30,8 +30,6 @@ to create-centroids-turtles
     set ycor item 1 location
     set size 0.3
      
-    ; Setting initial totalinfecteddaybefore to 0 initially
-    set totalinfecteddaybefore 0
     set totalnewinfected 0
 
     ; Setting initial total animal infections
