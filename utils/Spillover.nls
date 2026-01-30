@@ -15,7 +15,7 @@ animalfarms-own [node gm_name csvindex]
 
 to load-spillover-time-stamps
   set spillover-threshold 1000 ; Spillover only occurs when num of animal infections exceeds this
-  set spillover-interval 7; in days. Spillover infections occur every n days as defined by this variable
+  set spillover-interval 1; in days. Spillover infections occur every n days as defined by this variable
 end
 
 ; Updates the color of the animal farms and updates total animal infections in the gemeente
@@ -144,6 +144,7 @@ to create-spillover-animal-human-mechanism-b
     ; Updating the number of infected and susceptible individuals
     set I00000 I00000 + num-hum-spillover-infc
     set S00000 S00000 - num-hum-spillover-infc
+    set totalnewinfected totalnewinfected + num-hum-spillover-infc
 
     set totalspilloveranimalhumaninfections  num-hum-spillover-infc
   ] 
