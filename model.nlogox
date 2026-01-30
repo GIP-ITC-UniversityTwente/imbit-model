@@ -274,7 +274,7 @@ to go
 
     ;; write to output file
     ; The total susceptibl, exposed and infected are rounded
-    file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "round totalinfected)
+    file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "round totalnewinfected)
 
     ;file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ; "S00000" ; "I00000" ; "R00000" ")
     ; "I11112" ; "I12112" ; "I13112" ; "suminfected1217" ; "I15111" ; "suminfected2535" ; "suminfected3550" ; "suminfected5065" ; "I19111" ")
@@ -611,7 +611,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
 ; 20% is asymptomic and does not take a test. 
 ; Around 10.5% of tests taken are positive 
 ; based on week 48 to 52 in 2020</monitor>
-    <monitor x="727" precision="0" y="115" height="45" fontSize="11" display="Difference Infected" width="107" sizeVersion="0">round differenceinfected</monitor>
+    <monitor x="727" precision="0" y="115" height="45" fontSize="11" display="New Infected" width="107" sizeVersion="0">round (sum [totalnewinfected] of municipalities)</monitor>
     <monitor x="553" precision="0" y="116" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
     <input x="473" multiline="false" y="50" height="60" variable="output-nr" type="string" width="127">1_1_2</input>
     <slider x="189" step="1" y="412" max="10" display="Source_1_infections" height="33" min="0" direction="Horizontal" default="7.0" variable="Source_1_infections" width="195" sizeVersion="0"></slider>
