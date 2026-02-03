@@ -1,7 +1,7 @@
 extensions [GIS csv]
 
 globals [basemap-farm centroid-envelope 
-  current-timestep total-timesteps
+  current-timestep 
   iv iv-values-for-the-day
   spillover-threshold spillover-interval
   spillover_gm_name
@@ -14,50 +14,34 @@ breed [ animalfarms animalfarm ]
 animalfarms-own [node gm_name csvindex]
 
 to load-spillover-time-stamps
-  set total-timesteps 120 ; Total number of days of IV data (number of rows in iv csv file)
   set spillover-threshold 1000 ; Spillover only occurs when num of animal infections exceeds this
-  set spillover-interval 7; in days. Spillover infections occur every n days as defined by this variable
+  set spillover-interval 1; in days. Spillover infections occur every n days as defined by this variable
 end
 
-; Loads animal farm infections for a given day
-; Updates the color of the animal farms and also introduces spillover infections
+; Updates the color of the animal farms and updates total animal infections in the gemeente
 to load-animal-farm-infections
-  
-  if ticks = total-timesteps [
-    print(word "Day " ticks ": Last day for which we have Boris' animal farm data")
-  ]
-  
-  if ticks > total-timesteps  [
+  if ticks = n-farm-iv-rows [
+    print(word "Day " ticks ": Reached the end of farm iv file. Stopping the model.")
     stop
   ]
-
-  file-open farm-iv-file
-  let header-line file-read-line ; Skipping the header line
   
-  let target-row ticks + 1 ;Row indexing starts from 1 excluding the header
-  let current-row 0
-  let line ""
-  
-  ; Skip rows until we reach the target row
-  while [current-row < target-row] [
-    if file-at-end? [ stop ] ; Stop if the file ends early
-    set line file-read-line
-    set current-row current-row + 1
-  ]
-  
-  ; Target row reached, reading in the IV values for that day
-  if current-row = target-row [
-    set iv-values-for-the-day csv:from-row line ; Parse the CSV row into a list
+  if ticks < n-farm-iv-rows [
+    
+    ; n-row should always be ticks + 1 since the first row is the animal farm number
+    let row-index ticks + 1
+    let row item row-index farm-iv-data
+    
+    set iv-values-for-the-day row ; Parse the CSV row into a list
     
     ; Assign IV values to turtles
     ask animalfarms [
       set-animal-farm-color
-
+      
       set spillover_gm_name gm_name
       update-gm-animal-farm-inf
     ]
-  ]  
-  file-close
+  ]
+
 end
 
 ; Procedure to set animal farm color based on number of infections
@@ -160,6 +144,7 @@ to create-spillover-animal-human-mechanism-b
     ; Updating the number of infected and susceptible individuals
     set I00000 I00000 + num-hum-spillover-infc
     set S00000 S00000 - num-hum-spillover-infc
+    set totalnewinfected totalnewinfected + num-hum-spillover-infc
 
     set totalspilloveranimalhumaninfections  num-hum-spillover-infc
   ] 

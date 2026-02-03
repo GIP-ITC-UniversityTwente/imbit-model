@@ -92,20 +92,14 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
    jobcommuter-new-infected jobcommuter-new-infected-over-7-days schoolcommuter-new-infected schoolcommuter-new-infected-over-7-days VT-new-infected VT-new-infected-over-7-days
    GAET-new-infected GAET-new-infected-over-7-days R0-new R0-over-7-days economiclist
 
-   ; Move to config
-   Source_1_infections Source_2_infections Source_3_infections
-   Source_1 Source_2 Source_3
-
-   Frequency Day-COVID-19-Outbreak
-   ; Move to config
+   farm-iv-data n-farm-iv-rows
    ]
 
 breed [municipalities municipality]
 
 municipalities-own [name GGDregion vaccinationrate population totalpopulation fractionsusceptible fractionexposed
   fractioninfected fractionrecovered totalsusceptible totalexposed totalinfected totalrecovered totalhospitalized achospitalized
-  totalinfecteddaybefore totalnewinfected ; Used for calculating the number of totalnewinfected per day
-
+  totalnewinfected 
   no_farmers_per_farm ; For calculating spillovers
 
   ; Farmers
@@ -167,18 +161,11 @@ to setup
 
   init-paths
 
-  ; Move to CONFIG file
-  set Source_1 "Tilburg"
-  set Source_2 "Amsterdam"
-  set Source_3 "Diemen"
-
-  set Source_1_infections 0
-  set Source_2_infections 0
-  set Source_3_infections 0
-
-  set Frequency 1
-  set Day-COVID-19-Outbreak 41000
-  ; Move to CONFIG file
+  ; Load farm infection level data
+  if Model-Spillover? [
+    set farm-iv-data csv:from-file farm-iv-file
+    set n-farm-iv-rows length (farm-iv-data) - 1
+  ]
 
   load-spatial-layers
   create-model-turtles
@@ -231,7 +218,11 @@ to setup
   ask municipalities[
 ;  healthunits-location-vaccination
   ]
-  load-spillover-time-stamps
+
+  if Model-Spillover? [
+    load-spillover-time-stamps
+  ]
+
   print("Setup complete")
 end
 
@@ -242,12 +233,14 @@ to go
   if ticks = 0 or (ticks - Day-COVID-19-Outbreak) mod Frequency = 0 [run Scenario]
 
   ; For each day we reset the number of totalinfected animals and infected farms for municipalities to 0
-  ask municipalities [
-    set totalinfectedanimals 0
-    set ninfectedfarms 0
-    ]
-  load-animal-farm-infections
-
+  if Model-Spillover? [
+    ask municipalities [
+      set totalinfectedanimals 0
+      set ninfectedfarms 0
+      ]
+    load-animal-farm-infections
+  ]
+  
   ; Write to output file every day
   file-open (word output-file)
 
@@ -256,20 +249,23 @@ to go
     ;population-model-min
     ;healthunits-maternal-vaccination
 
+    set totalnewinfected 0
     SEIR-model
 
     if (Scenario ="COVID19_History_No_Lockdown") [decide_commuting_travelling_history]
-    if (Scenario ="COVID19_History_Lockdown") [decide_commuting_travelling_history]
-    if (Scenario ="Road_Map_Scenario") [decide_commuting_road_map]
-    if (Scenario ="Economic_Scenario") [decide_commuting_economic]
-    if (Scenario ="Age_Scenario") [decide_commuting_age]
+    ; if (Scenario ="COVID19_History_Lockdown") [decide_commuting_travelling_history]
+    ; if (Scenario ="Road_Map_Scenario") [decide_commuting_road_map]
+    ; if (Scenario ="Economic_Scenario") [decide_commuting_economic]
+    ; if (Scenario ="Age_Scenario") [decide_commuting_age]
     if (Scenario ="Original_Pertussis_Model") [decide_commuting_original]
 
     introduce-source-infection-single-municipality
     ; Introducing animal-human spillover infection in every gemeente
     ; if conditions are met
-    if (ticks mod spillover-interval = 0)[
-      create-spillover-animal-human
+    if Model-Spillover? [
+      if (ticks mod spillover-interval = 0)[
+        create-spillover-animal-human
+      ]
     ]
 
     recolor-single-municipality
@@ -278,7 +274,9 @@ to go
 
     ;; write to output file
     ; The total susceptibl, exposed and infected are rounded
-    file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ; "S00000" ; "I00000" ; "R00000" ")
+    file-print (word  ticks";"name";"xcor";"ycor";"round totalnewinfected)
+
+    ;file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ; "S00000" ; "I00000" ; "R00000" ")
     ; "I11112" ; "I12112" ; "I13112" ; "suminfected1217" ; "I15111" ; "suminfected2535" ; "suminfected3550" ; "suminfected5065" ; "I19111" ")
     ;] ;"sum05" ; "sum55"; "sum512"; "sum1217"; "sum1725"; "sum2535"; "sum3550"; "sum5065"; "sum65" ")] ; "S11112" ; "E11112" ;"I11112" ;"R11112" ;  "S12112" ;  "E12112" ; "I12112" ; "R12112" ; "S13112" ; "E13112" ; "I13112" ; "R13112" ; "S14212" ; "E14212" ; "I14212" ; "R14212" ; "S14112" ; "E14112" ; "I14112" ; "R14112" ; "S15111" ; "E15111" ; "I15111" ; "R15111" ; "S26311" ; "E26311" ; "I26311" ; "R26311" ; "S26312" ; "E26312" ; "I26312" ; "R26312" ; "S26111" ; "E26111" ; "I26111" ; "R26111" ; "S26112" ; "E26112" ; "I26112" ; "R26112" ; "S36322" ; "E36322" ; "I36322" ; "R36322" ; "S36311" ; "E36311" ;  "I36311" ; "R36311" ; "S36312" ; "E36312" ; "I36312" ; "R36312" ; "S36122" ; "E36122" ; "I36122" ; "R36122" ; "S36111" ; "E36111" ; "I36111" ; "R36111" ; "S36112" ; "E36112" ; "I36112" ; "R36112" ; "S17311" ; "E17311" ; "I17311" ; "R17311" ; "S17312" ; "E17312" ; "I17312" ; "R17312" ; "S17111" ; "E17111" ; "I17111" ; "R17111" ; "S17112" ; "E17112" ; "I17112" ; "R17112" ; "S18311" ; "E18311" ; "I18311" ; "R18311" ; "S18312" ; "E18312" ; "I18312" ; "R18312" ; "S18111" ; "E18111" ; "I18111" ; "R18111" ; "S18112" ; "E18112" ; "I18112" ; "R18112" ; "S19111" ; "E19111" ; "I19111" ; "R19111" ")
   ]
@@ -349,40 +347,16 @@ end]]></code>
         <update>plot newtotalinfected</update>
       </pen>
     </plot>
-    <slider x="266" step="1" y="140" max="100" display="Commuter-Threshold" height="33" min="1" direction="Horizontal" default="4.0" variable="Commuter-Threshold" width="193" sizeVersion="0"></slider>
-    <slider x="268" step="0.1" y="23" max="4" display="Duration-of-Immunity" height="33" min="0.1" direction="Horizontal" default="0.1" variable="Duration-of-Immunity" units="Year" width="193" sizeVersion="0"></slider>
-    <slider x="268" step="1" y="79" max="30" display="Duration-of-Infectivity" height="33" min="5" direction="Horizontal" default="5.0" variable="Duration-of-Infectivity" units="Days" width="192" sizeVersion="0"></slider>
-    <slider x="263" step="1" y="203" max="100" display="Schoolcommuter-Threshold" height="33" min="1" direction="Horizontal" default="6.0" variable="Schoolcommuter-Threshold" width="194" sizeVersion="0"></slider>
-    <plot x="1119" autoPlotX="true" yMax="1.0" autoPlotY="true" yAxis="Fraction" y="416" xMin="0.0" height="162" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Fractions SIR farmers" width="386" sizeVersion="0">
-      <setup></setup>
-      <update></update>
-      <pen interval="1.0" mode="0" display="Fraction Susceptible" color="-14070903" legend="true">
-        <setup></setup>
-        <update>plot (sum [S00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
-      </pen>
-      <pen interval="1.0" mode="0" display="Fraction Infected" color="-2674135" legend="true">
-        <setup></setup>
-        <update>plot (sum [I00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
-      </pen>
-      <pen interval="1.0" mode="0" display="Fraction Recovered" color="-13840069" legend="true">
-        <setup></setup>
-        <update>plot (sum [R00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
-      </pen>
-      <pen interval="1.0" mode="0" display="Fraction Exposed" color="-1184463" legend="true">
-        <setup></setup>
-        <update>plot (sum [E00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
-      </pen>
-    </plot>
+    <slider x="266" step="1" y="140" max="100" display="Commuter-Threshold" height="33" min="1" direction="Horizontal" default="11.0" variable="Commuter-Threshold" width="193" sizeVersion="0"></slider>
+    <slider x="268" step="0.1" y="23" max="4" display="Duration-of-Immunity" height="33" min="0.1" direction="Horizontal" default="0.5" variable="Duration-of-Immunity" units="Year" width="193" sizeVersion="0"></slider>
+    <slider x="268" step="1" y="79" max="30" display="Duration-of-Infectivity" height="33" min="5" direction="Horizontal" default="9.0" variable="Duration-of-Infectivity" units="Days" width="192" sizeVersion="0"></slider>
+    <slider x="263" step="1" y="203" max="100" display="Schoolcommuter-Threshold" height="33" min="1" direction="Horizontal" default="10.0" variable="Schoolcommuter-Threshold" width="194" sizeVersion="0"></slider>
     <chooser x="12" y="115" height="45" variable="Scenario" current="1" display="Scenario" width="223" sizeVersion="0">
       <choice type="string" value="Original_Pertussis_Model"></choice>
       <choice type="string" value="COVID19_History_No_Lockdown"></choice>
-      <choice type="string" value="COVID19_History_Lockdown"></choice>
-      <choice type="string" value="Road_Map_Scenario"></choice>
-      <choice type="string" value="Economic_Scenario"></choice>
-      <choice type="string" value="Age_Scenario"></choice>
     </chooser>
-    <slider x="262" step="1" y="256" max="100" display="Travelling-Threshold" height="33" min="1" direction="Horizontal" default="8.0" variable="Travelling-Threshold" width="195" sizeVersion="0"></slider>
-    <plot x="1118" autoPlotX="true" yMax="100.0" autoPlotY="true" yAxis="Infected" y="215" xMin="0.0" height="191" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Age infected whole population" width="387" sizeVersion="0">
+    <slider x="262" step="1" y="256" max="100" display="Travelling-Threshold" height="33" min="1" direction="Horizontal" default="12.0" variable="Travelling-Threshold" width="195" sizeVersion="0"></slider>
+    <plot x="1118" autoPlotX="true" yMax="100.0" autoPlotY="true" yAxis="Infected" y="215" xMin="0.0" height="286" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Age infected whole population" width="387" sizeVersion="0">
       <setup></setup>
       <update></update>
       <pen interval="1.0" mode="0" display="0-4 years" color="-5825686" legend="true">
@@ -456,144 +430,9 @@ end]]></code>
 
 For no human to human transmission choose  "COVID19_No_Lockdown".</note>
     <note x="14" y="169" backgroundDark="0" fontSize="11" width="224" markdown="false" height="100" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Sets the percentage immunity before the start (go procedure) of the model. Simulates a one time vaccination intervention. Municipal vaccinationrates are taken into account.</note>
-    <switch x="267" y="634" height="33" on="false" variable="Job-Commuting-Holiday?" display="Job-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
-    <chooser x="37" y="939" height="45" variable="Infection-Rate-WithinMuni-Summer" current="0" display="Infection-Rate-WithinMuni-Summer" width="206" sizeVersion="0">
-      <choice type="string" value="Transmission0.000.txt"></choice>
-      <choice type="string" value="Transmission0.020.txt"></choice>
-      <choice type="string" value="Transmission0.029.txt"></choice>
-      <choice type="string" value="Transmission0.040.txt"></choice>
-      <choice type="string" value="Transmission0.050.txt"></choice>
-      <choice type="string" value="Transmission0.067.txt"></choice>
-      <choice type="string" value="Transmission0.100.txt"></choice>
-      <choice type="string" value="Transmission0.200.txt"></choice>
-      <choice type="string" value="Transmission0.400.txt"></choice>
-      <choice type="string" value="Transmission0.600.txt"></choice>
-      <choice type="string" value="Transmission0.800.txt"></choice>
-      <choice type="string" value="Transmission1.000.txt"></choice>
-      <choice type="string" value="Transmission1.400.txt"></choice>
-      <choice type="string" value="Transmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="37" y="889" height="45" variable="Infection-Rate-WithinMuni-SpringAutumn" current="0" display="Infection-Rate-WithinMuni-SpringAutumn" width="206" sizeVersion="0">
-      <choice type="string" value="Transmission0.000.txt"></choice>
-      <choice type="string" value="Transmission0.020.txt"></choice>
-      <choice type="string" value="Transmission0.029.txt"></choice>
-      <choice type="string" value="Transmission0.040.txt"></choice>
-      <choice type="string" value="Transmission0.050.txt"></choice>
-      <choice type="string" value="Transmission0.067.txt"></choice>
-      <choice type="string" value="Transmission0.100.txt"></choice>
-      <choice type="string" value="Transmission0.200.txt"></choice>
-      <choice type="string" value="Transmission0.400.txt"></choice>
-      <choice type="string" value="Transmission0.600.txt"></choice>
-      <choice type="string" value="Transmission0.800.txt"></choice>
-      <choice type="string" value="Transmission1.000.txt"></choice>
-      <choice type="string" value="Transmission1.400.txt"></choice>
-      <choice type="string" value="Transmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="37" y="990" height="45" variable="Infection-Rate-WithinMuni-Winter" current="0" display="Infection-Rate-WithinMuni-Winter" width="205" sizeVersion="0">
-      <choice type="string" value="Transmission0.000.txt"></choice>
-      <choice type="string" value="Transmission0.020.txt"></choice>
-      <choice type="string" value="Transmission0.029.txt"></choice>
-      <choice type="string" value="Transmission0.040.txt"></choice>
-      <choice type="string" value="Transmission0.050.txt"></choice>
-      <choice type="string" value="Transmission0.067.txt"></choice>
-      <choice type="string" value="Transmission0.100.txt"></choice>
-      <choice type="string" value="Transmission0.200.txt"></choice>
-      <choice type="string" value="Transmission0.400.txt"></choice>
-      <choice type="string" value="Transmission0.600.txt"></choice>
-      <choice type="string" value="Transmission0.800.txt"></choice>
-      <choice type="string" value="Transmission1.000.txt"></choice>
-      <choice type="string" value="Transmission1.400.txt"></choice>
-      <choice type="string" value="Transmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="252" y="939" height="45" variable="Infection-Rate-AmongMuni-Summer" current="0" display="Infection-Rate-AmongMuni-Summer" width="206" sizeVersion="0">
-      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="252" y="887" height="45" variable="Infection-Rate-AmongMuni-SpringAutumn" current="0" display="Infection-Rate-AmongMuni-SpringAutumn" width="206" sizeVersion="0">
-      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
-    </chooser>
-    <chooser x="252" y="990" height="45" variable="Infection-Rate-AmongMuni-Winter" current="0" display="Infection-Rate-AmongMuni-Winter" width="207" sizeVersion="0">
-      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
-      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
-      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
-      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
-    </chooser>
-    <note x="183" y="804" backgroundDark="0" fontSize="15" width="150" markdown="false" height="19" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Transmission Rates</note>
-    <note x="53" y="829" backgroundDark="0" fontSize="11" width="414" markdown="false" height="62" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Infection rates should be set to the same number for within municipalities and among municipalities in the same seasons. Only used for Original pertussis model and COVID-19 history model without lockdown</note>
-    <note x="41" y="564" backgroundDark="0" fontSize="11" width="382" markdown="false" height="54" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Switch on to start commuting & travelling.
-In summer holiday no school commuting and less job commuting? Switch 'commuting-holiday' on]]></note>
-    <switch x="266" y="709" height="33" on="false" variable="Extra-Gathering-Events-Travelling-Holiday" display="Extra-Gathering-Events-Travelling-Holiday" width="202" sizeVersion="0"></switch>
-    <switch x="28" y="709" height="33" on="false" variable="Overall-Gatherings-Events-Travelling?" display="Overall-Gatherings-Events-Travelling?" width="218" sizeVersion="0"></switch>
-    <switch x="266" y="747" height="33" on="false" variable="Extra-Visit-Travelling-Holiday?" display="Extra-Visit-Travelling-Holiday?" width="202" sizeVersion="0"></switch>
-    <switch x="28" y="746" height="33" on="false" variable="Overall-Visit-Travelling?" display="Overall-Visit-Travelling?" width="218" sizeVersion="0"></switch>
-    <switch x="28" y="671" height="33" on="false" variable="Overall-School-Commuting?" display="Overall-School-Commuting?" width="218" sizeVersion="0"></switch>
-    <switch x="28" y="634" height="33" on="false" variable="Overall-Job-Commuting?" display="Overall-Job-Commuting?" width="218" sizeVersion="0"></switch>
-    <switch x="267" y="672" height="33" on="false" variable="School-Commuting-Holiday?" display="School-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
-    <note x="164" y="531" backgroundDark="0" fontSize="15" width="192" markdown="false" height="22" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Commuting & Travelling]]></note>
-    <note x="139" y="328" backgroundDark="0" fontSize="15" width="219" markdown="false" height="25" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Animal to human spillover </note>
     <chooser x="17" y="272" height="45" variable="Immunity-Startpopulation" current="0" display="Immunity-Startpopulation" width="222" sizeVersion="0">
       <choice type="string" value="test.shp"></choice>
     </chooser>
-    <slider x="275" step="0.01" y="486" max="1" display="prob-contact" height="33" min="0" direction="Horizontal" default="0.0" variable="prob-contact" width="172" sizeVersion="0"></slider>
-    <chooser x="30" y="367" height="60" variable="animal-inf-oubtreak-nr" current="0" width="231" display="animal-inf-oubtreak-nr">
-      <choice type="double" value="1.0"></choice>
-      <choice type="double" value="103319.0"></choice>
-      <choice type="double" value="451119.0"></choice>
-      <choice type="double" value="467803.0"></choice>
-      <choice type="double" value="485214.0"></choice>
-      <choice type="double" value="631256.0"></choice>
-      <choice type="double" value="739713.0"></choice>
-      <choice type="double" value="823622.0"></choice>
-      <choice type="double" value="890939.0"></choice>
-      <choice type="double" value="995529.0"></choice>
-    </chooser>
-    <chooser x="29" y="433" height="45" variable="spillover-group" current="0" display="spillover-group" width="138" sizeVersion="0">
-      <choice type="string" value="farmers"></choice>
-    </chooser>
-    <chooser x="181" y="434" height="45" variable="spillover-anim-hum-mechanism" current="0" display="spillover-anim-hum-mechanism" width="196" sizeVersion="0">
-      <choice type="string" value="B"></choice>
-    </chooser>
-    <slider x="29" step="0.05" y="484" max="1" display="prob-spillover-risk-after-contact" height="33" min="0" direction="Horizontal" default="0.05" variable="prob-spillover-risk-after-contact" width="239" sizeVersion="0"></slider>
-    <monitor x="945" precision="0" y="104" height="45" fontSize="11" display="Positive tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity
-; 20% is asymptomic and does not take a test. 
-; Around 10.5% of tests taken are positive 
-; based on 2020</monitor>
-    <monitor x="553" precision="0" y="104" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
     <button x="754" y="63" height="33" disableUntilTicks="false" forever="true" kind="Observer" display="Output" width="86" sizeVersion="0"><![CDATA[if ticks >= 511 [
 
 set ij (word substring date-and-time 0 2 substring date-and-time 3 5)
@@ -622,15 +461,208 @@ go
 
 ;if ij >= 50 [ stop ]
 if ticks >= 510 [ stop ]]]></button>
-    <button x="684" y="63" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="63" sizeVersion="0">setup</button>
     <button x="847" y="63" height="33" disableUntilTicks="false" forever="true" kind="Observer" display="go" width="63" sizeVersion="0"><![CDATA[go
-if ticks >= 550 [ stop ]]]></button>
-    <monitor x="727" precision="0" y="103" height="45" fontSize="11" display="Difference Infected" width="107" sizeVersion="0">differenceinfected</monitor>
-    <monitor x="841" precision="0" y="104" height="45" fontSize="11" display="Nr. of tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity / 10.5 * 100
+if ticks >= (Day-COVID-19-Outbreak + 60) [ stop ]]]></button>
+    <note x="144" y="592" backgroundDark="0" fontSize="15" width="219" markdown="false" height="25" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Animal to human spillover </note>
+    <slider x="34" step="0.05" y="748" max="1" display="prob-spillover-risk-after-contact" height="33" min="0" direction="Horizontal" default="0.0" variable="prob-spillover-risk-after-contact" width="239" sizeVersion="0"></slider>
+    <chooser x="34" y="697" height="45" variable="spillover-group" current="0" display="spillover-group" width="138" sizeVersion="0">
+      <choice type="string" value="farmers"></choice>
+    </chooser>
+    <switch x="272" y="936" height="33" on="true" variable="School-Commuting-Holiday?" display="School-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
+    <chooser x="186" y="698" height="45" variable="spillover-anim-hum-mechanism" current="0" display="spillover-anim-hum-mechanism" width="196" sizeVersion="0">
+      <choice type="string" value="B"></choice>
+    </chooser>
+    <slider x="280" step="0.01" y="750" max="1" display="prob-contact" height="33" min="0" direction="Horizontal" default="0.0" variable="prob-contact" width="172" sizeVersion="0"></slider>
+    <note x="169" y="795" backgroundDark="0" fontSize="15" width="192" markdown="false" height="22" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Commuting & Travelling]]></note>
+    <switch x="33" y="898" height="33" on="true" variable="Overall-Job-Commuting?" display="Overall-Job-Commuting?" width="218" sizeVersion="0"></switch>
+    <switch x="33" y="935" height="33" on="true" variable="Overall-School-Commuting?" display="Overall-School-Commuting?" width="218" sizeVersion="0"></switch>
+    <switch x="33" y="1010" height="33" on="true" variable="Overall-Visit-Travelling?" display="Overall-Visit-Travelling?" width="218" sizeVersion="0"></switch>
+    <switch x="271" y="1011" height="33" on="true" variable="Extra-Visit-Travelling-Holiday?" display="Extra-Visit-Travelling-Holiday?" width="202" sizeVersion="0"></switch>
+    <switch x="33" y="973" height="33" on="true" variable="Overall-Gatherings-Events-Travelling?" display="Overall-Gatherings-Events-Travelling?" width="218" sizeVersion="0"></switch>
+    <switch x="271" y="973" height="33" on="true" variable="Extra-Gathering-Events-Travelling-Holiday" display="Extra-Gathering-Events-Travelling-Holiday" width="202" sizeVersion="0"></switch>
+    <note x="46" y="828" backgroundDark="0" fontSize="11" width="382" markdown="false" height="54" textColorDark="-1" textColorLight="-16777216" backgroundLight="0"><![CDATA[Switch on to start commuting & travelling.
+In summer holiday no school commuting and less job commuting? Switch 'commuting-holiday' on]]></note>
+    <note x="58" y="1093" backgroundDark="0" fontSize="11" width="414" markdown="false" height="62" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Infection rates should be set to the same number for within municipalities and among municipalities in the same seasons. Only used for Original pertussis model and COVID-19 history model without lockdown</note>
+    <note x="188" y="1068" backgroundDark="0" fontSize="15" width="150" markdown="false" height="19" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Transmission Rates</note>
+    <chooser x="257" y="1254" height="45" variable="Infection-Rate-AmongMuni-Winter" current="0" display="Infection-Rate-AmongMuni-Winter" width="227" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="257" y="1151" height="45" variable="Infection-Rate-AmongMuni-SpringAutumn" current="0" display="Infection-Rate-AmongMuni-SpringAutumn" width="227" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="257" y="1203" height="45" variable="Infection-Rate-AmongMuni-Summer" current="0" display="Infection-Rate-AmongMuni-Summer" width="226" sizeVersion="0">
+      <choice type="string" value="CommuterTransmission0.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.020.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.029.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.040.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.050.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.067.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.100.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.200.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.600.txt"></choice>
+      <choice type="string" value="CommuterTransmission0.800.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.000.txt"></choice>
+      <choice type="string" value="CommuterTransmission1.400.txt"></choice>
+      <choice type="string" value="CommuterTransmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="42" y="1254" height="45" variable="Infection-Rate-WithinMuni-Winter" current="0" display="Infection-Rate-WithinMuni-Winter" width="205" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="42" y="1153" height="45" variable="Infection-Rate-WithinMuni-SpringAutumn" current="0" display="Infection-Rate-WithinMuni-SpringAutumn" width="206" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <chooser x="42" y="1203" height="45" variable="Infection-Rate-WithinMuni-Summer" current="0" display="Infection-Rate-WithinMuni-Summer" width="206" sizeVersion="0">
+      <choice type="string" value="Transmission0.000.txt"></choice>
+      <choice type="string" value="Transmission0.020.txt"></choice>
+      <choice type="string" value="Transmission0.029.txt"></choice>
+      <choice type="string" value="Transmission0.040.txt"></choice>
+      <choice type="string" value="Transmission0.050.txt"></choice>
+      <choice type="string" value="Transmission0.067.txt"></choice>
+      <choice type="string" value="Transmission0.100.txt"></choice>
+      <choice type="string" value="Transmission0.200.txt"></choice>
+      <choice type="string" value="Transmission0.400.txt"></choice>
+      <choice type="string" value="Transmission0.600.txt"></choice>
+      <choice type="string" value="Transmission0.800.txt"></choice>
+      <choice type="string" value="Transmission1.000.txt"></choice>
+      <choice type="string" value="Transmission1.400.txt"></choice>
+      <choice type="string" value="Transmission2.000.txt"></choice>
+    </chooser>
+    <switch x="272" y="898" height="33" on="true" variable="Job-Commuting-Holiday?" display="Job-Commuting-Holiday?" width="200" sizeVersion="0"></switch>
+    <monitor x="945" precision="0" y="116" height="45" fontSize="11" display="Positive tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity
+; 20% is asymptomic and does not take a test. 
+; Around 10.5% of tests taken are positive 
+; based on 2020</monitor>
+    <monitor x="611" precision="0" y="115" height="45" fontSize="11" display="Total Infected" width="108" sizeVersion="0">round( sum [totalinfected] of municipalities)</monitor>
+    <monitor x="841" precision="0" y="116" height="45" fontSize="11" display="Nr. of tests (day)" width="96" sizeVersion="0">newtotalinfected * 0.80 / Duration-of-Infectivity / 10.5 * 100
 ; 20% is asymptomic and does not take a test. 
 ; Around 10.5% of tests taken are positive 
 ; based on week 48 to 52 in 2020</monitor>
-    <monitor x="611" precision="0" y="103" height="45" fontSize="11" display="Total Infected" width="108" sizeVersion="0">newtotalinfected</monitor>
+    <monitor x="727" precision="0" y="115" height="45" fontSize="11" display="New Infected" width="107" sizeVersion="0">round (sum [totalnewinfected] of municipalities)</monitor>
+    <monitor x="553" precision="0" y="116" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
+    <input x="473" multiline="false" y="50" height="60" variable="output-nr" type="string" width="127">9</input>
+    <slider x="189" step="1" y="412" max="10" display="Source_1_infections" height="33" min="0" direction="Horizontal" default="6.0" variable="Source_1_infections" width="195" sizeVersion="0"></slider>
+    <chooser x="46" y="531" height="60" variable="Source_3" current="5" width="119" display="Source_3">
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+      <choice type="string" value="Lopik"></choice>
+      <choice type="string" value="Enschede"></choice>
+      <choice type="string" value="Apeldoorn"></choice>
+      <choice type="string" value="Emmen"></choice>
+      <choice type="string" value="Maastricht"></choice>
+      <choice type="string" value="Rotterdam"></choice>
+    </chooser>
+    <chooser x="46" y="463" height="60" variable="Source_2" current="7" width="121" display="Source_2">
+      <choice type="string" value="Amersfoort"></choice>
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+      <choice type="string" value="Eindhoven"></choice>
+      <choice type="string" value="Wageningen"></choice>
+      <choice type="string" value="Montfoort"></choice>
+      <choice type="string" value="Oisterwijk"></choice>
+    </chooser>
+    <chooser x="46" y="395" height="60" variable="Source_1" current="5" width="121" display="Source_1">
+      <choice type="string" value="Tilburg"></choice>
+      <choice type="string" value="Amsterdam"></choice>
+      <choice type="string" value="Diemen"></choice>
+      <choice type="string" value="Groningen"></choice>
+      <choice type="string" value="Nieuwegein"></choice>
+      <choice type="string" value="Almelo"></choice>
+      <choice type="string" value="Amersfoort"></choice>
+    </chooser>
+    <slider x="189" step="1" y="548" max="10" display="Source_3_infections" height="33" min="0" direction="Horizontal" default="5.0" variable="Source_3_infections" width="195" sizeVersion="0"></slider>
+    <slider x="189" step="1" y="480" max="10" display="Source_2_infections" height="33" min="0" direction="Horizontal" default="6.0" variable="Source_2_infections" width="195" sizeVersion="0"></slider>
+    <note x="145" y="321" backgroundDark="0" fontSize="15" width="219" markdown="false" height="33" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Human source infection</note>
+    <slider x="44" step="1" y="344" max="500" width="191" display="Day-COVID-19-Outbreak" height="50" min="0" direction="Horizontal" default="221.0" variable="Day-COVID-19-Outbreak"></slider>
+    <slider x="253" step="1" y="341" max="30" width="150" display="Frequency" height="50" min="0" direction="Horizontal" default="7.0" variable="Frequency"></slider>
+    <switch x="34" y="631" height="58" on="false" variable="Model-Spillover?" display="Model-Spillover?" width="139" sizeVersion="0"></switch>
+    <chooser x="188" y="629" height="60" variable="animal-inf-oubtreak-nr" current="0" width="231" display="animal-inf-oubtreak-nr">
+      <choice type="double" value="1.0"></choice>
+      <choice type="double" value="103319.0"></choice>
+      <choice type="double" value="451119.0"></choice>
+      <choice type="double" value="467803.0"></choice>
+      <choice type="double" value="485214.0"></choice>
+      <choice type="double" value="631256.0"></choice>
+      <choice type="double" value="739713.0"></choice>
+      <choice type="double" value="823622.0"></choice>
+      <choice type="double" value="890939.0"></choice>
+      <choice type="double" value="995529.0"></choice>
+    </chooser>
+    <plot x="1126" autoPlotX="true" yMax="1.0" autoPlotY="true" yAxis="Fraction" y="518" xMin="0.0" height="162" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Fractions SIR farmers" width="386" sizeVersion="0">
+      <setup></setup>
+      <update></update>
+      <pen interval="1.0" mode="0" display="Fraction Susceptible" color="-14070903" legend="true">
+        <setup></setup>
+        <update>plot (sum [S00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="Fraction Infected" color="-2674135" legend="true">
+        <setup></setup>
+        <update>plot (sum [I00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="Fraction Recovered" color="-13840069" legend="true">
+        <setup></setup>
+        <update>plot (sum [R00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
+      </pen>
+      <pen interval="1.0" mode="0" display="Fraction Exposed" color="-1184463" legend="true">
+        <setup></setup>
+        <update>plot (sum [E00000] of municipalities) / (sum [S00000 + E00000 + I00000 + R00000] of municipalities)</update>
+      </pen>
+    </plot>
+    <button x="684" y="63" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="63" sizeVersion="0">setup</button>
   </widgets>
   <info><![CDATA[## CONTACT?
 

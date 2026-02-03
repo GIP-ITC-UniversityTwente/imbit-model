@@ -3,6 +3,8 @@
 to introduce-source-infection-single-municipality
   if ticks = day-COVID-19-outbreak [ 
     if name = Source_1 [ 
+      set totalnewinfected totalnewinfected + Source_1_infections 
+
       set S17312 S17312 - Source_1_infections / 3
       set I17312 I17312 + Source_1_infections / 3
       set S18111 S18111 - Source_1_infections / 3
@@ -11,6 +13,8 @@ to introduce-source-infection-single-municipality
       set I19111 I19111 + Source_1_infections / 3
       ]
     if name = Source_2 [ 
+      set totalnewinfected totalnewinfected + Source_2_infections 
+
       set S17312 S17312 - Source_2_infections / 3
       set I17312 I17312 + Source_2_infections / 3
       set S18111 S18111 - Source_2_infections / 3
@@ -19,6 +23,8 @@ to introduce-source-infection-single-municipality
       set I19111 I19111 + Source_2_infections / 3
       ]
     if name = Source_3 [ 
+      set totalnewinfected totalnewinfected + Source_3_infections 
+
       set S17312 S17312 - Source_3_infections / 3
       set I17312 I17312 + Source_3_infections / 3
       set S18111 S18111 - Source_3_infections / 3
@@ -89,15 +95,4 @@ to calculate-totals-single-municipality
    set hospitalized80plus (suminfected80plus * 0.08) * 0.0944
    set totalhospitalized hospitalized05 + hospitalized512 + hospitalized1217 + hospitalized1725 + hospitalized2535 + hospitalized3550 + hospitalized5065 + hospitalized6580 + hospitalized80plus
 
-  ; Calculating the total number of new infections and subtracting 
-  ; the number of infected the day before.
-  set totalnewinfected round totalinfected - round totalinfecteddaybefore
-
-  if (totalnewinfected < 0) [
-    set totalnewinfected 0
-  ]
-    
-  ; Setting the totalinfecteddaybefore as the current day's number of infections
-  ; as we move on to the next day
-  set totalinfecteddaybefore totalinfected
 end
