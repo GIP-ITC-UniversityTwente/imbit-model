@@ -11,6 +11,8 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
    newtotalinfected newtotalhospitalized differenceinfected differencehospitalized differencehospitalizedfixed reproductionnumber reproductionnumberold reproductionnumbernew
    positivetests positivetestscalc ij risk_level
 
+   pop-raster foi-raster
+
    num-hum-spillover-infc frac-infected-farms
 
    ; School commuting
@@ -630,18 +632,6 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
     <slider x="44" step="1" y="344" max="500" width="191" display="Day-COVID-19-Outbreak" height="50" min="0" direction="Horizontal" default="221.0" variable="Day-COVID-19-Outbreak"></slider>
     <slider x="253" step="1" y="341" max="30" width="150" display="Frequency" height="50" min="0" direction="Horizontal" default="7.0" variable="Frequency"></slider>
     <switch x="34" y="631" height="58" on="false" variable="Model-Spillover?" display="Model-Spillover?" width="139" sizeVersion="0"></switch>
-    <chooser x="188" y="629" height="60" variable="animal-inf-oubtreak-nr" current="0" width="231" display="animal-inf-oubtreak-nr">
-      <choice type="double" value="1.0"></choice>
-      <choice type="double" value="103319.0"></choice>
-      <choice type="double" value="451119.0"></choice>
-      <choice type="double" value="467803.0"></choice>
-      <choice type="double" value="485214.0"></choice>
-      <choice type="double" value="631256.0"></choice>
-      <choice type="double" value="739713.0"></choice>
-      <choice type="double" value="823622.0"></choice>
-      <choice type="double" value="890939.0"></choice>
-      <choice type="double" value="995529.0"></choice>
-    </chooser>
     <plot x="1126" autoPlotX="true" yMax="1.0" autoPlotY="true" yAxis="Fraction" y="518" xMin="0.0" height="162" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Fractions SIR farmers" width="386" sizeVersion="0">
       <setup></setup>
       <update></update>
@@ -663,6 +653,22 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       </pen>
     </plot>
     <button x="684" y="63" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="63" sizeVersion="0">setup</button>
+    <chooser x="187" y="631" height="60" variable="Disease-Type" current="0" width="102" display="Disease-Type">
+      <choice type="double" value="1.0"></choice>
+      <choice type="double" value="2.0"></choice>
+    </chooser>
+    <chooser x="302" y="632" height="60" variable="animal-inf-oubtreak-nr" current="0" width="150" display="animal-inf-oubtreak-nr">
+      <choice type="double" value="1.0"></choice>
+      <choice type="double" value="103319.0"></choice>
+      <choice type="double" value="451119.0"></choice>
+      <choice type="double" value="467803.0"></choice>
+      <choice type="double" value="485214.0"></choice>
+      <choice type="double" value="631256.0"></choice>
+      <choice type="double" value="739713.0"></choice>
+      <choice type="double" value="823622.0"></choice>
+      <choice type="double" value="890939.0"></choice>
+      <choice type="double" value="995529.0"></choice>
+    </chooser>
   </widgets>
   <info><![CDATA[## CONTACT?
 
