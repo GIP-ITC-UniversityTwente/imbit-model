@@ -21,6 +21,7 @@ globals [
   infc-among-summer-file
   infc-among-springaut-file
   infc-among-wint-file
+  pop-raster-file foi-raster-file
 ]
 
 
@@ -42,6 +43,9 @@ to init-input-paths
   set biblebelt-shp-file (word input-dir "spatial_layers/BiblebeltTrMr.shp")
   set ggdpoints-shp-file (word input-dir "spatial_layers/GGDpointsTrMr.shp")
   set ggdregio-shp-file (word input-dir "spatial_layers/GGDregioTrMr.shp")
+
+  set pop-raster-file (word input-dir "pop_raster/pop_total_percell_2.asc")
+  set foi-raster-file (word input-dir "foi/foi.asc")
 
   ; Immunity
   set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
