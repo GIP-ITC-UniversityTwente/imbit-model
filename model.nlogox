@@ -156,6 +156,8 @@ breed [healthunits healthunit]
 
 healthunits-own [region]
 
+patches-own [pop foi]
+
 
 to setup
   clear-all

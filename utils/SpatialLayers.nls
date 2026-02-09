@@ -18,18 +18,7 @@ to load-population-raster
   ; resize-world 0 450 0 499
   gis:set-world-envelope-ds gis:envelope-of pop-raster
 
-  gis:apply-raster pop-raster s_pop
-
-  ; Setting initial infection at each raster to 0
-  ask patches [ set i_pop 0 ]
-
-  ;; Ensure all patches have a numeric density value
-  ;; NaN values are excluded using the condition below
-  ask patches [
-    ifelse (s_pop <= 0) or (s_pop >= 0)
-    [ set pcolor scale-color red s_pop 0 1000 ]
-    [ set pcolor black ]
-  ]
+  gis:apply-raster pop-raster pop
 end
 
 ; Function to load the force of infection raster provided by RIVM
