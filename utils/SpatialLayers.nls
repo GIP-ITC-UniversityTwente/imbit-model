@@ -18,7 +18,7 @@ to load-population-raster
   ; resize-world 0 450 0 499
   gis:set-world-envelope-ds gis:envelope-of pop-raster
 
-  gis:apply-raster pop-raster pop
+  gis:apply-raster pop-raster pop_prc
 end
 
 ; Function to load the force of infection raster provided by RIVM

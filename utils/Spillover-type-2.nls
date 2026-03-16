@@ -1,0 +1,14 @@
+to create-spillover-type-2
+    ask patches with [pop > 0 and foi > 0] [
+        let spillover-exposed round (foi * pop_prc)
+        if spillover-infections > 0 [
+        create-turtles spillover-infections [
+            set color red
+            set size 0.5
+            setxy (pxcor + random-float 1 - 0.5) (pycor + random-float 1 - 0.5)
+            set infected? true
+            set infection-age 0
+        ]
+        ]
+    ]
+end
