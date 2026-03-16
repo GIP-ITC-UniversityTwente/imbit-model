@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model version="NetLogo 7.0.3" snapToGrid="false">
   <code><![CDATA[ extensions [gis ] ;profiler]
-__includes [ "utils/Spillover.nls" "utils/SetupLinksOthers.nls" "utils/Ageingplus.nls" "utils/SEIR.nls" "utils/Ageingmin.nls" "utils/JobCommuting.nls" "utils/Schoolcommuting.nls" "utils/Travelling.nls" "utils/HealthunitsMaternal.nls"
+__includes [ "utils/SetupLinksOthers.nls" "utils/Ageingplus.nls" "utils/SEIR.nls" "utils/Ageingmin.nls" "utils/JobCommuting.nls" "utils/Schoolcommuting.nls" "utils/Travelling.nls" "utils/HealthunitsMaternal.nls"
   "utils/HealthunitsLocation.nls" "utils/R0.nls" "utils/COVID19history.nls" "utils/Roadmapscenario.nls" "utils/Economicscenario.nls" "utils/Agescenario.nls"
   "utils/Municipality.nls" "utils/SpatialLayers.nls" "utils/Turtles.nls" "utils/ContactRates.nls"
-  "utils/OriginalPertussisModel.nls" "utils/CreateOutputFile.nls" "utils/SetupPaths.nls"]
+  "utils/OriginalPertussisModel.nls" "utils/CreateOutputFile.nls" "utils/SetupPaths.nls"
+  "utils/Spillover-type-2.nls" "utils/Spillover.nls" ]
 
 
 globals [basemap biblebelt centroids items serviceregion GGD setup-links-travelling exposed-period infected-period recovered-period oldtotalinfected oldtotalhospitalized totalinfectedNL
@@ -156,7 +157,7 @@ breed [healthunits healthunit]
 
 healthunits-own [region]
 
-patches-own [pop foi]
+patches-own [pop_prc foi region-id]
 
 
 to setup
@@ -167,8 +168,10 @@ to setup
 
   ; Load farm infection level data
   if Model-Spillover? [
-    set farm-iv-data csv:from-file farm-iv-file
-    set n-farm-iv-rows length (farm-iv-data) - 1
+    if Disease-Type = 1 [
+      set farm-iv-data csv:from-file farm-iv-file
+      set n-farm-iv-rows length (farm-iv-data) - 1
+    ]
   ]
 
   load-spatial-layers
@@ -238,11 +241,13 @@ to go
 
   ; For each day we reset the number of totalinfected animals and infected farms for municipalities to 0
   if Model-Spillover? [
-    ask municipalities [
-      set totalinfectedanimals 0
-      set ninfectedfarms 0
-      ]
-    load-animal-farm-infections
+    if Disease-Type = 1[
+      ask municipalities [
+        set totalinfectedanimals 0
+        set ninfectedfarms 0
+        ]
+      load-animal-farm-infections
+    ]
   ]
   
   ; Write to output file every day
@@ -267,8 +272,10 @@ to go
     ; Introducing animal-human spillover infection in every gemeente
     ; if conditions are met
     if Model-Spillover? [
-      if (ticks mod spillover-interval = 0)[
-        create-spillover-animal-human
+      if (ticks mod spillover-interval = 0) [
+        if Disease-Type = 1 [create-spillover-animal-human]
+        if Disease-Type = 2 [create-spillover-type-2]
+      ]
       ]
     ]
 
