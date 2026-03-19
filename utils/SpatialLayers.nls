@@ -9,6 +9,7 @@ to load-spatial-layers
     if Disease-Type = 2 [
       load-population-frac-raster
       load-gm-id-raster
+      load-force-infection-raster
     ]
   ]
   load-spatial-layer-municipality-centroids
@@ -16,27 +17,19 @@ end
 
 to load-population-frac-raster
   set pop-frac-raster gis:load-dataset pop-frac-raster-file
-  ; resize-world 0 450 0 499
-  gis:set-world-envelope-ds gis:envelope-of pop-frac-raster
-
   gis:apply-raster pop-frac-raster pop_frac
 end
 
 to load-gm-id-raster
   set gm-id-raster gis:load-dataset gm-id-raster-file
-  gis:set-world-envelope-ds gis:envelope-of gm-id-raster
-
   gis:apply-raster gm-id-raster gm_id
 end
 
 ; Function to load the force of infection raster provided by RIVM
 to load-force-infection-raster
+  print "Loading foi raster"
   set foi-raster gis:load-dataset foi-raster-file
-  gis:set-world-envelope-ds gis:envelope-of foi-raster  
   gis:apply-raster foi-raster foi
-
-  ;; Ensure all patches have a numeric force of infection value
-  ;; NaN values are excluded using the condition below
   ask patches [
     ifelse (foi <= 0) or (foi >= 0)
     [ set pcolor scale-color blue foi 0 0.0099909594]
@@ -47,9 +40,8 @@ end
 to load-spatial-layer-municipalities
   set basemap gis:load-dataset gm-shp-file ;; Netlogo doesn't know Dutch Double Stereographic projection, thus European Transverse_Mercator projection. 
   gis:set-world-envelope gis:envelope-of basemap
-  ;gis:set-drawing-pen "outline"
-  ;gis:set-drawing-color 5
-  ;gis:fill basemap 0.0
+  gis:set-drawing-color 5
+  gis:fill basemap 0.0
 end
 
 to load-spatial-layer-biblebelt
@@ -86,5 +78,5 @@ to load-spatial-layer-animalfarms
   ;; Align NetLogo world with the dataset's extent
   ; The centroid-envelope is obtained using python script
   set centroid-envelope [1391399.65463144 1624957.91445851 535708.42576842 853387.50384582]
-  gis:set-world-envelope centroid-envelope
+  ; gis:set-world-envelope centroid-envelope
 end
