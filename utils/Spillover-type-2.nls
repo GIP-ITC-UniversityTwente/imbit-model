@@ -4,33 +4,35 @@
 
 to create-spillover-type-2
     ask patches with [pop_frac > 0 and foi > 0 and gm_id = [id] of myself] [
+        
+        let delta-S00000 pop_frac * [S00000] of myself * foi
+        let delta-S11112 pop_frac * [S11112] of myself * foi
+        let delta-S12112 pop_frac * [S12112] of myself * foi
+        let delta-S13112 pop_frac * [S13112] of myself * foi
+        let delta-S14212 pop_frac * [S14212] of myself * foi
+        let delta-S14112 pop_frac * [S14112] of myself * foi
+        let delta-S15111 pop_frac * [S15111] of myself * foi
+        let delta-S26311 pop_frac * [S26311] of myself * foi
+        let delta-S26312 pop_frac * [S26312] of myself * foi
+        let delta-S26111 pop_frac * [S26111] of myself * foi
+        let delta-S26112 pop_frac * [S26112] of myself * foi
+        let delta-S36322 pop_frac * [S36322] of myself * foi
+        let delta-S36311 pop_frac * [S36311] of myself * foi
+        let delta-S36312 pop_frac * [S36312] of myself * foi
+        let delta-S36122 pop_frac * [S36122] of myself * foi
+        let delta-S36111 pop_frac * [S36111] of myself * foi
+        let delta-S36112 pop_frac * [S36112] of myself * foi
+        let delta-S17311 pop_frac * [S17311] of myself * foi
+        let delta-S17312 pop_frac * [S17312] of myself * foi
+        let delta-S17111 pop_frac * [S17111] of myself * foi
+        let delta-S17112 pop_frac * [S17112] of myself * foi
+        let delta-S18311 pop_frac * [S18311] of myself * foi
+        let delta-S18312 pop_frac * [S18312] of myself * foi
+        let delta-S18111 pop_frac * [S18111] of myself * foi
+        let delta-S18112 pop_frac * [S18112] of myself * foi
+        let delta-S19111 pop_frac * [S19111] of myself * foi
+
         ask myself [
-            let delta-S00000 pop_frac * [S00000] of myself * foi
-            let delta-S11112 pop_frac * [S11112] of myself * foi
-            let delta-S12112 pop_frac * [S12112] of myself * foi
-            let delta-S13112 pop_frac * [S13112] of myself * foi
-            let delta-S14212 pop_frac * [S14212] of myself * foi
-            let delta-S14112 pop_frac * [S14112] of myself * foi
-            let delta-S15111 pop_frac * [S15111] of myself * foi
-            let delta-S26311 pop_frac * [S26311] of myself * foi
-            let delta-S26312 pop_frac * [S26312] of myself * foi
-            let delta-S26111 pop_frac * [S26111] of myself * foi
-            let delta-S26112 pop_frac * [S26112] of myself * foi
-            let delta-S36322 pop_frac * [S36322] of myself * foi
-            let delta-S36311 pop_frac * [S36311] of myself * foi
-            let delta-S36312 pop_frac * [S36312] of myself * foi
-            let delta-S36122 pop_frac * [S36122] of myself * foi
-            let delta-S36111 pop_frac * [S36111] of myself * foi
-            let delta-S36112 pop_frac * [S36112] of myself * foi
-            let delta-S17311 pop_frac * [S17311] of myself * foi
-            let delta-S17312 pop_frac * [S17312] of myself * foi
-            let delta-S17111 pop_frac * [S17111] of myself * foi
-            let delta-S17112 pop_frac * [S17112] of myself * foi
-            let delta-S18311 pop_frac * [S18311] of myself * foi
-            let delta-S18312 pop_frac * [S18312] of myself * foi
-            let delta-S18111 pop_frac * [S18111] of myself * foi
-            let delta-S18112 pop_frac * [S18112] of myself * foi
-            let delta-S19111 pop_frac * [S19111] of myself * foi
 
             set S00000 (S00000 - delta-S00000)
             set E00000 (E00000 + delta-S00000)
