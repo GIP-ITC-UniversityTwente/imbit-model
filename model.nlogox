@@ -100,7 +100,7 @@ globals [basemap biblebelt centroids items serviceregion GGD setup-links-travell
 
 breed [municipalities municipality]
 
-municipalities-own [name GGDregion vaccinationrate population totalpopulation fractionsusceptible fractionexposed
+municipalities-own [id name GGDregion vaccinationrate population totalpopulation fractionsusceptible fractionexposed
   fractioninfected fractionrecovered totalsusceptible totalexposed totalinfected totalrecovered totalhospitalized achospitalized
   totalnewinfected 
   no_farmers_per_farm ; For calculating spillovers
