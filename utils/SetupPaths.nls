@@ -21,7 +21,8 @@ globals [
   infc-among-summer-file
   infc-among-springaut-file
   infc-among-wint-file
-  pop-raster-file foi-raster-file
+  pop-frac-raster-file foi-raster-file
+  gm-id-raster-file
 ]
 
 
@@ -44,8 +45,10 @@ to init-input-paths
   set ggdpoints-shp-file (word input-dir "spatial_layers/GGDpointsTrMr.shp")
   set ggdregio-shp-file (word input-dir "spatial_layers/GGDregioTrMr.shp")
 
-  set pop-raster-file (word input-dir "pop_raster/pop_total_percell_2.asc")
+  ; Raster files for disease type using kernel
+  set pop-frac-raster-file (word input-dir "pop_frac/pop_frac.asc")
   set foi-raster-file (word input-dir "foi/foi.asc")
+  set gm-raster-file (word input-dir "spatial_layers/gm_id_raster.asc")
 
   ; Immunity
   set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
