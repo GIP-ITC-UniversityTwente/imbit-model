@@ -3,85 +3,15 @@
 ; spillover-exposed for each pop cat = (foi * pop_frac * pop_cat_gm)
 
 to create-spillover-type-2
-    ask patches with [pop_frac > 0 and foi > 0 and gm_id = id] [
-
-        set S00000 (S00000 - pop_frac * S00000 * foi)
-        set E00000 (E00000 + pop_frac * S00000 * foi)
-
-        set S11112 (S11112 - pop_frac * S11112 * foi)
-        set E11112 (E11112 + pop_frac * S11112 * foi)
-
-        set S12112 (S12112 - pop_frac * S12112 * foi)
-        set E12112 (E12112 + pop_frac * S12112 * foi)
-
-        set S13112 (S13112 - pop_frac * S13112 * foi)
-        set E13112 (E13112 + pop_frac * S13112 * foi)
-
-        set S14212 (S14212 - pop_frac * S14212 * foi)
-        set E14212 (E14212 + pop_frac * S14212 * foi)
-
-        set S14112 (S14112 - pop_frac * S14112 * foi)
-        set E14112 (E14112 + pop_frac * S14112 * foi)
-   
-        set S15111 (S15111 - pop_frac * S15111 * foi)
-        set E15111 (E15111 + pop_frac * S15111 * foi)
-
-        set S26311 (S26311 - pop_frac * S26311 * foi)
-        set E26311 (E26311 + pop_frac * S26311 * foi)
-
-        set S26312 (S26312 - pop_frac * S26312 * foi)
-        set E26312 (E26312 + pop_frac * S26312 * foi)
-
-        set S26111 (S26111 - pop_frac * S26111 * foi)
-        set E26111 (E26111 + pop_frac * S26111 * foi)
- 
-        set S26112 (S26112 - pop_frac * S26112 * foi)
-        set E26112 (E26112 + pop_frac * S26112 * foi)
- 
-        set S36322 (S36322 - pop_frac * S36322 * foi)
-        set E36322 (E36322 + pop_frac * S36322 * foi)
-
-        set S36311 (S36311 - pop_frac * S36311 * foi)
-        set E36311 (E36311 + pop_frac * S36311 * foi)
-
-        set S36312 (S36312 - pop_frac * S36312 * foi)
-        set E36312 (E36312 + pop_frac * S36312 * foi)
-
-        set S36122 (S36122 - pop_frac * S36122 * foi)
-        set E36122 (E36122 + pop_frac * S36122 * foi)
-
-        set S36111 (S36111 - pop_frac * S36111 * foi)
-        set E36111 (E36111 + pop_frac * S36111 * foi)
-
-        set S36112 (S36112 - pop_frac * S36112 * foi)
-        set E36112 (E36112 + pop_frac * S36112 * foi)
-
-        set S17311 (S17311 - pop_frac * S17311 * foi)
-        set E17311 (E17311 + pop_frac * S17311 * foi)
-
-        set S17312 (S17312 - pop_frac * S17312 * foi)
-        set E17312 (E17312 + pop_frac * S17312 * foi)
-
-        set S17111 (S17111 - pop_frac * S17111 * foi)
-        set E17111 (E17111 + pop_frac * S17111 * foi)
-
-        set S17112 (S17112 - pop_frac * S17112 * foi)
-        set E17112 (E17112 + pop_frac * S17112 * foi)
-
-        set S18311 (S18311 - pop_frac * S18311 * foi)
-        set E18311 (E18311 + pop_frac * S18311 * foi)
-
-        set S18312 (S18312 - pop_frac * S18312 * foi)
-        set E18312 (E18312 + pop_frac * S18312 * foi)
-
-        set S18111 (S18111 - pop_frac * S18111 * foi)
-        set E18111 (E18111 + pop_frac * S18111 * foi)
-
-        set S18112 (S18112 - pop_frac * S18112 * foi)
-        set E18112 (E18112 + pop_frac * S18112 * foi)
-
-        set S19111 (S19111 - pop_frac * S19111 * foi)
-        set E19111 (E19111 + pop_frac * S19111 * foi)
-
+    ask patches with [pop_frac > 0 and foi > 0 and gm_id = [id] of myself] [
+        print([name] of myself)
+        ; set [S00000] of myself ([S00000] of myself - pop_frac * [S00000] of myself * foi)
+        let delta-se pop_frac * [S00000] of myself * foi
+        print(delta-se)
+        ask myself [
+            set S00000 (S00000 - delta-se)
+            set E00000 (E00000 + delta-se)
+            set totalnewinfected totalnewinfected + delta-se
+        ]
     ]
 end
