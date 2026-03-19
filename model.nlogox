@@ -8,7 +8,7 @@ __includes [ "utils/SetupLinksOthers.nls" "utils/Ageingplus.nls" "utils/SEIR.nls
   "utils/Spillover-type-2.nls" "utils/Spillover.nls" ]
 
 
-globals [basemap biblebelt centroids items serviceregion GGD setup-links-travelling exposed-period infected-period recovered-period oldtotalinfected oldtotalhospitalized totalinfectedNL
+globals [basemap biblebelt muni-centroids items serviceregion GGD setup-links-travelling exposed-period infected-period recovered-period oldtotalinfected oldtotalhospitalized totalinfectedNL
    newtotalinfected newtotalhospitalized differenceinfected differencehospitalized differencehospitalizedfixed reproductionnumber reproductionnumberold reproductionnumbernew
    positivetests positivetestscalc ij risk_level
 

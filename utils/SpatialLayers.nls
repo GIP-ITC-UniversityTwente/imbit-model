@@ -11,7 +11,7 @@ to load-spatial-layers
       load-gm-id-raster
     ]
   ]
-  load-spatial-layer-centroids
+  load-spatial-layer-municipality-centroids
 end
 
 to load-population-frac-raster
@@ -65,11 +65,10 @@ to load-spatial-layer-healthunits
   gis:draw GGD 1
 end
 
-; What exactly are these centroids??
-to load-spatial-layer-centroids
-  set centroids gis:load-dataset imm-startpop-file
+to load-spatial-layer-municipality-centroids
+  set muni-centroids gis:load-dataset imm-startpop-file
   gis:set-drawing-color black 
-  gis:draw centroids 0.1
+  gis:draw muni-centroids 0.1
 end
 
 to load-spatial-layer-serviceregion

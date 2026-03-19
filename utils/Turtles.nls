@@ -1,6 +1,6 @@
 to create-model-turtles
   create-healthunit-turtles
-  create-centroids-turtles
+  create-municiapality-turtles
 
   if Model-Spillover? [ 
     create-animalfarm-turtles
@@ -20,8 +20,8 @@ to create-healthunit-turtles
     set region gis:property-value vector-feature "GGDREGIO"] ]
 end
 
-to create-centroids-turtles
-  foreach gis:feature-list-of centroids [[vector-feature]->
+to create-municiapality-turtles
+  foreach gis:feature-list-of muni-centroids [[vector-feature]->
     let location gis:location-of (first (first (gis:vertex-lists-of vector-feature)))
       create-municipalities 1 [
     set shape "circle"
