@@ -3,7 +3,7 @@ to create-model-turtles
   create-municiapality-turtles
 
   if Model-Spillover? [ 
-    create-animalfarm-turtles
+    if Disease-Type = 1 [create-animalfarm-turtles]
   ]
 end
 
