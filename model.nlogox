@@ -284,7 +284,7 @@ to go
 
     ;; write to output file
     ; The total susceptibl, exposed and infected are rounded
-    file-print (word  ticks";"name";"xcor";"ycor";"round totalnewinfected)
+    file-print (word  ticks";"name";"xcor";"ycor";"totalnewinfected";"S00000";"E00000";"I00000";"R00000)
 
     ;file-print (word  " "ticks" ; "name" ; "xcor" ; "ycor" ; "totalinfectedanimals" ; "totalspilloveranimalhumaninfections" ; "round totalpopulation" ; "round totalsusceptible" ; "round totalexposed" ; "round totalinfected" ; "round totalrecovered" ; "totalnewinfected" ; "S00000" ; "I00000" ; "R00000" ")
     ; "I11112" ; "I12112" ; "I13112" ; "suminfected1217" ; "I15111" ; "suminfected2535" ; "suminfected3550" ; "suminfected5065" ; "I19111" ")
