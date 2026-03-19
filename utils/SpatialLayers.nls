@@ -78,5 +78,4 @@ to load-spatial-layer-animalfarms
   ;; Align NetLogo world with the dataset's extent
   ; The centroid-envelope is obtained using python script
   set centroid-envelope [1391399.65463144 1624957.91445851 535708.42576842 853387.50384582]
-  ; gis:set-world-envelope centroid-envelope
 end
