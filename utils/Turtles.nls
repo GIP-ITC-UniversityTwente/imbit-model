@@ -44,7 +44,7 @@ to create-municiapality-turtles
 
     ;;Define variables for the municipalities
 
-    set id gis:property-value-vector-feature "ID"
+    set id gis:property-value vector-feature "ID"
     set name gis:property-value vector-feature "NAME"
     set GGDregion gis:property-value vector-feature "GGDREGION"
     set population gis:property-value vector-feature "TOTPOP"

@@ -19,11 +19,11 @@ to load-population-frac-raster
   ; resize-world 0 450 0 499
   gis:set-world-envelope-ds gis:envelope-of pop-frac-raster
 
-  gis:apply-raster pop-raster pop_frac
+  gis:apply-raster pop-frac-raster pop_frac
 end
 
 to load-gm-id-raster
-  set gm-id-raster-file gis:load-dataset gm-id-raster-file
+  set gm-id-raster gis:load-dataset gm-id-raster-file
   gis:set-world-envelope-ds gis:envelope-of gm-id-raster
 
   gis:apply-raster gm-id-raster gm_id

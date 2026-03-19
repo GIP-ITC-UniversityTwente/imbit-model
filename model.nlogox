@@ -12,7 +12,7 @@ globals [basemap biblebelt muni-centroids items serviceregion GGD setup-links-tr
    newtotalinfected newtotalhospitalized differenceinfected differencehospitalized differencehospitalizedfixed reproductionnumber reproductionnumberold reproductionnumbernew
    positivetests positivetestscalc ij risk_level
 
-   pop-raster foi-raster
+   pop-frac-raster foi-raster gm-id-raster
 
    num-hum-spillover-infc frac-infected-farms
 
@@ -275,7 +275,6 @@ to go
       if (ticks mod spillover-interval = 0) [
         if Disease-Type = 1 [create-spillover-animal-human]
         if Disease-Type = 2 [create-spillover-type-2]
-      ]
       ]
     ]
 
