@@ -1,0 +1,16 @@
+<PAMDataset>
+  <Metadata>
+    <MDI key="AREA_OR_POINT">Area</MDI>
+    <MDI key="Conventions">CF-1.4</MDI>
+    <MDI key="created_by">R packages ncdf4 and terra (version 1.8-29)</MDI>
+    <MDI key="created_date">2025-05-05 10:17:08</MDI>
+    <MDI key="easting#long_name">easting</MDI>
+    <MDI key="easting#units">meter</MDI>
+    <MDI key="northing#long_name">northing</MDI>
+    <MDI key="northing#units">meter</MDI>
+  </Metadata>
+  <PAMRasterBand band="1">
+    <Description>foi</Description>
+    <ColorInterp>Gray</ColorInterp>
+  </PAMRasterBand>
+</PAMDataset>
