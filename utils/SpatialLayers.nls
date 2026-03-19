@@ -1,6 +1,4 @@
 to load-spatial-layers
-
-  load-force-infection-raster
   load-spatial-layer-municipalities
   load-spatial-layer-biblebelt
   load-spatial-layer-healthunits
@@ -8,17 +6,27 @@ to load-spatial-layers
 
   if Model-Spillover? [ 
     if Disease-Type = 1 [load-spatial-layer-animalfarms]
-    if Disease-Type = 2 [load-population-raster]
+    if Disease-Type = 2 [
+      load-population-frac-raster
+      load-gm-id-raster
+    ]
   ]
   load-spatial-layer-centroids
 end
 
-to load-population-raster
-  set pop-raster gis:load-dataset pop-raster-file
+to load-population-frac-raster
+  set pop-frac-raster gis:load-dataset pop-frac-raster-file
   ; resize-world 0 450 0 499
-  gis:set-world-envelope-ds gis:envelope-of pop-raster
+  gis:set-world-envelope-ds gis:envelope-of pop-frac-raster
 
-  gis:apply-raster pop-raster pop_prc
+  gis:apply-raster pop-raster pop_frac
+end
+
+to load-gm-id-raster
+  set gm-id-raster-file gis:load-dataset gm-id-raster-file
+  gis:set-world-envelope-ds gis:envelope-of gm-id-raster
+
+  gis:apply-raster gm-id-raster gm_id
 end
 
 ; Function to load the force of infection raster provided by RIVM

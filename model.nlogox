@@ -157,7 +157,7 @@ breed [healthunits healthunit]
 
 healthunits-own [region]
 
-patches-own [pop_prc foi region-id]
+patches-own [pop_frac foi gm_id]
 
 
 to setup
