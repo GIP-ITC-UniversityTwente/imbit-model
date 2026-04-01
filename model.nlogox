@@ -123,6 +123,8 @@ municipalities-own [id name GGDregion vaccinationrate population totalpopulation
 
   ; Number of animal farms
   nfarms ninfectedfarms
+
+  wfoi-csvindex
   ]
 
 directed-link-breed [commuterflows commuterflow]
@@ -171,6 +173,11 @@ to setup
     if Disease-Type = 1 [
       set farm-iv-data csv:from-file farm-iv-file
       set n-farm-iv-rows length (farm-iv-data) - 1
+    ]
+
+    if Disease-Type = 2[
+      set wfoi-data csv:from-file wfoi-csv-file
+      set n-wfoi-rows length (wfoi-data) - 1
     ]
   ]
 
@@ -603,7 +610,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
     <monitor x="727" precision="0" y="115" height="45" fontSize="11" display="New Infected" width="107" sizeVersion="0">round (sum [totalnewinfected] of municipalities)</monitor>
     <monitor x="553" precision="0" y="116" height="45" fontSize="11" display="Week" width="50" sizeVersion="0">(ticks / 7)</monitor>
     <input x="473" multiline="false" y="50" height="60" variable="output-nr" type="string" width="127">9</input>
-    <slider x="189" step="1" y="412" max="10" display="Source_1_infections" height="33" min="0" direction="Horizontal" default="6.0" variable="Source_1_infections" width="195" sizeVersion="0"></slider>
+    <slider x="189" step="1" y="412" max="10" display="Source_1_infections" height="33" min="0" direction="Horizontal" default="0.0" variable="Source_1_infections" width="195" sizeVersion="0"></slider>
     <chooser x="46" y="531" height="60" variable="Source_3" current="5" width="119" display="Source_3">
       <choice type="string" value="Tilburg"></choice>
       <choice type="string" value="Amsterdam"></choice>
@@ -634,12 +641,12 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="Almelo"></choice>
       <choice type="string" value="Amersfoort"></choice>
     </chooser>
-    <slider x="189" step="1" y="548" max="10" display="Source_3_infections" height="33" min="0" direction="Horizontal" default="5.0" variable="Source_3_infections" width="195" sizeVersion="0"></slider>
-    <slider x="189" step="1" y="480" max="10" display="Source_2_infections" height="33" min="0" direction="Horizontal" default="6.0" variable="Source_2_infections" width="195" sizeVersion="0"></slider>
+    <slider x="189" step="1" y="548" max="10" display="Source_3_infections" height="33" min="0" direction="Horizontal" default="0.0" variable="Source_3_infections" width="195" sizeVersion="0"></slider>
+    <slider x="189" step="1" y="480" max="10" display="Source_2_infections" height="33" min="0" direction="Horizontal" default="0.0" variable="Source_2_infections" width="195" sizeVersion="0"></slider>
     <note x="145" y="321" backgroundDark="0" fontSize="15" width="219" markdown="false" height="33" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Human source infection</note>
     <slider x="44" step="1" y="344" max="500" width="191" display="Day-COVID-19-Outbreak" height="50" min="0" direction="Horizontal" default="221.0" variable="Day-COVID-19-Outbreak"></slider>
     <slider x="253" step="1" y="341" max="30" width="150" display="Frequency" height="50" min="0" direction="Horizontal" default="7.0" variable="Frequency"></slider>
-    <switch x="34" y="631" height="58" on="false" variable="Model-Spillover?" display="Model-Spillover?" width="139" sizeVersion="0"></switch>
+    <switch x="34" y="631" height="58" on="true" variable="Model-Spillover?" display="Model-Spillover?" width="139" sizeVersion="0"></switch>
     <plot x="1126" autoPlotX="true" yMax="1.0" autoPlotY="true" yAxis="Fraction" y="518" xMin="0.0" height="162" legend="true" xMax="50.0" yMin="0.0" xAxis="Time (days)" display="Fractions SIR farmers" width="386" sizeVersion="0">
       <setup></setup>
       <update></update>
@@ -661,7 +668,7 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       </pen>
     </plot>
     <button x="684" y="63" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="63" sizeVersion="0">setup</button>
-    <chooser x="187" y="631" height="60" variable="Disease-Type" current="0" width="102" display="Disease-Type">
+    <chooser x="187" y="631" height="60" variable="Disease-Type" current="1" width="102" display="Disease-Type">
       <choice type="double" value="1.0"></choice>
       <choice type="double" value="2.0"></choice>
     </chooser>
