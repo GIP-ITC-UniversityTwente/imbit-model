@@ -1,38 +1,55 @@
+globals [
+    wfoi-values-day
+    n-wfoi-rows
+]
+
 ; For each patch with pop_frac, foi> 0, we calculate the amount of spillover exposed
 ; by determining the gm the patch belongs to, then use eqn
 ; spillover-exposed for each pop cat = (foi * pop_frac * pop_cat_gm)
 
 to create-spillover-type-2
-    ask patches with [pop_frac > 0 and foi > 0 and gm_id = [id] of myself] [
-        
-        let delta-S00000 pop_frac * [S00000] of myself * foi
-        let delta-S11112 pop_frac * [S11112] of myself * foi
-        let delta-S12112 pop_frac * [S12112] of myself * foi
-        let delta-S13112 pop_frac * [S13112] of myself * foi
-        let delta-S14212 pop_frac * [S14212] of myself * foi
-        let delta-S14112 pop_frac * [S14112] of myself * foi
-        let delta-S15111 pop_frac * [S15111] of myself * foi
-        let delta-S26311 pop_frac * [S26311] of myself * foi
-        let delta-S26312 pop_frac * [S26312] of myself * foi
-        let delta-S26111 pop_frac * [S26111] of myself * foi
-        let delta-S26112 pop_frac * [S26112] of myself * foi
-        let delta-S36322 pop_frac * [S36322] of myself * foi
-        let delta-S36311 pop_frac * [S36311] of myself * foi
-        let delta-S36312 pop_frac * [S36312] of myself * foi
-        let delta-S36122 pop_frac * [S36122] of myself * foi
-        let delta-S36111 pop_frac * [S36111] of myself * foi
-        let delta-S36112 pop_frac * [S36112] of myself * foi
-        let delta-S17311 pop_frac * [S17311] of myself * foi
-        let delta-S17312 pop_frac * [S17312] of myself * foi
-        let delta-S17111 pop_frac * [S17111] of myself * foi
-        let delta-S17112 pop_frac * [S17112] of myself * foi
-        let delta-S18311 pop_frac * [S18311] of myself * foi
-        let delta-S18312 pop_frac * [S18312] of myself * foi
-        let delta-S18111 pop_frac * [S18111] of myself * foi
-        let delta-S18112 pop_frac * [S18112] of myself * foi
-        let delta-S19111 pop_frac * [S19111] of myself * foi
+    if ticks = n-wfoi-rows [
+        print(word "Day " ticks ": Reached the end of weighted foi file. Stopping the model.")
+        stop
+    ]
 
-        ask myself [
+    if ticks < n-wfoi-rows[
+        ; n-row should always be ticks + 1 since the first row is the gm id
+        let row-index ticks + 1
+        let row item row-index wfoi-data
+
+        set wfoi-values-day row ; Parse the CSV row into a list
+
+        ; Assigning the weighted foi values to each gemeente and calculating the spillover numbers
+        ask municipalities [
+            set wfoi item wfoi-csvindex wfoi-values-day
+            
+            let delta-S00000 wfoi * S00000
+            let delta-S11112 wfoi * S11112
+            let delta-S12112 wfoi * S12112
+            let delta-S13112 wfoi * S13112
+            let delta-S14212 wfoi * S14212
+            let delta-S14112 wfoi * S14112
+            let delta-S15111 wfoi * S15111
+            let delta-S26311 wfoi * S26311
+            let delta-S26312 wfoi * S26312
+            let delta-S26111 wfoi * S26111
+            let delta-S26112 wfoi * S26112
+            let delta-S36322 wfoi * S36322
+            let delta-S36311 wfoi * S36311
+            let delta-S36312 wfoi * S36312
+            let delta-S36122 wfoi * S36122
+            let delta-S36111 wfoi * S36111
+            let delta-S36112 wfoi * S36112
+            let delta-S17311 wfoi * S17311
+            let delta-S17312 wfoi * S17312
+            let delta-S17111 wfoi * S17111
+            let delta-S17112 wfoi * S17112  
+            let delta-S18311 wfoi * S18311
+            let delta-S18312 wfoi * S18312
+            let delta-S18111 wfoi * S18111
+            let delta-S18112 wfoi * S18112
+            let delta-S19111 wfoi * S19111
 
             set S00000 (S00000 - delta-S00000)
             set E00000 (E00000 + delta-S00000)
