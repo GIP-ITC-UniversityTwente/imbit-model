@@ -95,7 +95,11 @@ globals [basemap biblebelt muni-centroids items serviceregion GGD setup-links-tr
    jobcommuter-new-infected jobcommuter-new-infected-over-7-days schoolcommuter-new-infected schoolcommuter-new-infected-over-7-days VT-new-infected VT-new-infected-over-7-days
    GAET-new-infected GAET-new-infected-over-7-days R0-new R0-over-7-days economiclist
 
+   ; Disease Type 1 data
    farm-iv-data n-farm-iv-rows
+  
+   ; Disease Type 2 data
+   wfoi wfoi-data wfoi-raster
    ]
 
 breed [municipalities municipality]

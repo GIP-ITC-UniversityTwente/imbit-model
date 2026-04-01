@@ -11,20 +11,15 @@ to load-spatial-layers
       ;resize-world -100 100 -150 150
       ; resize-world -583 583 -791 791 ; Ideal to fit all foi and pop_frac into 
       ; set-patch-size 7
-      load-population-frac-raster
-      load-gm-id-raster
-      load-force-infection-raster
+
     ]
   ]
   load-spatial-layer-municipality-centroids
 end
 
 ; Function to load the force of infection raster provided by RIVM
-to load-force-infection-raster
-  set wfoi-raster gis:load-dataset wfoi-csv-file
-  gis:apply-raster wfoi-raster weighted_foi
-  gis:paint wfoi-raster 150 
-end
+; to load-force-infection-raster
+; end
 
 to load-spatial-layer-municipalities
   set basemap gis:load-dataset gm-shp-file ;; Netlogo doesn't know Dutch Double Stereographic projection, thus European Transverse_Mercator projection. 
