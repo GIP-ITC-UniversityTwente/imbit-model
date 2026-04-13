@@ -8,10 +8,6 @@ globals [
 ; spillover-exposed for each pop cat = (foi * pop_frac * pop_cat_gm)
 
 to create-spillover-type-2
-    if ticks = n-wfoi-rows [
-        print(word "Day " ticks ": Reached the end of weighted foi file. Stopping the model.")
-        stop
-    ]
 
     if ticks < n-wfoi-rows[
         ; n-row should always be ticks + 1 since the first row is the gm id
@@ -129,12 +125,6 @@ to create-spillover-type-2
             set S19111 (S19111 - delta-S19111)
             set E19111 (E19111 + delta-S19111)
 
-            set totalnewinfected totalnewinfected + delta-S00000 + delta-S11112 + delta-S12112 +
-                delta-S13112 + delta-S14212 + delta-S14112 + delta-S15111 + delta-S26311 +
-                delta-S26312 + delta-S26111 + delta-S26112 + delta-S36322 + delta-S36311 +
-                delta-S36312 + delta-S36122 + delta-S36111 + delta-S36112 + delta-S17311 +
-                delta-S17312 + delta-S17111 + delta-S17112 + delta-S18311 + delta-S18312 +
-                delta-S18111 + delta-S18112 + delta-S19111
         ]
     ]
 end
