@@ -11,21 +11,25 @@ to load-spatial-layers
       ;resize-world -100 100 -150 150
       ; resize-world -583 583 -791 791 ; Ideal to fit all foi and pop_frac into 
       ; set-patch-size 7
-
+      ;load-force-infection-raster
     ]
   ]
   load-spatial-layer-municipality-centroids
 end
 
-; Function to load the force of infection raster provided by RIVM
-; to load-force-infection-raster
-; end
+; Load foi raster only for visualisation purposes. 
+; The actual foi values are obtained from the csv file and assigned to turtles.
+to load-force-infection-raster
+  set foi-raster gis:load-dataset foi-raster-file
+  gis:paint foi-raster 0
+end
 
 to load-spatial-layer-municipalities
   set basemap gis:load-dataset gm-shp-file ;; Netlogo doesn't know Dutch Double Stereographic projection, thus European Transverse_Mercator projection. 
   gis:set-drawing-color 5
+  gis:fill basemap 0.0 ; original line
   ;gis:fill basemap 255
-  gis:draw basemap 0.5 ; To draw outline
+  ;gis:draw basemap 0.5 ; To draw outline
 end
 
 to load-spatial-layer-biblebelt
