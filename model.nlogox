@@ -261,7 +261,7 @@ to go
 
     if Disease-Type = 2[
       if ticks = n-wfoi-rows [
-        print(word "Day " ticks ": Reached the end of weighted foi file. Stopping the model.")
+        print(word "Day " ticks ": Reached the end of weighted foi file. foi is assumed to be zero for the rest of the simulation.")
       ]
     ]
   ]
