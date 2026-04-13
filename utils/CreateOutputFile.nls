@@ -1,4 +1,3 @@
-
 ; Procedure to create an output file
 to create-and-setup-output-file
   ;; Delete already existing output file
@@ -7,10 +6,10 @@ to create-and-setup-output-file
   file-open output-file
   file-print (word "==========================================================")
   file-print (word "============ COVID-19 cases in the Netherlands ===============")
-  file-type "ticks;"
-  file-type "name;"
-  file-type "xcor;"
-  file-type "ycor;"
+
+  ; Set base columns
+  let base-columns "ticks;name;xcor;ycor;totanewinfected;"
+  file-type base-columns
 
   ; Recording the number of animal infections and spillover numbers
   ; file-type "totalinfectedanimals ; "
@@ -20,13 +19,14 @@ to create-and-setup-output-file
   ; file-type "totalpopulation ; "
   ; file-type "totalsusceptible ; "
   ; file-type "totalexposed ; "
-  file-type "totalnewinfected;"
   ; file-type "totalrecovered ; "
   ; file-type "totalnewinfected ;"
 
   ; Uncomment this if you do not want to add specific groups'
   ; counts in the output file
-  setup-output-file-specific-group-counts
+  if full-output? [
+    setup-output-file-specific-group-counts
+  ]
 
   file-print (word)
   file-close
@@ -35,103 +35,86 @@ end
 ; Function to add column for specific group counts to the output file
 ; For instance adding the counts for I11112, S11112, R13112
 to setup-output-file-specific-group-counts
-
-  file-type "S00000;"
-  file-type "I00000;"
-  file-type "R00000;"
-
-  ;file-type "S11112 ;"
-  ;file-type "I11112 ;"
-  ;file-type "R11112 ;"
-  ;file-type "S12112 ;"
-  ;file-type "I12112 ;"
-  ;file-type "R12112 ;"
-  ;file-type "S13112 ;"
-  ;file-type "I13112 ;"
-  ;file-type "R13112 ;"
-  ;file-type "S14212 ;"
-  ;file-type "I14212 ;"
-  ;file-type "R14212 ;"
-  ;file-type "S14112 ;"
-  ;file-type "I14112 ;"
-  ;file-type "R14112 ;"
-  ;file-type "suminfected1217 ;"
-  ;file-type "S15111 ;"
-  ;file-type "I15111 ;"
-  ;file-type "R15111 ;"
-  ;file-type "S26311 ;"
-  ;file-type "I26311 ;"
-  ;file-type "R26311 ;"
-  ;file-type "S26312 ;"
-  ;file-type "I26312 ;"
-  ;file-type "R26312 ;"
-  ;file-type "S26111 ;"
-  ;file-type "I26111 ;"
-  ;file-type "R26111 ;"
-  ;file-type "S26112 ;"
-  ;file-type "I26112 ;"
-  ;file-type "R26112 ;"
-  ;file-type "S36322 ;"
-  ;file-type "I36322 ;"
-  ;file-type "R36322 ;"
-  ;file-type "S36311 ;"
-  ;file-type "I36311 ;"
-  ;file-type "R36311 ;"
-  ;file-type "S36312 ;"
-  ;file-type "I36312 ;"
-  ;file-type "R36312 ;"
-  ;file-type "S36122 ;"
-  ;file-type "I36122 ;"
-  ;file-type "R36122 ;"
-  ;file-type "S36111 ;"
-  ;file-type "I36111 ;"
-  ;file-type "R36111 ;"
-  ;file-type "S36112 ;"
-  ;file-type "I36112 ;"
-  ;file-type "R36112 ;"
-  ;file-type "suminfected2535 ;"
-  ;file-type "S17311 ;"
-  ;file-type "I17311 ;"
-  ;file-type "R17311 ;"
-  ;file-type "S17312 ;"
-  ;file-type "I17312 ;"
-  ;file-type "R17312 ;"
-  ;file-type "S17111 ;"
-  ;file-type "I17111 ;"
-  ;file-type "R17111 ;"
-  ;file-type "S17112 ;"
-  ;file-type "I17112 ;"
-  ;file-type "R17112 ;"
-  ;file-type "suminfected3550 ;"
-  ;file-type "S18311 ;"
-  ;file-type "I18311 ;"
-  ;file-type "R18311 ;"
-  ;file-type "S18312 ;"
-  ;file-type "I18312 ;"
-  ;file-type "R18312 ;"
-  ;file-type "S18111 ;"
-  ;file-type "I18111 ;"
-  ;file-type "R18111 ;"
-  ;file-type "S18112 ;"
-  ;file-type "I18112 ;"
-  ;file-type "R18112 ;"
-  ;file-type "suminfected5065 ;"
-  ;file-type "S19111 ;"
-  ;file-type "I19111 ;"
-  ;file-type "R19111 ;"
-
+  file-type "S00000;E00000;I00000;R00000;"
+  file-type "S11112;E11112;I11112;R11112;"
+  file-type "S12112;E12112;I12112;R12112;"
+  file-type "S13112;E13112;I13112;R13112;"
+  file-type "S14212;E14212;I14212;R14212;"
+  file-type "S14112;E14112;I14112;R14112;"
+  file-type "suminfected1217;"
+  file-type "S15111;E15111;I15111;R15111;"
+  file-type "S26311;E26311;I26311;R26311;"
+  file-type "S26312;E26312;I26312;R26312;"
+  file-type "S26111;E26111;I26111;R26111;"
+  file-type "S26112;E26112;I26112;R26112;"
+  file-type "S36322;E36322;I36322;R36322;"
+  file-type "S36311;E36311;I36311;R36311;"
+  file-type "S36312;E36312;I36312;R36312;"
+  file-type "S36122;E36122;I36122;R36122;"
+  file-type "S36111;E36111;I36111;R36111;"
+  file-type "S36112;E36112;I36112;R36112;"
+  file-type "suminfected2535;"
+  file-type "S17311;E17311;I17311;R17311;"
+  file-type "S17312;E17312;I17312;R17312;"
+  file-type "S17111;E17111;I17111;R17111;"
+  file-type "S17112;E17112;I17112;R17112;"
+  file-type "suminfected3550;"
+  file-type "S18311;E18311;I18311;R18311;"
+  file-type "S18312;E18312;I18312;R18312;"
+  file-type "S18111;E18111;I18111;R18111;"
+  file-type "S18112;E18112;I18112;R18112;"
+  file-type "suminfected5065;"
+  file-type "S19111;E19111;I19111;R19111;"
 end
 
-; Function to add column for population size for each age group
-; This is done to check if the age groups have constant population
 to setup-output-file-groups-population-size
-  ;file-type "sum05 ;"
-  ;file-type "sum55 ;"
-  ;file-type "sum512 ;"
-  ;file-type "sum1217 ;"
-  ;file-type "sum1725 ;"
-  ;file-type "sum2535 ;"
-  ;file-type "sum3550 ;"
-  ;file-type "sum5065 ;"
-  ;file-type "sum65 ;"
+  ;file-type "sum05;"
+  ;file-type "sum55;"
+  ;file-type "sum512;"
+  ;file-type "sum1217;"
+  ;file-type "sum1725;"
+  ;file-type "sum2535;"
+  ;file-type "sum3550;"
+  ;file-type "sum5065;"
+  ;file-type "sum65;"
+end
+
+to write-output-row
+  ; Basic columns
+  file-type (word ticks ";" name ";" xcor ";" ycor ";" totalnewinfected)
+
+  ; Extended group columns
+  if full-output? [
+    file-type (word ";" S00000 ";" E00000 ";" I00000 ";" R00000)
+    file-type (word ";" S11112 ";" E11112 ";" I11112 ";" R11112)
+    file-type (word ";" S12112 ";" E12112 ";" I12112 ";" R12112)
+    file-type (word ";" S13112 ";" E13112 ";" I13112 ";" R13112)
+    file-type (word ";" S14212 ";" E14212 ";" I14212 ";" R14212)
+    file-type (word ";" S14112 ";" E14112 ";" I14112 ";" R14112)
+    file-type (word ";" suminfected1217)
+    file-type (word ";" S15111 ";" E15111 ";" I15111 ";" R15111)
+    file-type (word ";" S26311 ";" E26311 ";" I26311 ";" R26311)
+    file-type (word ";" S26312 ";" E26312 ";" I26312 ";" R26312)
+    file-type (word ";" S26111 ";" E26111 ";" I26111 ";" R26111)
+    file-type (word ";" S26112 ";" E26112 ";" I26112 ";" R26112)
+    file-type (word ";" S36322 ";" E36322 ";" I36322 ";" R36322)
+    file-type (word ";" S36311 ";" E36311 ";" I36311 ";" R36311)
+    file-type (word ";" S36312 ";" E36312 ";" I36312 ";" R36312)
+    file-type (word ";" S36122 ";" E36122 ";" I36122 ";" R36122)
+    file-type (word ";" S36111 ";" E36111 ";" I36111 ";" R36111)
+    file-type (word ";" S36112 ";" E36112 ";" I36112 ";" R36112)
+    file-type (word ";" suminfected2535)
+    file-type (word ";" S17311 ";" E17311 ";" I17311 ";" R17311)
+    file-type (word ";" S17312 ";" E17312 ";" I17312 ";" R17312)
+    file-type (word ";" S17111 ";" E17111 ";" I17111 ";" R17111)
+    file-type (word ";" S17112 ";" E17112 ";" I17112 ";" R17112)
+    file-type (word ";" suminfected3550)
+    file-type (word ";" S18311 ";" E18311 ";" I18311 ";" R18311)
+    file-type (word ";" S18312 ";" E18312 ";" I18312 ";" R18312)
+    file-type (word ";" S18111 ";" E18111 ";" I18111 ";" R18111)
+    file-type (word ";" S18112 ";" E18112 ";" I18112 ";" R18112)
+    file-type (word ";" suminfected5065)
+    file-type (word ";" S19111 ";" E19111 ";" I19111 ";" R19111)
+  ]
+  file-print ""
 end
