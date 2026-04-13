@@ -8,7 +8,7 @@ to create-and-setup-output-file
   file-print (word "============ COVID-19 cases in the Netherlands ===============")
 
   ; Set base columns
-  let base-columns "ticks;name;xcor;ycor;totanewinfected;"
+  let base-columns "ticks;name;xcor;ycor;totalnewinfected;"
   file-type base-columns
 
   ; Recording the number of animal infections and spillover numbers
