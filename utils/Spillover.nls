@@ -142,7 +142,7 @@ to create-spillover-animal-human-mechanism-b
     set num-hum-spillover-infc min (list num-hum-spillover-infc S00000)
     
     ; Updating the number of infected and susceptible individuals
-    set I00000 I00000 + num-hum-spillover-infc
+    set E00000 E00000 + num-hum-spillover-infc
     set S00000 S00000 - num-hum-spillover-infc
     set totalnewinfected totalnewinfected + num-hum-spillover-infc
 

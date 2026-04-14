@@ -1,23 +1,41 @@
 to load-spatial-layers
+
   load-spatial-layer-municipalities
   load-spatial-layer-biblebelt
   load-spatial-layer-healthunits
   load-spatial-layer-serviceregion
-  load-spatial-layer-animalfarms
-  load-spatial-layer-centroids
+
+  if Model-Spillover? [ 
+    if Disease-Type = 1 [load-spatial-layer-animalfarms]
+    if Disease-Type = 2 [
+      ;resize-world -100 100 -150 150
+      ; resize-world -583 583 -791 791 ; Ideal to fit all foi and pop_frac into 
+      ; set-patch-size 7
+      ;load-force-infection-raster
+    ]
+  ]
+  load-spatial-layer-municipality-centroids
+end
+
+; Load foi raster only for visualisation purposes. 
+; The actual foi values are obtained from the csv file and assigned to turtles.
+to load-force-infection-raster
+  set foi-raster gis:load-dataset foi-raster-file
+  gis:paint foi-raster 0
 end
 
 to load-spatial-layer-municipalities
   set basemap gis:load-dataset gm-shp-file ;; Netlogo doesn't know Dutch Double Stereographic projection, thus European Transverse_Mercator projection. 
-  gis:set-world-envelope gis:envelope-of basemap
   gis:set-drawing-color 5
-  gis:fill basemap 0.0
+  gis:fill basemap 0.0 ; original line
+  ;gis:fill basemap 255
+  ;gis:draw basemap 0.5 ; To draw outline
 end
 
 to load-spatial-layer-biblebelt
   set biblebelt gis:load-dataset biblebelt-shp-file
   gis:set-drawing-color 4
-  gis:fill biblebelt 0.0 
+  ;gis:fill biblebelt 0.0 
 end
 
 ;;Load point data set of healthunits
@@ -27,17 +45,16 @@ to load-spatial-layer-healthunits
   gis:draw GGD 1
 end
 
-; What exactly are these centroids??
-to load-spatial-layer-centroids
-  set centroids gis:load-dataset imm-startpop-file
+to load-spatial-layer-municipality-centroids
+  set muni-centroids gis:load-dataset imm-startpop-file
   gis:set-drawing-color black 
-  gis:draw centroids 0.1
+  gis:draw muni-centroids 0.1
 end
 
 to load-spatial-layer-serviceregion
   set serviceregion gis:load-dataset ggdregio-shp-file
   gis:set-drawing-color 2
-  gis:draw serviceregion 0.8
+  ;gis:draw serviceregion 0.8
 end
 
 to load-spatial-layer-animalfarms
@@ -49,5 +66,4 @@ to load-spatial-layer-animalfarms
   ;; Align NetLogo world with the dataset's extent
   ; The centroid-envelope is obtained using python script
   set centroid-envelope [1391399.65463144 1624957.91445851 535708.42576842 853387.50384582]
-  gis:set-world-envelope centroid-envelope
 end

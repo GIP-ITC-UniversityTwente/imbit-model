@@ -1,9 +1,9 @@
 to create-model-turtles
   create-healthunit-turtles
-  create-centroids-turtles
+  create-municiapality-turtles
 
   if Model-Spillover? [ 
-    create-animalfarm-turtles
+    if Disease-Type = 1 [create-animalfarm-turtles]
   ]
 end
 
@@ -20,8 +20,14 @@ to create-healthunit-turtles
     set region gis:property-value vector-feature "GGDREGIO"] ]
 end
 
-to create-centroids-turtles
-  foreach gis:feature-list-of centroids [[vector-feature]->
+to create-municiapality-turtles
+  ; Open the csv file
+  file-open wfoi-csv-file
+
+  let csv-wfoi-row file-read-line
+  let gm_id_list csv:from-row csv-wfoi-row
+
+  foreach gis:feature-list-of muni-centroids [[vector-feature]->
     let location gis:location-of (first (first (gis:vertex-lists-of vector-feature)))
       create-municipalities 1 [
     set shape "circle"
@@ -43,11 +49,16 @@ to create-centroids-turtles
     ; set no_farmers_per_farm gis:property-value vector-feature "no_farmers_per_farm"
 
     ;;Define variables for the municipalities
+    set id gis:property-value vector-feature "ID"
     set name gis:property-value vector-feature "NAME"
     set GGDregion gis:property-value vector-feature "GGDREGION"
     set population gis:property-value vector-feature "TOTPOP"
     set vaccinationrate gis:property-value vector-feature "DKTPVACCIN"
 
+    ; The index of the nodes' iv values in the csv value will correspond to the
+    ; position of the node in the first row of the read line
+    let index position id gm_id_list
+    set wfoi-csvindex index
   
     ;;The variables should be read as follows:
     ;;SEIR.Gender.Age.Commuting.Pregnant.Household

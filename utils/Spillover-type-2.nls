@@ -1,0 +1,130 @@
+globals [
+    wfoi-values-day
+    n-wfoi-rows
+]
+
+; For each patch with pop_frac, foi> 0, we calculate the amount of spillover exposed
+; by determining the gm the patch belongs to, then use eqn
+; spillover-exposed for each pop cat = (foi * pop_frac * pop_cat_gm)
+
+to create-spillover-type-2
+
+    if ticks < n-wfoi-rows[
+        ; n-row should always be ticks + 1 since the first row is the gm id
+        let row-index ticks + 1
+        let row item row-index wfoi-data
+
+        set wfoi-values-day row ; Parse the CSV row into a list
+
+        ; Assigning the weighted foi values to each gemeente and calculating the spillover numbers
+        ask municipalities [
+            set wfoi item wfoi-csvindex wfoi-values-day
+            
+            let delta-S00000 wfoi * S00000
+            let delta-S11112 wfoi * S11112
+            let delta-S12112 wfoi * S12112
+            let delta-S13112 wfoi * S13112
+            let delta-S14212 wfoi * S14212
+            let delta-S14112 wfoi * S14112
+            let delta-S15111 wfoi * S15111
+            let delta-S26311 wfoi * S26311
+            let delta-S26312 wfoi * S26312
+            let delta-S26111 wfoi * S26111
+            let delta-S26112 wfoi * S26112
+            let delta-S36322 wfoi * S36322
+            let delta-S36311 wfoi * S36311
+            let delta-S36312 wfoi * S36312
+            let delta-S36122 wfoi * S36122
+            let delta-S36111 wfoi * S36111
+            let delta-S36112 wfoi * S36112
+            let delta-S17311 wfoi * S17311
+            let delta-S17312 wfoi * S17312
+            let delta-S17111 wfoi * S17111
+            let delta-S17112 wfoi * S17112  
+            let delta-S18311 wfoi * S18311
+            let delta-S18312 wfoi * S18312
+            let delta-S18111 wfoi * S18111
+            let delta-S18112 wfoi * S18112
+            let delta-S19111 wfoi * S19111
+
+            set S00000 (S00000 - delta-S00000)
+            set E00000 (E00000 + delta-S00000)
+
+            set S11112 (S11112 - delta-S11112)
+            set E11112 (E11112 + delta-S11112)
+
+            set S12112 (S12112 - delta-S12112)
+            set E12112 (E12112 + delta-S12112)
+
+            set S13112 (S13112 - delta-S13112)
+            set E13112 (E13112 + delta-S13112)
+
+            set S14212 (S14212 - delta-S14212)
+            set E14212 (E14212 + delta-S14212)
+
+            set S14112 (S14112 - delta-S14112)
+            set E14112 (E14112 + delta-S14112)
+
+            set S15111 (S15111 - delta-S15111)
+            set E15111 (E15111 + delta-S15111)
+
+            set S26311 (S26311 - delta-S26311)
+            set E26311 (E26311 + delta-S26311)
+
+            set S26312 (S26312 - delta-S26312)
+            set E26312 (E26312 + delta-S26312)
+
+            set S26111 (S26111 - delta-S26111)
+            set E26111 (E26111 + delta-S26111)
+
+            set S26112 (S26112 - delta-S26112)
+            set E26112 (E26112 + delta-S26112)
+
+            set S36322 (S36322 - delta-S36322)
+            set E36322 (E36322 + delta-S36322)
+
+            set S36311 (S36311 - delta-S36311)
+            set E36311 (E36311 + delta-S36311)
+
+            set S36312 (S36312 - delta-S36312)
+            set E36312 (E36312 + delta-S36312)
+
+            set S36122 (S36122 - delta-S36122)
+            set E36122 (E36122 + delta-S36122)
+
+            set S36111 (S36111 - delta-S36111)
+            set E36111 (E36111 + delta-S36111)
+
+            set S36112 (S36112 - delta-S36112)
+            set E36112 (E36112 + delta-S36112)
+
+            set S17311 (S17311 - delta-S17311)
+            set E17311 (E17311 + delta-S17311)
+
+            set S17312 (S17312 - delta-S17312)
+            set E17312 (E17312 + delta-S17312)
+
+            set S17111 (S17111 - delta-S17111)
+            set E17111 (E17111 + delta-S17111)
+
+            set S17112 (S17112 - delta-S17112)
+            set E17112 (E17112 + delta-S17112)
+
+            set S18311 (S18311 - delta-S18311)
+            set E18311 (E18311 + delta-S18311)
+
+            set S18312 (S18312 - delta-S18312)
+            set E18312 (E18312 + delta-S18312)
+
+            set S18111 (S18111 - delta-S18111)
+            set E18111 (E18111 + delta-S18111)
+
+            set S18112 (S18112 - delta-S18112)
+            set E18112 (E18112 + delta-S18112)
+
+            set S19111 (S19111 - delta-S19111)
+            set E19111 (E19111 + delta-S19111)
+
+        ]
+    ]
+end
