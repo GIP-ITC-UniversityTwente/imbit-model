@@ -13,6 +13,7 @@ to load-spatial-layers
       ; set-patch-size 7
       ;load-force-infection-raster
     ]
+    if Disease-Type = 3 [load-spatial-layer-vole-inf]
   ]
   load-spatial-layer-municipality-centroids
 end
@@ -62,6 +63,17 @@ to load-spatial-layer-animalfarms
 
   gis:set-drawing-color 3
   gis:draw basemap-farm 1
+
+  ;; Align NetLogo world with the dataset's extent
+  ; The centroid-envelope is obtained using python script
+  set centroid-envelope [1391399.65463144 1624957.91445851 535708.42576842 853387.50384582]
+end
+
+to load-spatial-layer-animalfarms
+  set basemap-vole gis:load-dataset vole-shp-file
+
+  gis:set-drawing-color 3
+  gis:draw basemap-vole 1
 
   ;; Align NetLogo world with the dataset's extent
   ; The centroid-envelope is obtained using python script
