@@ -64,8 +64,8 @@ to init-input-paths
 
   ; Disease type 3- infections
   if Disease-Type = 3 [
-    set vole-shp-file (word input-dir "vole/outbreak_" disease-3-outbreak-nr "/vole_loc.shp")
-    set vole-iv-file (word input-dir "vole/outbreak_" disease-3-outbreak-nr "/env_table.csv")
+    set vole-shp-file (word input-dir "vole/outbreak-" disease-3-outbreak-nr "/vole_loc.shp")
+    set vole-iv-file (word input-dir "vole/outbreak-" disease-3-outbreak-nr "/env_table.csv")
   ]
 
   ; Links
