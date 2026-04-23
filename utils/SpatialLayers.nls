@@ -13,7 +13,7 @@ to load-spatial-layers
       ; set-patch-size 7
       ;load-force-infection-raster
     ]
-    if Disease-Type = 3 [load-spatial-layer-vole-inf]
+    if Disease-Type = 3 [load-spatial-layer-vole-loc]
   ]
   load-spatial-layer-municipality-centroids
 end
@@ -69,7 +69,7 @@ to load-spatial-layer-animalfarms
   set centroid-envelope [1391399.65463144 1624957.91445851 535708.42576842 853387.50384582]
 end
 
-to load-spatial-layer-animalfarms
+to load-spatial-layer-vole-loc
   set basemap-voleloc gis:load-dataset vole-shp-file
 
   gis:set-drawing-color 3
