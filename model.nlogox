@@ -100,6 +100,9 @@ globals [basemap biblebelt muni-centroids items serviceregion GGD exposed-period
   
    ; Disease Type 2 data
    wfoi wfoi-data wfoi-raster
+
+   ; Disease Type 3 data
+   vole-iv-data n-vole-iv-rows
    ]
 
 breed [municipalities municipality]
@@ -130,7 +133,7 @@ municipalities-own [id name GGDregion vaccinationrate population totalpopulation
   wfoi-csvindex
 
   ; Disease type 3
-  totalinfectedvoles ninfcvoleloc
+  totalinfectedvoles nvoleloc
   ]
 
 directed-link-breed [commuterflows commuterflow]
@@ -711,8 +714,14 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
       <choice type="string" value="Transmission2.000.txt"></choice>
     </chooser>
     <note x="29" y="843" backgroundDark="0" fontSize="15" width="150" markdown="false" height="33" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">For disease type 3</note>
-    <chooser x="17" y="875" height="60" variable="disease-3-outbreak-nr" current="0" width="250" display="disease-3-outbreak-nr">
+    <chooser x="7" y="880" height="60" variable="disease-3-outbreak-nr" current="0" width="147" display="disease-3-outbreak-nr">
       <choice type="double" value="1.0"></choice>
+      <choice type="double" value="848178.0"></choice>
+      <choice type="double" value="282382.0"></choice>
+      <choice type="double" value="403228.0"></choice>
+      <choice type="double" value="654502.0"></choice>
+      <choice type="double" value="717926.0"></choice>
+      <choice type="double" value="917448.0"></choice>
     </chooser>
   </widgets>
   <info><![CDATA[## CONTACT?
