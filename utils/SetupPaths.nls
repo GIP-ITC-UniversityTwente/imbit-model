@@ -49,16 +49,22 @@ to init-input-paths
   set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
   
   ; Disease type 1- farm infections
-  set farm-shp-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/preprocessed_farm.shp")
-  set farm-iv-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/iv_table.csv")
+  if Disease-Type = 1 [
+    set farm-shp-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/preprocessed_farm.shp")
+    set farm-iv-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/iv_table.csv")
+  ]
 
   ; Disease type 2- foi 
-  set wfoi-csv-file (word input-dir "foi/weighted_foi.csv")
-  set foi-raster-file (word input-dir "foi/foi_band.asc")
+  if Disease-Type = 2 [
+    set wfoi-csv-file (word input-dir "foi/weighted_foi.csv")
+    set foi-raster-file (word input-dir "foi/foi_band.asc")
+  ]
 
   ; Disease type 3- infections
-  set vole-shp-file (word input-dir "vole/outbreak_" disease-3-outbreak-nr "/preprocessed_vole_loc.shp")
-  set vole-iv-file (word input-dir "vole/outbreak_" disease-3-outbreak-nr "/iv_table.csv")
+  if Disease-Type = 3 [
+    set vole-shp-file (word input-dir "vole/outbreak_" disease-3-outbreak-nr "/preprocessed_vole_loc.shp")
+    set vole-iv-file (word input-dir "vole/outbreak_" disease-3-outbreak-nr "/iv_table.csv")
+  ]
 
   ; Links
   set commuter-links-file (word input-dir "links/LinksCommuter.txt")
