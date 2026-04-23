@@ -104,6 +104,8 @@ globals [basemap biblebelt muni-centroids items serviceregion GGD exposed-period
 
    ; Disease Type 3 data
    vole-iv-data n-vole-iv-rows
+
+   gm_id_list
    ]
 
 breed [municipalities municipality]
@@ -718,7 +720,6 @@ In summer holiday no school commuting and less job commuting? Switch 'commuting-
     </chooser>
     <note x="29" y="843" backgroundDark="0" fontSize="15" width="150" markdown="false" height="33" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">For disease type 3</note>
     <chooser x="7" y="880" height="60" variable="disease-3-outbreak-nr" current="0" width="147" display="disease-3-outbreak-nr">
-      <choice type="double" value="1.0"></choice>
       <choice type="double" value="848178.0"></choice>
       <choice type="double" value="282382.0"></choice>
       <choice type="double" value="403228.0"></choice>
