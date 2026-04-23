@@ -23,6 +23,8 @@ globals [
   infc-among-wint-file
   wfoi-csv-file
   foi-raster-file
+  vole-shp-file
+  vole-iv-file
 ]
 
 
