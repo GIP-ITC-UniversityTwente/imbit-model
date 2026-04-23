@@ -122,13 +122,15 @@ municipalities-own [id name GGDregion vaccinationrate population totalpopulation
   suminfected5065 suminfected6580 suminfected80plus hospitalized05 hospitalized512 hospitalized1217 hospitalized1725 hospitalized2535 hospitalized3550
   hospitalized5065 hospitalized6580 hospitalized80plus
 
-  ; To record number of animal infections and spillovers
-  totalinfectedanimals totalspilloveranimalhumaninfections
+  ; Disease type 1
+  totalinfectedanimals nfarms ninfectedfarms
+  totalspilloveranimalhumaninfections
 
-  ; Number of animal farms
-  nfarms ninfectedfarms
-
+  ; Disease type 2
   wfoi-csvindex
+
+  ; Disease type 3
+  totalinfectedvoles ninfcvoleloc
   ]
 
 directed-link-breed [commuterflows commuterflow]
@@ -182,6 +184,11 @@ to setup
     if Disease-Type = 2[
       set wfoi-data csv:from-file wfoi-csv-file
       set n-wfoi-rows length (wfoi-data) - 1
+    ]
+
+    if Disease-Type = 3[
+      set vole-iv-data csv:from-file vole-iv-file
+      set n-vole-iv-rows length (vole-iv-data) - 1
     ]
   ]
 
@@ -262,6 +269,13 @@ to go
     if Disease-Type = 2[
       if ticks = n-wfoi-rows [
         print(word "Day " ticks ": Reached the end of weighted foi file. foi is assumed to be zero for the rest of the simulation.")
+      ]
+    ]
+
+    if Disease-Type = 3[
+      ask municipalities [
+        set totalinfectedvoles 0
+        set ninfcvoleloc 0
       ]
     ]
   ]
