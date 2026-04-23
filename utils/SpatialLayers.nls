@@ -70,10 +70,10 @@ to load-spatial-layer-animalfarms
 end
 
 to load-spatial-layer-animalfarms
-  set basemap-vole gis:load-dataset vole-shp-file
+  set basemap-voleloc gis:load-dataset vole-shp-file
 
   gis:set-drawing-color 3
-  gis:draw basemap-vole 1
+  gis:draw basemap-voleloc 1
 
   ;; Align NetLogo world with the dataset's extent
   ; The centroid-envelope is obtained using python script
