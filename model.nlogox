@@ -5,7 +5,8 @@ __includes [ "utils/SetupLinksOthers.nls" "utils/Ageingplus.nls" "utils/SEIR.nls
   "utils/HealthunitsLocation.nls" "utils/R0.nls" "utils/COVID19history.nls" "utils/Roadmapscenario.nls" "utils/Economicscenario.nls" "utils/Agescenario.nls"
   "utils/Municipality.nls" "utils/SpatialLayers.nls" "utils/Turtles.nls" "utils/ContactRates.nls"
   "utils/OriginalPertussisModel.nls" "utils/CreateOutputFile.nls" "utils/SetupPaths.nls"
-  "utils/Spillover-type-2.nls" "utils/Spillover.nls" ]
+  "utils/Spillover-type-2.nls" "utils/Spillover.nls" 
+  "utils/Spillover-type-3.nls" ]
 
 
 globals [basemap biblebelt muni-centroids items serviceregion GGD exposed-period infected-period recovered-period oldtotalinfected oldtotalhospitalized totalinfectedNL
@@ -133,7 +134,7 @@ municipalities-own [id name GGDregion vaccinationrate population totalpopulation
   wfoi-csvindex
 
   ; Disease type 3
-  totalinfectedvoles nvoleloc
+  totalinfectedvoles nvoleloc ninfcvoleloc
   ]
 
 directed-link-breed [commuterflows commuterflow]
@@ -265,7 +266,7 @@ to go
       ask municipalities [
         set totalinfectedanimals 0
         set ninfectedfarms 0
-        ]
+      ]
       load-animal-farm-infections
     ]
 
@@ -280,6 +281,7 @@ to go
         set totalinfectedvoles 0
         set ninfcvoleloc 0
       ]
+      load-vole-loc-infections
     ]
   ]
   
@@ -311,6 +313,7 @@ to go
       if (ticks mod spillover-interval = 0) [
         if Disease-Type = 1 [create-spillover-animal-human]
         if Disease-Type = 2 [create-spillover-type-2]
+        if Disease-Type = 3 [create-spillover-type-3]
 
         if id = 71 [
           ;print (word ticks " After spillover, totalnewinfected " totalnewinfected)

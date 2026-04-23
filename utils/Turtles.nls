@@ -40,14 +40,29 @@ to create-municiapality-turtles
     set totalnewinfected 0
 
     ; Setting initial total animal infections
-    set totalinfectedanimals 0
-    set totalspilloveranimalhumaninfections 0
+    if Disease-Type = 1 [
+      set totalinfectedanimals 0
+      set totalspilloveranimalhumaninfections 0
 
-    ; Setting total farms and infected farms 
-    set nfarms 0
-    set ninfectedfarms 0
-    set no_farmers_per_farm 20
-    ; set no_farmers_per_farm gis:property-value vector-feature "no_farmers_per_farm"
+      ; Setting total farms and infected farms 
+      set nfarms 0
+      set ninfectedfarms 0
+      set no_farmers_per_farm 20
+      ; set no_farmers_per_farm gis:property-value vector-feature "no_farmers_per_farm"
+    ]
+
+    if Disease-Type = 2 [
+      ; The index of the nodes' iv values in the csv value will correspond to the
+      ; position of the node in the first row of the read line
+      let index position id gm_id_list
+      set wfoi-csvindex index    
+    ]
+
+    if Disease-Type = 3 [
+      set totalinfectedvoles 0
+      set nvoleloc 0 
+      set ninfcvoleloc 0
+    ]
 
     ;;Define variables for the municipalities
     set id gis:property-value vector-feature "ID"
@@ -55,12 +70,6 @@ to create-municiapality-turtles
     set GGDregion gis:property-value vector-feature "GGDREGION"
     set population gis:property-value vector-feature "TOTPOP"
     set vaccinationrate gis:property-value vector-feature "DKTPVACCIN"
-
-    ; The index of the nodes' iv values in the csv value will correspond to the
-    ; position of the node in the first row of the read line
-    let index position id gm_id_list
-    set wfoi-csvindex index
-  
     ;;The variables should be read as follows:
     ;;SEIR.Gender.Age.Commuting.Pregnant.Household
     ;;SEIR S=susceptible E=exposed I=infected R=recovered
