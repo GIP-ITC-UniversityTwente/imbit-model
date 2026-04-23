@@ -4,6 +4,7 @@ to create-model-turtles
 
   if Model-Spillover? [ 
     if Disease-Type = 1 [create-animalfarm-turtles]
+    if Disease-Type = 3 [create-voleloc-turtles]
   ]
 end
 
@@ -204,6 +205,42 @@ to create-animalfarm-turtles
       
     ask (municipalities with [name = [gm_name] of myself]) [
       set nfarms nfarms + 1
+    ]
+    ; The index of the nodes' iv values in the csv value will correspond to the
+    ; position of the node in the first row of the read line
+    let index position node node-values
+    set csvindex index
+  ]]
+
+  file-close
+end
+
+to create-voleloc-turtles
+  ; Open the csv file
+  file-open vole-iv-file
+  
+  let csv-node-row file-read-line
+  let node-values csv:from-row csv-node-row
+
+  foreach gis:feature-list-of basemap-voleloc [[vector-feature]->
+    let location gis:location-of (first (first (gis:vertex-lists-of vector-feature)))
+      create-volelocs 1 [
+    set shape "triangle"
+    set color [0 0 255 0]
+    set xcor item 0 location
+    set ycor item 1 location
+    set size 0.2
+      
+    ; Setting node id of the object
+    ;let node_id gis:property-value vector-feature "node" 
+    set node gis:property-value vector-feature "node" ;! Might be redundant since we are only using it to determine the csvindex
+    
+    ; Setting gm name
+    ;let gm_id gis:property-value vector-feature "gm_id" 
+    set gm_name gis:property-value vector-feature "Name" 
+      
+    ask (municipalities with [name = [gm_name] of myself]) [
+      set nvoleloc nvoleloc + 1
     ]
     ; The index of the nodes' iv values in the csv value will correspond to the
     ; position of the node in the first row of the read line
