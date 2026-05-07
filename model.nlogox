@@ -588,7 +588,7 @@ if ticks >= (Day-COVID-19-Outbreak + 60) [ stop ]]]></button>
       <choice type="double" value="3.0"></choice>
     </chooser>
     <switch x="471" y="118" height="40" on="true" variable="full-output?" width="96" display="full-output?"></switch>
-    <chooser x="4" y="740" height="60" variable="animal-inf-oubtreak-nr" current="0" width="150" display="animal-inf-oubtreak-nr">
+    <chooser x="4" y="740" height="60" variable="animal-inf-outbreak-nr" current="0" width="150" display="animal-inf-outbreak-nr">
       <choice type="double" value="1.0"></choice>
       <choice type="double" value="103319.0"></choice>
       <choice type="double" value="451119.0"></choice>

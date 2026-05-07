@@ -50,13 +50,13 @@ to init-input-paths
   ; Immunity
   set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
   
-  if Model-Spillover?
+  if Model-Spillover? [
     let spillover_subfolder (word "spillover/disease_type" Disease-Type "/outbreak_" )
 
     ; Disease type 1- farm infections
     if Disease-Type = 1 [
-      set farm-shp-file (word input-dir spillover_subfolder disease-1-outbreak-nr "/preprocessed_farm.shp")
-      set farm-iv-file (word input-dir spillover_subfolder disease-1-outbreak-nr "/iv_table.csv")
+      set farm-shp-file (word input-dir spillover_subfolder animal-inf-outbreak-nr "/preprocessed_farm.shp")
+      set farm-iv-file (word input-dir spillover_subfolder animal-inf-outbreak-nr "/iv_table.csv")
     ]
 
     ; Disease type 2- foi 
@@ -70,6 +70,7 @@ to init-input-paths
       set vole-shp-file (word input-dir spillover_subfolder disease-3-outbreak-nr "/vole_loc.shp")
       set vole-iv-file (word input-dir spillover_subfolder disease-3-outbreak-nr "/env_table.csv")
     ]
+  ]
 
   ; Links
   set commuter-links-file (word input-dir "links/LinksCommuter.txt")
