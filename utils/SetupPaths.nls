@@ -51,7 +51,7 @@ to init-input-paths
   set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
   
   if Model-Spillover? [
-    let spillover_subfolder (word "spillover/disease_type" Disease-Type "/outbreak_" )
+    let spillover_subfolder (word "spillover/disease_type_" Disease-Type "/outbreak_" )
 
     ; Disease type 1- farm infections
     if Disease-Type = 1 [
