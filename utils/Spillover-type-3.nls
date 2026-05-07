@@ -1,0 +1,91 @@
+extensions [GIS csv]
+
+globals [
+    basemap-voleloc
+]
+
+breed [ volelocs voleloc]
+
+volelocs-own [node vole csvindex gm_name]
+
+; Updates vole location colors and gemeente total vole infections
+to load-vole-loc-infections
+
+    if ticks = n-vole-iv-rows [
+        print(word "Disease type 3: Day " ticks ": Reached the end of vole iv file. Stopping the model.")
+        stop
+    ]
+
+    if ticks < n-vole-iv-rows [
+        ; n-row should always be ticks + 1 since the first row is the animal farm number
+        let row-index ticks + 1
+        let row item row-index vole-iv-data
+        
+        set iv-values-for-the-day row ; Parse the CSV row into a list
+        
+        ; Assign IV values to turtles
+        ask volelocs [
+          set-vole-loc-color
+          
+          set spillover_gm_name gm_name
+          update-gm-vole-inf
+        ]
+    ]
+end
+
+; Sets vole location color based on number of infections
+to set-vole-loc-color
+  set iv item csvindex iv-values-for-the-day ; Assign each turtle its corresponding IV value using its csvindex
+  
+  ; When transmission occurs
+  ifelse iv >= 500 [
+    set color red
+  ] [
+    ; increase of transmission is higher
+    ifelse iv > 200 and iv < 500 [
+      set color orange
+    ] [
+      ifelse iv >= 100 and iv <= 200 [
+        set color yellow
+      ] [
+        ; Transmission is unlikely
+        set color [0 0 255 0]
+      ]
+    ]
+  ]
+end
+
+; Updates a specific gemeente's number of vole infections
+to update-gm-vole-inf
+  ; This is the number of totalinfected animals at any given day
+  ask municipalities with [name = spillover_gm_name][
+    set totalinfectedvoles totalinfectedvoles + iv
+
+    if (iv > 0)[
+      set ninfcvoleloc ninfcvoleloc + 1
+    ]
+  ]
+end
+
+; Municipality procedure to introduce spillover infection based on tot. infected voles
+to create-spillover-type-3
+
+  ; Spillovers only occur in gemeentes where n_voleloc > 0 
+  if not (nvoleloc = 0) [
+    let frac-infc-nvoleloc (ninfcvoleloc / nvoleloc)
+
+    ; Calculating number of spillovers based on RIVM's numbers
+    set num-hum-spillover-infc (S00000 * frac-infc-nvoleloc  * totalinfectedvoles * prob-spillover-risk-after-contact * prob-contact)
+
+    ; Cap the number of infections as it cannot increase more than the number of susceptible
+    ; We choose the number of spillover infections to be the minimum of the susceptible and the possible spillovers
+    set num-hum-spillover-infc min (list num-hum-spillover-infc S00000)
+    
+    ; Updating the number of infected and susceptible individuals
+    set E00000 E00000 + num-hum-spillover-infc
+    set S00000 S00000 - num-hum-spillover-infc
+    set totalnewinfected totalnewinfected + num-hum-spillover-infc
+
+    set totalspilloveranimalhumaninfections  num-hum-spillover-infc
+  ]
+end

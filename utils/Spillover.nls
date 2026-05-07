@@ -1,6 +1,8 @@
 extensions [GIS csv]
 
-globals [basemap-farm centroid-envelope 
+globals [
+  basemap-farm 
+  centroid-envelope 
   current-timestep 
   iv iv-values-for-the-day
   spillover-threshold spillover-interval
@@ -21,7 +23,7 @@ end
 ; Updates the color of the animal farms and updates total animal infections in the gemeente
 to load-animal-farm-infections
   if ticks = n-farm-iv-rows [
-    print(word "Day " ticks ": Reached the end of farm iv file. Stopping the model.")
+    print(word "Disease type 2: Day " ticks ": Reached the end of farm iv file. Stopping the model.")
     stop
   ]
   

@@ -1,9 +1,10 @@
 to create-model-turtles
   create-healthunit-turtles
-  create-municiapality-turtles
+  create-municipality-turtles
 
   if Model-Spillover? [ 
     if Disease-Type = 1 [create-animalfarm-turtles]
+    if Disease-Type = 3 [create-voleloc-turtles]
   ]
 end
 
@@ -20,13 +21,14 @@ to create-healthunit-turtles
     set region gis:property-value vector-feature "GGDREGIO"] ]
 end
 
-to create-municiapality-turtles
-  ; Open the csv file
-  file-open wfoi-csv-file
-
-  let csv-wfoi-row file-read-line
-  let gm_id_list csv:from-row csv-wfoi-row
-
+to create-municipality-turtles
+  
+  if Disease-Type = 2 [
+      file-open wfoi-csv-file
+      let csv-wfoi-row file-read-line
+      set gm_id_list csv:from-row csv-wfoi-row
+  ]
+  
   foreach gis:feature-list-of muni-centroids [[vector-feature]->
     let location gis:location-of (first (first (gis:vertex-lists-of vector-feature)))
       create-municipalities 1 [
@@ -35,18 +37,6 @@ to create-municiapality-turtles
     set xcor item 0 location
     set ycor item 1 location
     set size 0.3
-     
-    set totalnewinfected 0
-
-    ; Setting initial total animal infections
-    set totalinfectedanimals 0
-    set totalspilloveranimalhumaninfections 0
-
-    ; Setting total farms and infected farms 
-    set nfarms 0
-    set ninfectedfarms 0
-    set no_farmers_per_farm 20
-    ; set no_farmers_per_farm gis:property-value vector-feature "no_farmers_per_farm"
 
     ;;Define variables for the municipalities
     set id gis:property-value vector-feature "ID"
@@ -55,11 +45,33 @@ to create-municiapality-turtles
     set population gis:property-value vector-feature "TOTPOP"
     set vaccinationrate gis:property-value vector-feature "DKTPVACCIN"
 
-    ; The index of the nodes' iv values in the csv value will correspond to the
-    ; position of the node in the first row of the read line
-    let index position id gm_id_list
-    set wfoi-csvindex index
-  
+    set totalnewinfected 0
+
+    ; Setting initial total animal infections
+    if Disease-Type = 1 [
+      set totalinfectedanimals 0
+      set totalspilloveranimalhumaninfections 0
+
+      ; Setting total farms and infected farms 
+      set nfarms 0
+      set ninfectedfarms 0
+      set no_farmers_per_farm 20
+      ; set no_farmers_per_farm gis:property-value vector-feature "no_farmers_per_farm"
+    ]
+
+    if Disease-Type = 2 [
+      ; The index of the nodes' iv values in the csv value will correspond to the
+      ; position of the node in the first row of the read line
+      let index position id gm_id_list
+      set wfoi-csvindex index    
+    ]
+
+    if Disease-Type = 3 [
+      set totalinfectedvoles 0
+      set nvoleloc 0 
+      set ninfcvoleloc 0
+    ]
+
     ;;The variables should be read as follows:
     ;;SEIR.Gender.Age.Commuting.Pregnant.Household
     ;;SEIR S=susceptible E=exposed I=infected R=recovered
@@ -204,6 +216,42 @@ to create-animalfarm-turtles
       
     ask (municipalities with [name = [gm_name] of myself]) [
       set nfarms nfarms + 1
+    ]
+    ; The index of the nodes' iv values in the csv value will correspond to the
+    ; position of the node in the first row of the read line
+    let index position node node-values
+    set csvindex index
+  ]]
+
+  file-close
+end
+
+to create-voleloc-turtles
+  ; Open the csv file
+  file-open vole-iv-file
+  
+  let csv-node-row file-read-line
+  let node-values csv:from-row csv-node-row
+
+  foreach gis:feature-list-of basemap-voleloc [[vector-feature]->
+    let location gis:location-of (first (first (gis:vertex-lists-of vector-feature)))
+      create-volelocs 1 [
+    set shape "triangle"
+    set color [0 0 255 0]
+    set xcor item 0 location
+    set ycor item 1 location
+    set size 0.2
+      
+    ; Setting node id of the object
+    ;let node_id gis:property-value vector-feature "node" 
+    set node gis:property-value vector-feature "node" ;! Might be redundant since we are only using it to determine the csvindex
+    
+    ; Setting gm name
+    ;let gm_id gis:property-value vector-feature "gm_id" 
+    set gm_name gis:property-value vector-feature "Name" 
+      
+    ask (municipalities with [name = [gm_name] of myself]) [
+      set nvoleloc nvoleloc + 1
     ]
     ; The index of the nodes' iv values in the csv value will correspond to the
     ; position of the node in the first row of the read line
