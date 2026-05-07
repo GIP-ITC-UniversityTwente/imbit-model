@@ -50,23 +50,26 @@ to init-input-paths
   ; Immunity
   set imm-startpop-file (word input-dir "imm_startpop/" Immunity-Startpopulation)
   
-  ; Disease type 1- farm infections
-  if Disease-Type = 1 [
-    set farm-shp-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/preprocessed_farm.shp")
-    set farm-iv-file (word input-dir "farm_data/outbreak_" animal-inf-oubtreak-nr "/iv_table.csv")
-  ]
+  if Model-Spillover?
+    let spillover_subfolder (word "spillover/disease_type" Disease-Type "/outbreak_" )
 
-  ; Disease type 2- foi 
-  if Disease-Type = 2 [
-    set wfoi-csv-file (word input-dir "foi/weighted_foi.csv")
-    set foi-raster-file (word input-dir "foi/foi_band.asc")
-  ]
+    ; Disease type 1- farm infections
+    if Disease-Type = 1 [
+      set farm-shp-file (word input-dir spillover_subfolder disease-1-outbreak-nr "/preprocessed_farm.shp")
+      set farm-iv-file (word input-dir spillover_subfolder disease-1-outbreak-nr "/iv_table.csv")
+    ]
 
-  ; Disease type 3- infections
-  if Disease-Type = 3 [
-    set vole-shp-file (word input-dir "vole/outbreak-" disease-3-outbreak-nr "/vole_loc.shp")
-    set vole-iv-file (word input-dir "vole/outbreak-" disease-3-outbreak-nr "/env_table.csv")
-  ]
+    ; Disease type 2- foi 
+    if Disease-Type = 2 [
+      set wfoi-csv-file (word input-dir "spillover/disease_type_2/weighted_foi.csv")
+      set foi-raster-file (word input-dir "spillover/disease_type_2/foi_band.asc")
+    ]
+
+    ; Disease type 3- infections
+    if Disease-Type = 3 [
+      set vole-shp-file (word input-dir spillover_subfolder disease-3-outbreak-nr "/vole_loc.shp")
+      set vole-iv-file (word input-dir spillover_subfolder disease-3-outbreak-nr "/env_table.csv")
+    ]
 
   ; Links
   set commuter-links-file (word input-dir "links/LinksCommuter.txt")
