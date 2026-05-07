@@ -6,7 +6,7 @@ globals [
 
 breed [ volelocs voleloc]
 
-volelocs-own [node vole csvindex]
+volelocs-own [node vole csvindex gm_name]
 
 ; Updates vole location colors and gemeente total vole infections
 to load-vole-loc-infections

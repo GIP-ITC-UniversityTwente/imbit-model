@@ -1,6 +1,6 @@
 to create-model-turtles
   create-healthunit-turtles
-  create-municiapality-turtles
+  create-municipality-turtles
 
   if Model-Spillover? [ 
     if Disease-Type = 1 [create-animalfarm-turtles]
@@ -21,13 +21,14 @@ to create-healthunit-turtles
     set region gis:property-value vector-feature "GGDREGIO"] ]
 end
 
-to create-municiapality-turtles
-  ; Open the csv file
-  file-open wfoi-csv-file
-
-  let csv-wfoi-row file-read-line
-  let gm_id_list csv:from-row csv-wfoi-row
-
+to create-municipality-turtles
+  
+  if Disease-Type = 2 [
+      file-open wfoi-csv-file
+      let csv-wfoi-row file-read-line
+      set gm_id_list csv:from-row csv-wfoi-row
+  ]
+  
   foreach gis:feature-list-of muni-centroids [[vector-feature]->
     let location gis:location-of (first (first (gis:vertex-lists-of vector-feature)))
       create-municipalities 1 [
@@ -36,7 +37,14 @@ to create-municiapality-turtles
     set xcor item 0 location
     set ycor item 1 location
     set size 0.3
-     
+
+    ;;Define variables for the municipalities
+    set id gis:property-value vector-feature "ID"
+    set name gis:property-value vector-feature "NAME"
+    set GGDregion gis:property-value vector-feature "GGDREGION"
+    set population gis:property-value vector-feature "TOTPOP"
+    set vaccinationrate gis:property-value vector-feature "DKTPVACCIN"
+
     set totalnewinfected 0
 
     ; Setting initial total animal infections
@@ -64,12 +72,6 @@ to create-municiapality-turtles
       set ninfcvoleloc 0
     ]
 
-    ;;Define variables for the municipalities
-    set id gis:property-value vector-feature "ID"
-    set name gis:property-value vector-feature "NAME"
-    set GGDregion gis:property-value vector-feature "GGDREGION"
-    set population gis:property-value vector-feature "TOTPOP"
-    set vaccinationrate gis:property-value vector-feature "DKTPVACCIN"
     ;;The variables should be read as follows:
     ;;SEIR.Gender.Age.Commuting.Pregnant.Household
     ;;SEIR S=susceptible E=exposed I=infected R=recovered
